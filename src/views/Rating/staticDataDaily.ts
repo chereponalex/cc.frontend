@@ -1,0 +1,58 @@
+const staticDataDaily = [
+  // {
+  //   title: "20+",
+  //   id: 21,
+  //   accruals: "360₽ x 20+",
+  //   summa_one_transfer: "360₽",
+  //   // summa_one_hour: "250₽",
+  //   chances: "4",
+  //   background: "#de8ffa",
+  // },
+  // {
+  //   title: "20",
+  //   id: 20,
+  //   accruals: "7 200₽",
+  //   summa_one_transfer: "360₽",
+  //   // summa_one_hour: "250₽",
+  //   chances: "4",
+  //   background: "#8fff9a",
+  // },
+  {
+    title: "15+",
+    id: 15,
+    accruals: "5 100₽",
+    summa_one_transfer: "340₽",
+    // summa_one_hour: "200₽",
+    // chances: "3",
+    background: "#de8ffa",
+  },
+  {
+    title: "10",
+    id: 10,
+    accruals: "3 200₽",
+    summa_one_transfer: "320₽",
+    // summa_one_hour: "150₽",
+    // chances: "2",
+    background: "#8fff9a",
+  },
+  {
+    title: "5",
+    id: 5,
+    accruals: "1500₽",
+    summa_one_transfer: "300₽",
+    // summa_one_hour: "100₽",
+    // chances: "1",
+    background: "#ff8f9d",
+  },
+  {
+    title: "1-4",
+    id: 4,
+    accruals: "от 280₽",
+    summa_one_transfer: "280₽",
+    // summa_one_hour: "0₽",
+    // chances: "0",
+    background: "#FFFF",
+  },
+];
+
+export default staticDataDaily;

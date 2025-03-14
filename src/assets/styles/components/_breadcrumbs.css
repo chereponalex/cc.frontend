@@ -1,0 +1,26 @@
+.breadcrumbs {
+}
+
+.breadcrumbs > * {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.breadcrumbs .crumb:after {
+  content: ">";
+  margin-left: 10px;
+}
+
+.breadcrumbs .crumb:last-child {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.breadcrumbs .crumb:last-child:after {
+  display: none;
+}
+
+.breadcrumbs .crumb:not(:last-child) a:hover {
+  text-decoration: underline;
+}

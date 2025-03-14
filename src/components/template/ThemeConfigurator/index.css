@@ -1,0 +1,70 @@
+.container_switcher {
+  cursor: pointer;
+}
+
+.container_switcher input {
+  display: none;
+}
+
+.container_switcher input + div {
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  position: relative;
+  box-shadow: inset 8px -8px 0 0 var(--color-toggle-dark, #6b7280);
+  transform: scale(1) rotate(-2deg);
+  transition:
+    box-shadow 0.5s ease 0s,
+    transform 0.4s ease 0.1s;
+}
+
+.container_switcher input + div::before {
+  content: "";
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: background 0.3s ease;
+}
+
+.container_switcher input + div::after {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin: -4px 0 0 -4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  box-shadow:
+    0 -15px 0 var(--color-toggle-light, #9ca3af),
+    0 16px 0 var(--color-toggle-light, #9ca3af),
+    16px 0 0 var(--color-toggle-light, #9ca3af),
+    -15px 0 0 var(--color-toggle-light, #9ca3af),
+    12px 12px 0 var(--color-toggle-light, #9ca3af),
+    -11px 12px 0 var(--color-toggle-light, #9ca3af),
+    10px -11px 0 var(--color-toggle-light, #9ca3af),
+    -10px -11px 0 var(--color-toggle-light, #9ca3af);
+  transform: scale(0);
+  transition: all 0.3s ease;
+}
+
+.container_switcher input:checked + div {
+  box-shadow: inset 32px -32px 0 0 #fff;
+  transform: scale(0.5) rotate(0deg);
+  transition:
+    transform 0.3s ease 0.1s,
+    box-shadow 0.2s ease 0s;
+}
+
+.container_switcher input:checked + div::before {
+  background: var(--color-toggle-light, #9ca3af);
+  transition: background 0.3s ease 0.1s;
+}
+
+.container_switcher input:checked + div::after {
+  transform: scale(1.5);
+  transition: transform 0.5s ease 0.15s;
+}

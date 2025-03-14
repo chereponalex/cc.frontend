@@ -1,0 +1,17 @@
+.container_managers {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+}
+
+.card-body-padding {
+  padding: 5px !important;
+}
+
+.card-border {
+  margin-bottom: 0.25rem;
+}
+
+.custom-margin {
+  margin: 0 !important;
+}

@@ -1,0 +1,8 @@
+.input-wrapper {
+  max-width: 750px;
+}
+
+.invalid-input {
+  border-radius: 7px;
+  border: 2px solid #ef4444 !important;
+}

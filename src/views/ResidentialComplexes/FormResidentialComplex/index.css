@@ -1,0 +1,29 @@
+.custom-text-area {
+  border-radius: 7px;
+  outline: none;
+  padding: 8px 12px;
+  background: none;
+  max-width: 750px;
+  /* height: 28px !important; */
+}
+.invalid-text-area {
+  border: 2px solid #ef4444 !important;
+}
+
+.custom-text-area:focus {
+  border: 2px solid #7c3aed;
+}
+
+.dark-mode {
+  border: 1px solid #4b5563;
+}
+
+.light-mode {
+  border: 1px solid #d1d5db;
+}
+
+.upload-input {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}

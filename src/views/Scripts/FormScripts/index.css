@@ -1,0 +1,56 @@
+.ck-powered-by {
+  display: none;
+}
+/* ======= unfocus ====== */
+.dark-mode {
+  .ck.ck-toolbar {
+    background: #1f2937 !important;
+  }
+  .ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
+    border-top: 1px solid #4b5563 !important;
+    border-left: 1px solid #4b5563 !important;
+    border-right: 1px solid #4b5563 !important;
+  }
+  .ck-reset_all :not(.ck-reset_all-excluded *),
+  .ck.ck-reset_all {
+    color: #9da3af !important;
+  }
+  .ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline {
+    background: #1f2937;
+  }
+  /* ======= focus ====== */
+  .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+    border-color: #4b5563 !important;
+  }
+  .ck-focused {
+    border: 1px solid #7c3aed !important;
+  }
+  /* ======= other ======== */
+  .ck-rounded-corners .ck.ck-toolbar,
+  .ck.ck-toolbar.ck-rounded-corners {
+    border-radius: 0 !important;
+  }
+}
+
+.light-mode {
+  .ck.ck-toolbar {
+  }
+  .ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
+  }
+  .ck-reset_all :not(.ck-reset_all-excluded *),
+  .ck.ck-reset_all {
+  }
+  .ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline {
+  }
+  /* ======= focus ====== */
+  .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+  }
+  .ck-focused {
+  }
+  /* ======= other ======== */
+  .ck-rounded-corners .ck.ck-toolbar,
+  .ck.ck-toolbar.ck-rounded-corners {
+  }
+}
+
+/* ===============default styles documentations================ */

@@ -1,0 +1,35 @@
+.select__indicators {
+  position: relative;
+  top: -5px;
+  height: 36px;
+}
+
+.select__control {
+  height: 28px !important;
+  height: auto;
+}
+.css-ltqcad-menu {
+  max-width: 750px;
+  z-index: 11;
+}
+
+.select__value-container {
+  position: relative;
+  top: -5px;
+}
+
+.select__multi-value {
+  /* padding: 1px !important; */
+  margin: 1px !important;
+  font-size: 14px !important;
+  height: 23px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* .select-xxs {
+    height: 50px;
+} */
+/* .select-custom-h {
+    height: 10px;
+} */

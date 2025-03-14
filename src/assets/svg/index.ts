@@ -1,0 +1,10 @@
+export { default as DriversLicenseSvg } from "./DriversLicenseSvg";
+export { default as NationalIdSvg } from "./NationalIdSvg";
+export { default as PassportSvg } from "./PassportSvg";
+export { default as CitySvg } from "./CitySvg";
+export { default as SellSvg } from "./SellSvg";
+export { default as DomainSvg } from "./DomainSvg";
+export { default as OffersSvg } from "./OffersSvg";
+export { default as SettingsSvg } from "./SettingsSvg";
+export { default as SubwaySvg } from "./SubwaySvg";
+export { default as Profile } from "./Profile";
