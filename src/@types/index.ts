@@ -1,6 +1,21 @@
 import { Paginate } from "@/@types/paginate";
 import { UseQueryStateResult } from "@reduxjs/toolkit/dist/query/react/buildHooks";
 
+export interface SelectInfoCountry {
+  label: string;
+  value: string;
+  regions: {
+    label: string;
+    value: string;
+    cities: { label: string; value: string }[];
+  }[];
+}
+
+export interface SelectInfo{
+  label: string;
+  value: string;
+}
+
 export enum StatusTransfer {
   CALL_ONLINE = "Клиент разговаривает",
   CALL_FAILED = "Разговор не состоялся",
@@ -99,7 +114,7 @@ export interface CustomErrorResponse {
 }
 
 export interface Response<T> {
-  data: T;
+  data?: T;
   filters: Filter[];
   paginate: Paginate;
   error: boolean | CustomErrorResponse;

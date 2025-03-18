@@ -1,6 +1,7 @@
 import { OnSortParam } from "@/components/shared";
 import React, {
   ChangeEvent,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -47,6 +48,7 @@ import { RequestFilterType, RtkRequest } from "@/@types/requestRtk";
 import { setFilterPaginate, setFiltersTransfer } from "@/store/slices/entities";
 import dayjs from "dayjs";
 import CreatNewDevelopers from "@/views/Developers/CreatNewDevelopers";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const { TabNav, TabList, TabContent } = Tabs;
 
@@ -141,8 +143,12 @@ function _TablePage<T>(props: TablePageProps<T>) {
   const reportKey = `api.v1.crm.${textConst}.create_report`;
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isOpenDrawer = useAppSelector(
+    (state) => state.actionsState.actions.drawer
+  );
+
   const [selectedRowsData, setSelectedRowsData] = useState<any[]>([]);
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  // const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [currentTab, setCurrentTab] = useState<string>(TypeTab.ACTIVE);
@@ -171,16 +177,24 @@ function _TablePage<T>(props: TablePageProps<T>) {
   });
   const [activeHeight, setActiveHeight] = useState<number | null>(null);
   const direction = useAppSelector((state) => state.theme.direction);
+  const [selectedId, setSelectedId] = useState<any>(null);
+  const [drawerType, setDrawerType] = useState<"card" | "create">("card");
+  const refData = useRef(data?.data);
 
-  const Footer = (
-    <div className="text-right w-full">
-      <Button size="sm" className="mr-2" onClick={() => setIsOpenDrawer(false)}>
-        Cancel
-      </Button>
-      <Button size="sm" variant="solid" onClick={() => setIsOpenDrawer(false)}>
-        Confirm
-      </Button>
-    </div>
+  const handleOpenDrawer = (type: "card" | "create", id?: string) => {
+    setSelectedId(refData.current?.find((el: any) => el.id === id));
+    setDrawerType(type);
+    dispatch(setDrawerState(true));
+  };
+
+  const DrawerContent = useCallback(
+    (props: any) => {
+      const Comp =
+        drawerType === "card" ? childrenDrawer.card : childrenDrawer.create;
+
+      return <Comp {...props} />;
+    },
+    [drawerType]
   );
 
   const formatDate = (date: Date): string => {
@@ -383,7 +397,11 @@ function _TablePage<T>(props: TablePageProps<T>) {
                               size="xs"
                               icon={<HiEye />}
                               onClick={() => {
-                                setIsOpenDrawer(true);
+                                handleOpenDrawer(
+                                  "card",
+                                  (props.row.original as { id: string }).id
+                                );
+                                // setIsOpenDrawer(true);
                                 // navigate(
                                 //   `${(props.row.original as { id: string }).id}`
                                 // );
@@ -392,19 +410,24 @@ function _TablePage<T>(props: TablePageProps<T>) {
                           </Tooltip>
                           {Recovery && currentTab === TypeTab.ACTIVE ? (
                             // permissions[updateKey] && (
-                            <Tooltip title={t(`tooltip.${textConst}.edit`)}>
-                              <Button
-                                shape="circle"
-                                variant="plain"
-                                size="xs"
-                                icon={<HiPencil />}
-                                onClick={() =>
-                                  handleRecovery(
-                                    (props.row.original as { id: string }).id
-                                  )
-                                }
-                              />
-                            </Tooltip>
+                            // <Tooltip title={t(`tooltip.${textConst}.edit`)}>
+                            //   <Button
+                            //     shape="circle"
+                            //     variant="plain"
+                            //     size="xs"
+                            //     icon={<HiPencil />}
+                            //     onClick={() =>
+                            //       handleOpenDrawer(
+                            //         (props.row.original as { id: string }).id,
+                            //         "create"
+                            //       )
+                            //       // handleRecovery(
+                            //       //   (props.row.original as { id: string }).id
+                            //       // )
+                            //     }
+                            //   />
+                            // </Tooltip>
+                            <></>
                           ) : (
                             // )
                             <Tooltip title={t(`tooltip.${textConst}.recovery`)}>
@@ -422,7 +445,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
                             </Tooltip>
                           )}
                           {/* {permissions[createKey] && ( */}
-                          <Tooltip
+                          {/* <Tooltip
                             title={t(
                               `tooltip.${textConst}.duplicateAndCreatElement`
                             )}
@@ -441,7 +464,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
                                 )
                               }
                             />
-                          </Tooltip>
+                          </Tooltip> */}
                           {/* )} */}
                         </>
                       )}
@@ -711,6 +734,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
   useEffect(() => {
     if (data && !hasLoaded)
       setTableFiltersData(data?.filters?.map((el) => ({ ...el, value: "" })));
+    refData.current = data?.data;
   }, [data]);
 
   const handleAnimationComplete = () => {
@@ -1082,7 +1106,8 @@ function _TablePage<T>(props: TablePageProps<T>) {
                       icon={<HiPlus />}
                       onClick={() => {
                         //@ts-ignore
-                        setIsOpenDrawer(true);
+                        handleOpenDrawer("create");
+                        dispatch(setDrawerState(true));
                         // navigate(`${routePrefix[textConst]}/creat-new`);
                       }}
                     >
@@ -1166,15 +1191,23 @@ function _TablePage<T>(props: TablePageProps<T>) {
       )}
 
       <Drawer
-        title={t(`${TableTextConst.DEVELOPERS}Page.buttons.createNew`)}
+        title={
+          drawerType === "card"
+            ? `Информация`
+            : t(`${textConst}Page.buttons.createNew`)
+        }
         isOpen={isOpenDrawer}
         placement={direction === "rtl" ? "left" : "right"}
-        width={575}
-        onClose={() => setIsOpenDrawer(false)}
-        onRequestClose={() => setIsOpenDrawer(false)}
-        footer={Footer}
+        width={textConst === TableTextConst.REALESTATEBUILDING ? 775 : 575}
+        onClose={() => dispatch(setDrawerState(false))}
+        onRequestClose={() => dispatch(setDrawerState(false))}
       >
-        <div>{childrenDrawer}</div>
+        <div>
+          <DrawerContent
+            item={selectedId}
+            onClose={() => dispatch(setDrawerState(false))}
+          />
+        </div>
       </Drawer>
     </div>
   );

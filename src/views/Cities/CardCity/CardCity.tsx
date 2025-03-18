@@ -18,49 +18,45 @@ import CustomerInfoField from "@/components/ui/CustomerInfoField";
 import { City, TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
-const CardCity = () => {
+const CardCity = ({ item }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions,
+    (state) => state.auth.user.role?.permissions
   );
   const updateKey = `api.v1.crm.${TableTextConst.CITY}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.CITY}.delete_soft`;
   const { t } = useTranslation();
-  const { id } = useParams();
   const navigate = useNavigate();
-
+  const dispatch = useAppDispatch();
   const [isEdit, setIsEdit] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const isEditPage = searchParams.get("editPage");
 
-  const { data, isLoading } = useGetCityByIdQuery(id as string);
   const [UpdateData] = useUpdateCityByIdMutation();
   const [SoftDeleteCity] = useSoftDeleteCityByIdMutation();
   const openNotification = (type: ToastType, text: string) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>,
+      </Notification>
     );
   };
-  // console.log(data?.data, 'data')
-  // const formData = useMemo(() => {
-  //   return data ? omit(data.data, ["id", "links"]) : data;
-  // }, [data]);
 
   const handleUpdate = async (form: FormEssence<City>) => {
     try {
-      await UpdateData({ id: id, ...form }).unwrap();
+      await UpdateData({ id: item?.id, ...form }).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.CITY}.update`),
+        t(`toast.message.${TableTextConst.CITY}.update`)
       );
       setIsEdit(false);
+      // dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -70,9 +66,10 @@ const CardCity = () => {
     if (!deletedItem?.data.error) {
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.CITY}.delete`),
+        t(`toast.message.${TableTextConst.CITY}.delete`)
       );
-      navigate(`${routePrefix.city}`);
+      dispatch(setDrawerState(false));
+      // navigate(`${routePrefix.city}`);
     }
   };
 
@@ -83,12 +80,12 @@ const CardCity = () => {
   }, []);
 
   return (
-    <Loading loading={!data && isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
+    <Loading /* loading={!data && isLoading} type="cover" */>
+      {/* {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)} */}
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
-            {t(`${TableTextConst.CITY}Page.card.title`)} {data?.data.name}
+            {t(`${TableTextConst.CITY}Page.card.title`)} {item?.name}
           </h3>
           <div className="mb-1 flex justify-end flex-row">
             {isEdit ? (
@@ -100,32 +97,32 @@ const CardCity = () => {
                 onClick={() => setIsEdit((prev) => !prev)}
               />
             ) : (
-              permissions[updateKey] && (
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="md"
-                  icon={<HiPencil size={15} />}
-                  onClick={() => setIsEdit((prev) => !prev)}
-                />
-              )
-            )}
-            {permissions[deleteSoftKey] && (
+              // permissions[updateKey] && (
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
-                icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(id as string)}
+                icon={<HiPencil size={15} />}
+                onClick={() => setIsEdit((prev) => !prev)}
               />
+              // )
             )}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Button
+              shape="circle"
+              variant="plain"
+              size="md"
+              icon={<HiTrash size={15} />}
+              onClick={() => handleDelete(item?.id as string)}
+            />
+            {/* )} */}
           </div>
         </div>
         {isEdit ? (
           <FormCity
-            data={data?.data}
+            data={item}
             onNextChange={handleUpdate}
-            isLoadingEndpoint={isLoading}
+            // isLoadingEndpoint={isLoading}
             isEdit
           />
         ) : (
@@ -134,25 +131,23 @@ const CardCity = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                 <CustomerInfoField
                   title={t("formInput.cities.name")}
-                  value={data?.data.name || t("global.noDataAvailable")}
+                  value={item?.name || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.cities.latitude")}
-                  value={data?.data.latitude || t("global.noDataAvailable")}
+                  value={item?.latitude || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.cities.longitude")}
-                  value={data?.data.longitude || t("global.noDataAvailable")}
+                  value={item?.longitude || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.cities.location")}
-                  value={data?.data.region?.name || t("global.noDataAvailable")}
+                  value={item?.region?.name || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.cities.country")}
-                  value={
-                    data?.data?.country?.name || t("global.noDataAvailable")
-                  }
+                  value={item?.country?.name || t("global.noDataAvailable")}
                 />
               </div>
             </div>

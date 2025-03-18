@@ -9,6 +9,8 @@ import { CreatNewFormProps } from "@/@types/props";
 import { validationSchemaDeveloper } from "@/utils/validationForm";
 import { Developer, TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
+import { setDrawerState } from "@/store/slices/actionState";
+import { useAppDispatch } from "@/store";
 
 const FormDevelopers = ({
   data,
@@ -19,6 +21,7 @@ const FormDevelopers = ({
 }: CreatNewFormProps<FormEssence<Developer>>) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
 
   const onNext = (values: FormEssenceDeveloper, duplicate: any) => {
     const onlyChangeFields = {} as any;
@@ -32,6 +35,7 @@ const FormDevelopers = ({
       });
     }
     onNextChange?.(duplicate === null ? onlyChangeFields : values);
+    dispatch(setDrawerState(false))
   };
 
   const initialValues = {
@@ -71,7 +75,7 @@ const FormDevelopers = ({
               <div className="flex justify-end mt-4 gap-2">
                 <Button
                   type="button"
-                  onClick={() => navigate(`${routePrefix.developer}`)}
+                  onClick={() => dispatch(setDrawerState(false))}
                 >
                   {t("global.close")}
                 </Button>

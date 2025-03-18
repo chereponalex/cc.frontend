@@ -5,7 +5,10 @@ import type { ComponentType } from "react";
 import Input from "@/components/ui/Input";
 import { Button, Select, Checkbox, Card } from "@/components/ui";
 import { FormEssence } from "@/@types/form";
-import { useGetRealEstateBuildingsActionInfoQuery } from "@/services/RtkQueryService";
+import {
+  useSelectInfoDevelopersQuery,
+  useSelectInfoCitiesQuery,
+} from "@/services/RtkQueryService";
 import { Loading } from "@/components/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,14 +16,15 @@ import NumericFormatInput from "@/components/ui/NumericFormatInput/NumericFormat
 import NumberInput from "@/components/ui/NumberInput/NumberInput";
 import { CreatNewFormProps } from "@/@types/props";
 import { validationSchemaResidentialComplex } from "@/utils/validationForm";
-import { RealEstateBuilding, TableTextConst } from "@/@types";
+import { RealEstateBuilding, SelectInfo, TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import "./index.css";
 import useDarkMode from "@/utils/hooks/useDarkmode";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import cs from "classnames";
 import TextareaAutosize from "react-textarea-autosize";
 import AddPictureComponent from "@/components/shared/AddPictureComponent";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const CustomTextArea = ({ form, field, value }: any) => {
   const [isDark] = useDarkMode();
@@ -70,37 +74,24 @@ const FormResidentialComplex = ({
   const { mode } = useAppSelector((state) => state.theme);
   const [isDark] = useDarkMode();
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  // console.log(data, "data")
+  const dispatch = useAppDispatch();
 
-  const { data: selectInfo, isLoading: isLoadingSelectInfo } =
+  const {
+    data: selectInfoDevelopers,
+    isLoading: isLoadingSelectInfoDevelopers,
+  } =
     //@ts-ignore
-    useGetRealEstateBuildingsActionInfoQuery();
-  const developers = selectInfo?.data.developers || {};
-  const cities = selectInfo?.data.cities || {};
+    useSelectInfoDevelopersQuery();
+  const { data: selectInfoCities, isLoading: isLoadingSelectInfoCities } =
+    //@ts-ignore
+    useSelectInfoCitiesQuery();
+  const developers = (selectInfoDevelopers?.data || []) as SelectInfo[];
+  const cities = (selectInfoCities?.data || []) as SelectInfo[];
 
   const onNext = (values: FormEssence<RealEstateBuilding>, duplicate: any) => {
     onNextChange?.(values);
+    dispatch(setDrawerState(false));
   };
-
-  const optionsDevelopers = useMemo(() => {
-    const data = Object.entries(developers);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [developers]);
-
-  const optionsCities = useMemo(() => {
-    const result = [];
-
-    for (const key1 in cities) {
-      for (const key2 in cities[key1]) {
-        result.push({ value: key2, label: cities[key1][key2] });
-      }
-    }
-    return result;
-  }, [cities]);
 
   const initialValues: any = useMemo(() => {
     return {
@@ -118,7 +109,14 @@ const FormResidentialComplex = ({
   }, [data]);
 
   return (
-    <Loading loading={isLoadingEndpoint && isLoadingSelectInfo} type="cover">
+    <Loading
+      loading={
+        isLoadingEndpoint &&
+        isLoadingSelectInfoDevelopers &&
+        isLoadingSelectInfoCities
+      }
+      type="cover"
+    >
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
@@ -176,10 +174,10 @@ const FormResidentialComplex = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsDevelopers}
-                          value={optionsDevelopers.filter(
+                          options={developers}
+                          value={developers.filter(
                             (developer) =>
-                              developer.value === values.developer_id,
+                              developer.value === values.developer_id
                           )}
                           onChange={(developer) => {
                             if (developer) {
@@ -205,9 +203,9 @@ const FormResidentialComplex = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsCities}
-                          value={optionsCities.filter(
-                            (city) => city.value === values.city_id,
+                          options={cities}
+                          value={cities.filter(
+                            (city) => city.value === values.city_id
                           )}
                           onChange={(city) => {
                             if (city) {
@@ -372,9 +370,7 @@ const FormResidentialComplex = ({
                 >
                   <Button
                     type="button"
-                    onClick={() =>
-                      navigate(`${routePrefix.real_estate_building}`)
-                    }
+                    onClick={() => dispatch(setDrawerState(false))}
                   >
                     {t("global.close")}
                   </Button>
@@ -386,7 +382,7 @@ const FormResidentialComplex = ({
                     {isEdit
                       ? t("global.save")
                       : t(
-                          `${TableTextConst.REALESTATEBUILDING}Page.buttons.createNew`,
+                          `${TableTextConst.REALESTATEBUILDING}Page.buttons.createNew`
                         )}
                   </Button>
                 </div>

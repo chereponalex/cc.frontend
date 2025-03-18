@@ -4,16 +4,16 @@ import { FormContainer, FormItem } from "@/components/ui/Form";
 import { useMemo, type ComponentType } from "react";
 import Input from "@/components/ui/Input";
 import { Button, Card, Select } from "@/components/ui";
-import { useNavigate } from "react-router-dom";
 import { CreatNewFormProps } from "@/@types/props";
 import NumericFormatInput from "@/components/ui/NumericFormatInput/NumericFormatInput";
 import NumberInput from "@/components/ui/NumberInput/NumberInput";
 import { validationSchemaCity } from "@/utils/validationForm";
 import { FormEssence } from "@/@types/form";
-import { City, TableTextConst } from "@/@types";
-import routePrefix from "@/configs/routes.config/routePrefix";
-import { useGetCityActionInfoQuery } from "@/services/RtkQueryService";
+import { City, SelectInfoCountry, TableTextConst } from "@/@types";
+import { useSelectInfoCountriesQuery } from "@/services/RtkQueryService";
 import { Loading } from "@/components/shared";
+import { setDrawerState } from "@/store/slices/actionState";
+import { useAppDispatch } from "@/store";
 
 const FormCity = ({
   data,
@@ -22,17 +22,16 @@ const FormCity = ({
   isLoadingEndpoint,
 }: CreatNewFormProps<FormEssence<City>>) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const { data: selectInfo, isLoading: isLoadingSelectInfo } =
     //@ts-ignore
-    useGetCityActionInfoQuery();
-
-  const countries = selectInfo?.data?.countries || {};
-  const regions = selectInfo?.data?.regions || {};
+    useSelectInfoCountriesQuery();
+  const countries = (selectInfo?.data || []) as SelectInfoCountry[];
 
   const onNext = (values: FormEssence<City>) => {
     onNextChange?.(values);
+    dispatch(setDrawerState(false));
   };
 
   const initialValues: any = useMemo(() => {
@@ -44,34 +43,6 @@ const FormCity = ({
       country_id: data?.country?.id || "",
     };
   }, [data]);
-
-  const optionsCountries = useMemo(() => {
-    const data = Object.entries(countries);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [countries]);
-
-  const optionsRegions = useMemo(() => {
-    const result = [];
-
-    for (const key1 in regions) {
-      for (const key2 in regions[key1]) {
-        result.push({ value: key2, label: regions[key1][key2] });
-      }
-    }
-    return result;
-  }, [regions]);
-
-  const actualOptions = (dataObj: any) => {
-    if (dataObj) {
-      return Object.entries(dataObj)?.map(([value, label]) => ({
-        label,
-        value,
-      }));
-    }
-  };
 
   return (
     <Formik
@@ -169,8 +140,8 @@ const FormCity = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsCountries}
-                          value={optionsCountries.filter((country: any) => {
+                          options={countries}
+                          value={countries.filter((country: any) => {
                             return country.value === values.country_id;
                           })}
                           onChange={(country) => {
@@ -191,29 +162,33 @@ const FormCity = ({
                     asterisk
                   >
                     <Field name="region_id">
-                      {({ field, form }: FieldProps) => (
-                        <Select
-                          noOptionsMessage={() => t(`select.noOptions`)}
-                          size="xs"
-                          placeholder=""
-                          field={field}
-                          form={form}
-                          isDisabled={!values.country_id}
-                          options={actualOptions(regions[values.country_id])}
-                          value={
-                            regions[values.country_id]
-                              ? optionsRegions.filter((region: any) => {
-                                  return region.value === values.region_id;
-                                })
-                              : null
-                          }
-                          onChange={(region) => {
-                            if (region) {
-                              form.setFieldValue(field.name, region.value);
-                            }
-                          }}
-                        />
-                      )}
+                      {({ field, form }: FieldProps) => {
+                        const filteredRegions = values.country_id
+                          ? countries.find(
+                              (country: any) =>
+                                country.value === values.country_id
+                            )?.regions || []
+                          : [];
+                        return (
+                          <Select
+                            noOptionsMessage={() => t(`select.noOptions`)}
+                            size="xs"
+                            placeholder=""
+                            field={field}
+                            form={form}
+                            isDisabled={!values.country_id}
+                            options={filteredRegions}
+                            value={filteredRegions.filter((region: any) => {
+                              return region.value === values.region_id;
+                            })}
+                            onChange={(region) => {
+                              if (region) {
+                                form.setFieldValue(field.name, region.value);
+                              }
+                            }}
+                          />
+                        );
+                      }}
                     </Field>
                   </FormItem>
                 </Card>
@@ -221,7 +196,7 @@ const FormCity = ({
                 <div className="flex justify-end mt-4 gap-2">
                   <Button
                     type="button"
-                    onClick={() => navigate(`${routePrefix.city}`)}
+                    onClick={() => dispatch(setDrawerState(false))}
                   >
                     {t("global.close")}
                   </Button>

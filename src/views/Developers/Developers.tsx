@@ -47,7 +47,10 @@ const Developers = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<Developer>
-        childrenDrawer={<CardDeveloper/>}
+        childrenDrawer={{
+          card: CardDeveloper,
+          create: CreatNewDevelopers,
+        }}
         columns={columns}
         textConst={TableTextConst.DEVELOPERS}
         data={developers}

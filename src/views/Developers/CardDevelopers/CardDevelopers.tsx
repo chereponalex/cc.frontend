@@ -21,14 +21,14 @@ import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
 import { useAppSelector } from "@/store";
 
-const CardDeveloper = () => {
+const CardDeveloper = ({ item }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions,
+    (state) => state.auth.user.role?.permissions
   );
   const updateKey = `api.v1.crm.${TableTextConst.DEVELOPERS}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.DEVELOPERS}.delete_soft`;
   const { t } = useTranslation();
-  const { id } = useParams();
+  // const { id } = useParams();
   const navigate = useNavigate();
 
   const [isEdit, setIsEdit] = useState(false);
@@ -36,7 +36,7 @@ const CardDeveloper = () => {
   const isEditPage = searchParams.get("editPage");
   const isDuplicatePage = searchParams.get("duplicate");
 
-  const { data, isLoading } = useGetDeveloperByIdQuery(id as string);
+  // const { data, isLoading } = useGetDeveloperByIdQuery(id as string);
   const [UpdateData] = useUpdateDeveloperByIdMutation();
   const [SoftDeleteDeveloper] = useSoftDeleteDeveloperByIdMutation();
 
@@ -44,26 +44,26 @@ const CardDeveloper = () => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>,
+      </Notification>
     );
   };
 
-  const formData = useMemo(() => {
-    return data ? omit(data.data, ["id", "links"]) : data;
-  }, [data]);
+  // const formData = useMemo(() => {
+  //   return data ? omit(data.data, ["id", "links"]) : data;
+  // }, [data]);
 
   const handleUpdate = async (form: FormEssence<Developer>) => {
     try {
-      await UpdateData({ id: id, ...form }).unwrap();
+      await UpdateData({ id: item.id, ...form }).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.DEVELOPERS}.update`),
+        t(`toast.message.${TableTextConst.DEVELOPERS}.update`)
       );
       setIsEdit(false);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -73,7 +73,7 @@ const CardDeveloper = () => {
     if (!deletedItem?.data.error) {
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.DEVELOPERS}.delete`),
+        t(`toast.message.${TableTextConst.DEVELOPERS}.delete`)
       );
       navigate(`${routePrefix.developer}`);
     }
@@ -86,12 +86,12 @@ const CardDeveloper = () => {
   }, []);
 
   return (
-    <Loading loading={!data && isLoading} type="cover">
+    <Loading /* loading={!data && isLoading} type="cover" */>
       {/* {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)} */}
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
-            {t(`${TableTextConst.DEVELOPERS}Page.card.title`)} {data?.data.name}
+            {t(`${TableTextConst.DEVELOPERS}Page.card.title`)} {/* {data?.data.name} */}{item?.name}
           </h3>
           <div className="mb-1 flex justify-end flex-row">
             {isEdit ? (
@@ -104,23 +104,23 @@ const CardDeveloper = () => {
               />
             ) : (
               // permissions[updateKey] && (
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="md"
-                  icon={<HiPencil size={15} />}
-                  onClick={() => setIsEdit((prev) => !prev)}
-                />
-              // )
-            )}
-            {/* {permissions[deleteSoftKey] && ( */}
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
-                icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(id as string)}
+                icon={<HiPencil size={15} />}
+                onClick={() => setIsEdit((prev) => !prev)}
               />
+              // )
+            )}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Button
+              shape="circle"
+              variant="plain"
+              size="md"
+              icon={<HiTrash size={15} />}
+              onClick={() => handleDelete(item.id as string)}
+            />
             {/* )} */}
           </div>
         </div>
@@ -128,9 +128,9 @@ const CardDeveloper = () => {
         {isEdit ? (
           <FormDevelopers
             duplicate={isDuplicatePage}
-            data={formData}
+            data={item}
             onNextChange={handleUpdate}
-            isLoadingEndpoint={isLoading}
+            // isLoadingEndpoint={isLoading}
             isEdit
           />
         ) : (
@@ -139,11 +139,11 @@ const CardDeveloper = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                 <CustomerInfoField
                   title={t("formInput.residentialComplexes.id")}
-                  value={data?.data.int_id || t("global.noDataAvailable")}
+                  value={item?.int_id || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.residentialComplexes.name")}
-                  value={data?.data.name || t("global.noDataAvailable")}
+                  value={item?.name || t("global.noDataAvailable")}
                 />
               </div>
             </div>

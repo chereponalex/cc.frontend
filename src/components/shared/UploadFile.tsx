@@ -24,7 +24,7 @@ export const UploadFile = ({
     <div>
       {imagesUrl?.length > 0 && (
         <div style={{ flexWrap: "wrap", maxWidth: "750px" }}>
-          {imagesUrl.map((photo: string, i: number) => {
+          {/* {imagesUrl.map((photo: string, i: number) => {
             return (
               <div
                 key={i}
@@ -55,7 +55,7 @@ export const UploadFile = ({
                 />
               </div>
             );
-          })}
+          })} */}
         </div>
       )}
       <div>

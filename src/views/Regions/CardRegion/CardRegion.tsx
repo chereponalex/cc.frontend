@@ -19,22 +19,23 @@ import { ToastType } from "@/@types/toast";
 import { Region, TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
-const CardRegion = () => {
+const CardRegion = ({item}: any) => {
   const permissions: any = useAppSelector(
     (state) => state.auth.user.role?.permissions,
   );
   const updateKey = `api.v1.crm.${TableTextConst.REGION}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.REGION}.delete_soft`;
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const [isEdit, setIsEdit] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const isEditPage = searchParams.get("editPage");
 
-  const { data, isLoading } = useGetRegionByIdQuery(id as string);
+  // const { data, isLoading } = useGetRegionByIdQuery(id as string);
   const [UpdateData] = useUpdateRegionByIdMutation();
   const [SoftDeleteRegion] = useSoftDeleteRegionByIdMutation();
 
@@ -49,7 +50,7 @@ const CardRegion = () => {
   const handleUpdate = async (form: Partial<Region>) => {
     try {
       await UpdateData({
-        id: id,
+        id: item?.id,
         ...form,
       }).unwrap();
       openNotification(
@@ -72,7 +73,8 @@ const CardRegion = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.REGION}.delete`),
       );
-      navigate(`${routePrefix.region}`);
+      dispatch(setDrawerState(false))
+      // navigate(`${routePrefix.region}`);
     }
   };
 
@@ -83,12 +85,12 @@ const CardRegion = () => {
   }, []);
 
   return (
-    <Loading loading={!data && isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
+    <Loading /* loading={!data && isLoading} type="cover" */>
+      {/* {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)} */}
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
-            {t(`${TableTextConst.REGION}Page.card.title`)} {data?.data.name}
+            {t(`${TableTextConst.REGION}Page.card.title`)} {item?.name}
           </h3>
           <div className="mb-1 flex justify-end flex-row">
             {isEdit ? (
@@ -100,7 +102,7 @@ const CardRegion = () => {
                 onClick={() => setIsEdit((prev) => !prev)}
               />
             ) : (
-              permissions[updateKey] && (
+              // permissions[updateKey] && (
                 <Button
                   shape="circle"
                   variant="plain"
@@ -108,24 +110,24 @@ const CardRegion = () => {
                   icon={<HiPencil size={15} />}
                   onClick={() => setIsEdit((prev) => !prev)}
                 />
-              )
+              // )
             )}
-            {permissions[deleteSoftKey] && (
+            {/* {permissions[deleteSoftKey] && ( */}
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
                 icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(id as string)}
+                onClick={() => handleDelete(item?.id as string)}
               />
-            )}
+            {/* )} */}
           </div>
         </div>
         {isEdit ? (
           <FormRegion
-            data={data?.data}
+            data={item}
             onNextChange={handleUpdate}
-            isLoadingEndpoint={isLoading}
+            // isLoadingEndpoint={isLoading}
             isEdit
           />
         ) : (
@@ -134,11 +136,11 @@ const CardRegion = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                 <CustomerInfoField
                   title={t("formInput.regions.id")}
-                  value={data?.data.int_id || t("global.noDataAvailable")}
+                  value={item?.int_id || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.regions.region")}
-                  value={data?.data.name || t("global.noDataAvailable")}
+                  value={item?.name || t("global.noDataAvailable")}
                 />
               </div>
             </div>

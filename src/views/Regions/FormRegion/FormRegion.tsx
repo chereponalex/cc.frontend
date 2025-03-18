@@ -11,9 +11,14 @@ import { FormItem, FormContainer } from "@/components/ui/Form";
 import Input from "@/components/ui/Input";
 import { useMemo } from "react";
 import { validationSchemaRegion } from "@/utils/validationForm";
-import { useGetCountriesQuery } from "@/services/RtkQueryService";
-import { TableTextConst } from "@/@types";
+import {
+  useGetCountriesQuery,
+  useSelectInfoCountriesQuery,
+} from "@/services/RtkQueryService";
+import { SelectInfoCountry, TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
+import { useAppDispatch } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const FormRegion = ({
   data,
@@ -22,14 +27,14 @@ const FormRegion = ({
   isLoadingEndpoint,
 }: any) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { data: countries = null, isLoading: isLoadingCountries } =
-    useGetCountriesQuery({
-      per_page: "all",
-    });
-  console.log(countries, "countries");
+  const dispatch = useAppDispatch();
+  const { data: selectInfo = null, isLoading: isLoadingCountries } =
+    //@ts-ignore
+    useSelectInfoCountriesQuery();
+    const countries = (selectInfo?.data || []) as SelectInfoCountry[];
   const onNext = (values: FormEssenceRegion) => {
     onNextChange?.(values);
+    dispatch(setDrawerState(false))
   };
 
   const initialValues: FormEssenceRegion = useMemo(() => {
@@ -39,14 +44,8 @@ const FormRegion = ({
     };
   }, [data]);
 
-  const optionsCountries = useMemo(() => {
-    return countries
-      ? countries.data.map((el) => ({ label: el.name, value: el.id }))
-      : [];
-  }, [countries]);
-
   return (
-    <Loading type="cover" loading={!countries && isLoadingCountries}>
+    <Loading type="cover" loading={!selectInfo && isLoadingCountries}>
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
@@ -92,10 +91,10 @@ const FormRegion = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsCountries}
-                          value={optionsCountries.filter(
+                          options={countries}
+                          value={countries?.filter(
                             (country: any) =>
-                              country.value === values.country_id,
+                              country.value === values.country_id
                           )}
                           onChange={(country) => {
                             if (country) {
@@ -110,7 +109,7 @@ const FormRegion = ({
                 <div className="flex justify-end mt-4 gap-2">
                   <Button
                     type="button"
-                    onClick={() => navigate(`${routePrefix.region}`)}
+                    onClick={() => dispatch(setDrawerState(false))}
                   >
                     {t("global.close")}
                   </Button>

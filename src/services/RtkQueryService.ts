@@ -27,6 +27,8 @@ import {
   Region,
   BlackList,
   Report,
+  SelectInfoCountry,
+  SelectInfo,
 } from "@/@types";
 import {
   FormEssence,
@@ -196,7 +198,7 @@ const RtkQueryService = createApi({
     // Cities
     getCities: build.query<Response<City[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/city",
+        url: "/api/city",
         method: params.method,
         params: params.method == "GET" ? params.body : undefined,
         data: params.method == "PUT" ? params.body : undefined,
@@ -204,9 +206,9 @@ const RtkQueryService = createApi({
       providesTags: ["Cities"],
       keepUnusedDataFor: 0,
     }),
-    getCityActionInfo: build.query<Response<any>, Request>({
+    selectInfoCities: build.query<Response<any>, Request>({
       query: () => ({
-        url: "/crm/city/get/action-info",
+        url: "/api/select-info/cities",
         method: "GET",
       }),
       providesTags: ["Cities"],
@@ -223,7 +225,7 @@ const RtkQueryService = createApi({
     }),
     creatNewCity: build.mutation<string, FormEssence<City>>({
       query: (body) => ({
-        url: `/crm/city`,
+        url: `/api/city/create`,
         method: "POST",
         data: body,
       }),
@@ -231,7 +233,7 @@ const RtkQueryService = createApi({
     }),
     updateCityById: build.mutation<string, Partial<City>>({
       query: ({ id, ...body }) => ({
-        url: `/crm/city/${id}`,
+        url: `/api/city/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -240,7 +242,7 @@ const RtkQueryService = createApi({
 
     recoveryCityById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/city/${id}`,
+        url: `/api/city/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["Cities"],
@@ -265,7 +267,7 @@ const RtkQueryService = createApi({
     }),
     softDeleteCityById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/city/soft/${id}`,
+        url: `/api/city/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Cities"],
@@ -281,7 +283,7 @@ const RtkQueryService = createApi({
     // Countries
     getCountries: build.query<Response<Country[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/country",
+        url: "/api/country",
         method: params.method,
         params: params.method == "GET" ? params.body : undefined,
         data: params.method == "PUT" ? params.body : undefined,
@@ -299,7 +301,7 @@ const RtkQueryService = createApi({
     }),
     creatNewCountry: build.mutation<string, FormEssence<Country>>({
       query: (body) => ({
-        url: `/crm/country`,
+        url: `/api/country/create`,
         method: "POST",
         data: body,
       }),
@@ -307,7 +309,7 @@ const RtkQueryService = createApi({
     }),
     updateCountryById: build.mutation<string, Partial<Country>>({
       query: ({ id, ...body }) => ({
-        url: `/crm/country/${id}`,
+        url: `/api/country/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -315,7 +317,7 @@ const RtkQueryService = createApi({
     }),
     recoveryCountryById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/country/${id}`,
+        url: `/api/country/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["Countries"],
@@ -340,7 +342,7 @@ const RtkQueryService = createApi({
     }),
     softDeleteCountryById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/country/soft/${id}`,
+        url: `/api/country/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Countries"],
@@ -353,10 +355,19 @@ const RtkQueryService = createApi({
       invalidatesTags: ["Countries"],
     }),
 
+    selectInfoCountries: build.query<Response<SelectInfoCountry>, Request>({
+      query: () => ({
+        url: "/api/select-info/country-region-city",
+        method: "GET",
+      }),
+      providesTags: ["Countries"],
+      keepUnusedDataFor: 0,
+    }),
+
     // Regions
     getRegions: build.query<Response<Region[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/region",
+        url: "/api/region",
         method: params.method,
         params: params.method == "GET" ? params.body : undefined,
         data: params.method == "PUT" ? params.body : undefined,
@@ -374,7 +385,7 @@ const RtkQueryService = createApi({
     }),
     creatNewRegion: build.mutation<string, FormEssence<Region>>({
       query: (body) => ({
-        url: `/crm/region`,
+        url: `/api/region/create`,
         method: "POST",
         data: body,
       }),
@@ -382,7 +393,7 @@ const RtkQueryService = createApi({
     }),
     updateRegionById: build.mutation<string, Partial<Region>>({
       query: ({ id, ...body }) => ({
-        url: `/crm/region/${id}`,
+        url: `/api/region/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -390,14 +401,14 @@ const RtkQueryService = createApi({
     }),
     recoveryRegionById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/region/${id}`,
+        url: `/api/region/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["Regions"],
     }),
     softDeleteRegionById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/region/soft/${id}`,
+        url: `/api/region/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Regions"],
@@ -1529,7 +1540,7 @@ const RtkQueryService = createApi({
     >({
       query: (params) => {
         return {
-          url: "/crm/real_estate_building",
+          url: "/api/real_estate_building",
           method: params.method,
           params: params.method == "GET" ? params.body : undefined,
           data: params.method == "PUT" ? params.body : undefined,
@@ -1567,15 +1578,10 @@ const RtkQueryService = createApi({
       string,
       FormEssence<RealEstateBuilding>
     >({
-      query: (/* { images, otherData } */ body) => ({
-        url: `/crm/real_estate_building`,
+      query: (body) => ({
+        url: `/api/real_estate_building/create`,
         method: "POST",
-        // data: body,
         data: body,
-        // params: otherData,
-        // headers: {
-        //   "Content-Type": "multipart/form-data",
-        // },
       }),
       invalidatesTags: ["RealEstateBuildings"],
     }),
@@ -1584,7 +1590,7 @@ const RtkQueryService = createApi({
       Partial<RealEstateBuilding>
     >({
       query: ({ id, ...body }) => ({
-        url: `/crm/real_estate_building/${id}`,
+        url: `/api/real_estate_building/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -1660,18 +1666,18 @@ const RtkQueryService = createApi({
           method: "DELETE",
         }),
         invalidatesTags: ["RealEstateBuildings"],
-      },
+      }
     ),
     recoveryRealEstateBuildingById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/real_estate_building/${id}`,
+        url: `/api/real_estate_building/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["RealEstateBuildings"],
     }),
     softDeleteRealEstateBuildingById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/real_estate_building/soft/${id}`,
+        url: `/api/real_estate_building/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["RealEstateBuildings"],
@@ -1729,7 +1735,7 @@ const RtkQueryService = createApi({
     }),
     updateDeveloperById: build.mutation<string, Partial<Developer>>({
       query: ({ id, ...body }) => ({
-        url: `/crm/developer/${id}`,
+        url: `/api/developer/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -1771,6 +1777,15 @@ const RtkQueryService = createApi({
         method: "DELETE",
       }),
       invalidatesTags: ["Developers"],
+    }),
+
+    selectInfoDevelopers: build.query<Response<SelectInfo[]>, Request>({
+      query: () => ({
+        url: "/api/select-info/developers",
+        method: "GET",
+      }),
+      providesTags: ["Countries"],
+      keepUnusedDataFor: 0,
     }),
 
     // Sale
@@ -2111,7 +2126,7 @@ export const {
   // Cities
   useLazyGetCitiesQuery,
   useGetCitiesQuery,
-  useGetCityActionInfoQuery,
+  useSelectInfoCitiesQuery,
   useGetCityByIdQuery,
   useCreatNewCityMutation,
   useUpdateCityByIdMutation,
@@ -2124,6 +2139,7 @@ export const {
   // Countries
   useLazyGetCountriesQuery,
   useGetCountriesQuery,
+  useSelectInfoCountriesQuery,
   useCreatNewCountryMutation,
   useGetCountryByIdQuery,
   useUpdateCountryByIdMutation,
@@ -2233,6 +2249,7 @@ export const {
   useGetDevelopersQuery,
   useLazyGetDevelopersQuery,
   useGetDeveloperByIdQuery,
+  useSelectInfoDevelopersQuery,
   useCreatNewDeveloperMutation,
   useUpdateDeveloperByIdMutation,
   useSoftDeleteDeveloperByIdMutation,

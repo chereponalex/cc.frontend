@@ -16,14 +16,10 @@ import { Region, TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
 
-const CreatNewRegion = () => {
+const CreatNewRegion = ({ item }: any) => {
   const { t } = useTranslation();
-  const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetRegionByIdQuery(id as string, {
-    skip: !id,
-  });
   const [creatNew, { isLoading: isLoadingCreate }] =
     useCreatNewRegionMutation();
 
@@ -31,7 +27,7 @@ const CreatNewRegion = () => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>,
+      </Notification>
     );
   };
 
@@ -40,26 +36,23 @@ const CreatNewRegion = () => {
       await creatNew(form).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.REGION}.create`),
+        t(`toast.message.${TableTextConst.REGION}.create`)
       );
       navigate(`${routePrefix.region}`);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
 
   return (
-    <Loading loading={isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
-      <FormRegion
-        data={data?.data}
-        onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoadingCreate}
-      />
-    </Loading>
+    <FormRegion
+      data={item}
+      onNextChange={handleCreatNew}
+      isLoadingEndpoint={isLoadingCreate}
+    />
   );
 };
 

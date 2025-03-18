@@ -16,6 +16,8 @@ import usePermissionLink from "@/utils/hooks/usePermissionLink";
 import useCustomLink from "@/utils/hooks/useCustomLink";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
+import CardRegion from "./CardRegion";
+import CreatNewRegion from "./CreatNewRegion";
 
 const Regions = () => {
   const { t } = useTranslation();
@@ -56,6 +58,10 @@ const Regions = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<Region>
+        childrenDrawer={{
+          card: CardRegion,
+          create: CreatNewRegion,
+        }}
         columns={columns}
         textConst={TableTextConst.REGION}
         data={regions}

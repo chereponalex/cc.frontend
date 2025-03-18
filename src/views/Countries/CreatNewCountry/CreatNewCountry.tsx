@@ -13,14 +13,10 @@ import { TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
 
-const CreatNewCountry = () => {
+const CreatNewCountry = ({ item }: any) => {
   const { t } = useTranslation();
-  const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetCountryByIdQuery(id as string, {
-    skip: !id,
-  });
   const [creatNew, { isLoading: isLoadingCreate }] =
     useCreatNewCountryMutation();
 
@@ -28,7 +24,7 @@ const CreatNewCountry = () => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>,
+      </Notification>
     );
   };
 
@@ -37,26 +33,23 @@ const CreatNewCountry = () => {
       await creatNew(form).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.COUNTRY}.create`),
+        t(`toast.message.${TableTextConst.COUNTRY}.create`)
       );
       navigate(`${routePrefix.country}`);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
 
   return (
-    <Loading loading={isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
-      <FormCountry
-        data={data?.data}
-        onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoadingCreate}
-      />
-    </Loading>
+    <FormCountry
+      data={item}
+      onNextChange={handleCreatNew}
+      isLoadingEndpoint={isLoadingCreate}
+    />
   );
 };
 

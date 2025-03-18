@@ -9,6 +9,7 @@ import uis, { UisState } from "./slices/uis/uisSlice";
 import report, { ReportState } from "./slices/report/reportSlice";
 import ws, { WSState } from "./slices/ws/wsSlice";
 import entities from "./slices/entities";
+import actionsState from "./slices/actionState";
 
 export type RootState = CombinedState<{
   auth: CombinedState<AuthState>;
@@ -21,6 +22,7 @@ export type RootState = CombinedState<{
   ws: WSState;
   //TODO дописать типы для всех entities
   entities: any;
+  actionsState: any;
   /* eslint-disable @typescript-eslint/no-explicit-any */
   [RtkQueryService.reducerPath]: any;
 }>;
@@ -39,6 +41,7 @@ const staticReducers = {
   report,
   ws,
   entities,
+  actionsState,
   [RtkQueryService.reducerPath]: RtkQueryService.reducer,
 };
 

@@ -15,6 +15,8 @@ import usePermissionLink from "@/utils/hooks/usePermissionLink";
 import useCustomLink from "@/utils/hooks/useCustomLink";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
+import CardCity from "./CardCity";
+import CreatNewCity from "./CreatNewCity";
 
 const Cities = () => {
   const { t } = useTranslation();
@@ -38,7 +40,7 @@ const Cities = () => {
       },
       {
         header: t("table.columnsHeader.country"),
-        accessorKey: "region.country",
+        accessorKey: "country",
         cell: function (props) {
           return useCustomLink(routePrefix.country, props.row.original.country);
         },
@@ -84,6 +86,10 @@ const Cities = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<City>
+        childrenDrawer={{
+          card: CardCity,
+          create: CreatNewCity,
+        }}
         columns={columns}
         textConst={TableTextConst.CITY}
         data={cities}

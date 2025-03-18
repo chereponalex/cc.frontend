@@ -58,9 +58,10 @@ import TableWorkHoursBindOffer from "@/components/shared/TableWorkHoursBindOffer
 import methodInsert from "@/utils/methodInsertBread";
 import { IoArrowUndo } from "react-icons/io5";
 import { UpdateMetroStationResponse } from "@/@types/requestRtk";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import thousandSeparatorValue from "@/utils/thousandSeparator";
 import { FaCheck } from "react-icons/fa";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const { TabNav, TabList, TabContent } = Tabs;
 
@@ -71,7 +72,7 @@ const { METRO_STATIONS, PAYMENT_METHODS, TAGS, OBJECTS, OFFERS } =
 
 const SwitcherComponent = ({ value, onClick }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions,
+    (state) => state.auth.user.role?.permissions
   );
   const updateKeyOffer = `api.v1.crm.${TableTextConst.OFFER}.update`;
 
@@ -91,26 +92,25 @@ const SwitcherComponent = ({ value, onClick }: any) => {
   );
 };
 
-const CardResidentialComplex = () => {
+const CardResidentialComplex = ({ item }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions,
+    (state) => state.auth.user.role?.permissions
   );
 
-  const updateKey = `api.v1.crm.${TableTextConst.REALESTATEBUILDING}.update`;
-  const deleteSoftKey = `api.v1.crm.${TableTextConst.REALESTATEBUILDING}.delete_soft`;
+  // const updateKey = `api.v1.crm.${TableTextConst.REALESTATEBUILDING}.update`;
+  // const deleteSoftKey = `api.v1.crm.${TableTextConst.REALESTATEBUILDING}.delete_soft`;
 
-  const viewKeyPaymentMethod = `api.v1.crm.${TableTextConst.PAYMENT_METHOD}.view`;
-  const viewKeyMetroStastion = `api.v1.crm.${TableTextConst.METRO_STATION}.view`;
-  const viewKeyTag = `api.v1.crm.${TableTextConst.TAG}.view`;
-  const viewKeyObject = `api.v1.crm.${TableTextConst.REAL_ESTATE_OBJECT}.view`;
-  const viewKeyOffer = `api.v1.crm.${TableTextConst.OFFER}.view`;
+  // const viewKeyPaymentMethod = `api.v1.crm.${TableTextConst.PAYMENT_METHOD}.view`;
+  // const viewKeyMetroStastion = `api.v1.crm.${TableTextConst.METRO_STATION}.view`;
+  // const viewKeyTag = `api.v1.crm.${TableTextConst.TAG}.view`;
+  // const viewKeyObject = `api.v1.crm.${TableTextConst.REAL_ESTATE_OBJECT}.view`;
+  // const viewKeyOffer = `api.v1.crm.${TableTextConst.OFFER}.view`;
 
-  const viewKeyScript = `api.v1.crm.${TableTextConst.SCRIPT}.view`;
-  const viewKeyWorkTime = `api.v1.crm.${TableTextConst.WORK_TIME}.view`;
+  // const viewKeyScript = `api.v1.crm.${TableTextConst.SCRIPT}.view`;
+  // const viewKeyWorkTime = `api.v1.crm.${TableTextConst.WORK_TIME}.view`;
 
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [isEdit, setIsEdit] = useState(false);
   const [bindMode, setBindMode] = useState<boolean>(false);
@@ -123,7 +123,7 @@ const CardResidentialComplex = () => {
     [key: string]: { square: string | null; price: string | null };
   }>({});
   const [isEditDriving, setIsEditDriving] = useState<Record<string, boolean>>(
-    {},
+    {}
   );
   const [isEditSquare, setIsEditSquare] = useState<Record<string, boolean>>({});
   const [isEditPrice, setIsEditPrice] = useState<Record<string, boolean>>({});
@@ -160,27 +160,27 @@ const CardResidentialComplex = () => {
     }));
   };
 
-  const [getData, { data, isLoading, isFetching }] =
-    useLazyGetRealEstateBuildingByIdQuery();
-  const searchStations = data?.info?.metro_stations?.filter((item: any) =>
-    item.name.toLowerCase().includes(searchMetroStation.toLowerCase()),
-  );
+  // const [getData, { data, isLoading, isFetching }] =
+  //   useLazyGetRealEstateBuildingByIdQuery();
+  // const searchStations = data?.info?.metro_stations?.filter((item: any) =>
+  //   item.name.toLowerCase().includes(searchMetroStation.toLowerCase())
+  // );
 
   useEffect(() => {
-    if (permissions[viewKeyPaymentMethod]) {
-      setCurrentTab(PAYMENT_METHODS);
-    } else if (permissions[viewKeyMetroStastion]) {
-      setCurrentTab(METRO_STATIONS);
-    } else if (permissions[viewKeyTag]) {
-      setCurrentTab(TAGS);
-    } else if (permissions[viewKeyObject]) {
-      setCurrentTab(OBJECTS);
-    } else if (permissions[viewKeyOffer]) {
-      setCurrentTab(OFFERS);
-    } else {
-      setCurrentTab("");
-    }
-    getData({ id: id, params: paramCache } as any);
+    // if (permissions[viewKeyPaymentMethod]) {
+    //   setCurrentTab(PAYMENT_METHODS);
+    // } else if (permissions[viewKeyMetroStastion]) {
+    //   setCurrentTab(METRO_STATIONS);
+    // } else if (permissions[viewKeyTag]) {
+    //   setCurrentTab(TAGS);
+    // } else if (permissions[viewKeyObject]) {
+    //   setCurrentTab(OBJECTS);
+    // } else if (permissions[viewKeyOffer]) {
+    //   setCurrentTab(OFFERS);
+    // } else {
+    //   setCurrentTab("");
+    // }
+    // getData({ id: id, params: paramCache } as any);
   }, []);
 
   // ================update======================
@@ -210,67 +210,67 @@ const CardResidentialComplex = () => {
     useSoftDeleteRealEstateObjectByIdMutation();
   const [SoftDeleteOffer] = useSoftDeleteOfferByIdMutation<any>();
 
-  const formData = useMemo(() => {
-    return data ? omit(data.data, "id") : data;
-  }, [data]);
+  // const formData = useMemo(() => {
+  //   return data ? omit(data.data, "id") : data;
+  // }, [data]);
 
   const openNotification = (type: ToastType, text: string) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>,
+      </Notification>
     );
   };
   const bindItemToBuilding = async (newIds: {
     [key in TypeTabTableResidentialComplex]?: any;
   }) => {
     try {
-      if (newIds.hasOwnProperty(PAYMENT_METHODS)) {
-        const alreadyBindedIds: any = data?.data.payment_methods.map(
-          (el) => el.payment_method_id,
-        );
-        const allIds = [...alreadyBindedIds, ...newIds.payment_methods];
-        const transform = allIds?.map((id) => ({
-          payment_method_id: id,
-        }));
-        await bindData(PAYMENT_METHODS, transform);
-      }
-      if (newIds.hasOwnProperty(METRO_STATIONS)) {
-        const alreadyBindedIds: any = data?.data.metro_stations.map(
-          (el) => el.metro_station_id,
-        );
-        const allIds = [...alreadyBindedIds, ...newIds.metro_stations];
-        const transform = allIds.map((id) => ({
-          metro_station_id: id,
-          time_on_car: inputChangeStation.current[id]?.time_on_car || null,
-          time_on_foot: inputChangeStation.current[id]?.time_on_foot || null,
-        }));
-        await bindData(METRO_STATIONS, transform);
-      }
-      if (newIds.hasOwnProperty(TAGS)) {
-        const alreadyBindedIds: any = data?.data.tags.map((el) => el.tag_id);
-        const allIds = [...alreadyBindedIds, ...newIds.tags];
-        const transform = allIds?.map((id) => ({
-          tag_id: id,
-        }));
-        await bindData(TAGS, transform);
-      }
-      getData({
-        id: id,
-        params: paramCache,
-      } as any).then(() => {
-        openNotification(
-          ToastType.SUCCESS,
-          t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`),
-        );
-        setBindMode(false);
-        inputChangeStation.current = {};
-        // setInputChangeStation({});
-      });
+      // if (newIds.hasOwnProperty(PAYMENT_METHODS)) {
+      //   const alreadyBindedIds: any = data?.data.payment_methods.map(
+      //     (el) => el.payment_method_id
+      //   );
+      //   const allIds = [...alreadyBindedIds, ...newIds.payment_methods];
+      //   const transform = allIds?.map((id) => ({
+      //     payment_method_id: id,
+      //   }));
+      //   await bindData(PAYMENT_METHODS, transform);
+      // }
+      // if (newIds.hasOwnProperty(METRO_STATIONS)) {
+      //   const alreadyBindedIds: any = data?.data.metro_stations.map(
+      //     (el) => el.metro_station_id
+      //   );
+      //   const allIds = [...alreadyBindedIds, ...newIds.metro_stations];
+      //   const transform = allIds.map((id) => ({
+      //     metro_station_id: id,
+      //     time_on_car: inputChangeStation.current[id]?.time_on_car || null,
+      //     time_on_foot: inputChangeStation.current[id]?.time_on_foot || null,
+      //   }));
+      //   await bindData(METRO_STATIONS, transform);
+      // }
+      // if (newIds.hasOwnProperty(TAGS)) {
+      //   const alreadyBindedIds: any = data?.data.tags.map((el) => el.tag_id);
+      //   const allIds = [...alreadyBindedIds, ...newIds.tags];
+      //   const transform = allIds?.map((id) => ({
+      //     tag_id: id,
+      //   }));
+      //   await bindData(TAGS, transform);
+      // }
+      // getData({
+      //   id: id,
+      //   params: paramCache,
+      // } as any).then(() => {
+      //   openNotification(
+      //     ToastType.SUCCESS,
+      //     t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`)
+      //   );
+      //   setBindMode(false);
+      //   inputChangeStation.current = {};
+      //   // setInputChangeStation({});
+      // });
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -328,11 +328,11 @@ const CardResidentialComplex = () => {
             await unBindPaymentMethod(transform).then(async (res) => {
               //@ts-ignore
               if (res?.data.success) {
-                await getData({ id: id, params: paramCache } as any).then(
-                  () => {
-                    fetchLoading.current = false;
-                  },
-                );
+                // await getData({ id: id, params: paramCache } as any).then(
+                //   () => {
+                //     fetchLoading.current = false;
+                //   }
+                // );
               }
             });
             break;
@@ -341,11 +341,11 @@ const CardResidentialComplex = () => {
             await unBindMetroStation(transform).then(async (res) => {
               //@ts-ignore
               if (res?.data.success) {
-                await getData({ id: id, params: paramCache } as any).then(
-                  () => {
-                    fetchLoading.current = false;
-                  },
-                );
+                // await getData({ id: id, params: paramCache } as any).then(
+                //   () => {
+                //     fetchLoading.current = false;
+                //   }
+                // );
               }
             });
             break;
@@ -354,11 +354,11 @@ const CardResidentialComplex = () => {
             await unbindTag(transform).then(async (res) => {
               //@ts-ignore
               if (res?.data.success) {
-                await getData({ id: id, params: paramCache } as any).then(
-                  () => {
-                    fetchLoading.current = false;
-                  },
-                );
+                // await getData({ id: id, params: paramCache } as any).then(
+                //   () => {
+                //     fetchLoading.current = false;
+                //   }
+                // );
               }
             });
             break;
@@ -367,13 +367,13 @@ const CardResidentialComplex = () => {
         }
         openNotification(
           ToastType.SUCCESS,
-          t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`),
+          t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`)
         );
       }
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -428,20 +428,20 @@ const CardResidentialComplex = () => {
             : null,
       } as UpdateMetroStationResponse);
       if (res?.data.success) {
-        await getData({ id: id, params: paramCache } as any);
+        // await getData({ id: id, params: paramCache } as any);
         fetchLoading.current = false;
         setIsEditDriving({});
         setIsEditWalk({});
       }
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.METRO_STATION}.update`),
+        t(`toast.message.${TableTextConst.METRO_STATION}.update`)
       );
     } catch (error) {
       console.log(error, "error");
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -450,28 +450,28 @@ const CardResidentialComplex = () => {
       fetchLoading.current = true;
       const fieldToUpdate = type === "price" ? "price" : "square";
       const updatedValue = Number(
-        inputChangeObject.current[rowId]?.[fieldToUpdate]?.replace(/\s/g, ""),
+        inputChangeObject.current[rowId]?.[fieldToUpdate]?.replace(/\s/g, "")
       );
       const res: any = await UpdateDataObject({
         id: rowId,
         [fieldToUpdate]: updatedValue,
       });
       if (res?.data?.success) {
-        await getData({ id: id, params: paramCache } as any).then(() => {
-          fetchLoading.current = false;
-          setIsEditSquare({});
-          setIsEditPrice({});
-          openNotification(
-            ToastType.SUCCESS,
-            t(`toast.message.${TableTextConst.REAL_ESTATE_OBJECT}.update`),
-          );
-        });
+        // await getData({ id: id, params: paramCache } as any).then(() => {
+        //   fetchLoading.current = false;
+        //   setIsEditSquare({});
+        //   setIsEditPrice({});
+        //   openNotification(
+        //     ToastType.SUCCESS,
+        //     t(`toast.message.${TableTextConst.REAL_ESTATE_OBJECT}.update`)
+        //   );
+        // });
       }
     } catch (error) {
       console.log(error, "error");
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -491,7 +491,7 @@ const CardResidentialComplex = () => {
   const handleInputChangeObject = (
     rowId: string,
     field: string,
-    value: string,
+    value: string
   ) => {
     if (rowId) {
       inputChangeObject.current = {
@@ -539,7 +539,7 @@ const CardResidentialComplex = () => {
                     handleInputChange(
                       props.row.original.id,
                       "time_on_car",
-                      e.target.value,
+                      e.target.value
                     )
                   }
                 />
@@ -553,7 +553,7 @@ const CardResidentialComplex = () => {
                       handleInputChange(
                         props.row.original.id,
                         "time_on_car",
-                        e.target.value,
+                        e.target.value
                       )
                     }
                   />
@@ -604,7 +604,7 @@ const CardResidentialComplex = () => {
                     handleInputChange(
                       props.row.original.id,
                       "time_on_foot",
-                      e.target.value,
+                      e.target.value
                     )
                   }
                 />
@@ -618,7 +618,7 @@ const CardResidentialComplex = () => {
                       handleInputChange(
                         props.row.original.id,
                         "time_on_foot",
-                        e.target.value,
+                        e.target.value
                       )
                     }
                   />
@@ -726,7 +726,7 @@ const CardResidentialComplex = () => {
           return useCustomLink(
             routePrefix.marketplace,
             props.row.original.marketplace,
-            maxLength,
+            maxLength
           );
         },
       },
@@ -737,7 +737,7 @@ const CardResidentialComplex = () => {
           return useCustomLink(
             routePrefix.developer,
             props.row.original.developer,
-            maxLength,
+            maxLength
           );
         },
       },
@@ -747,8 +747,11 @@ const CardResidentialComplex = () => {
         cell: function (props) {
           return (
             <>
-              {Object.entries(props.row.original.scripts || {}).length > 0 &&
-              permissions[viewKeyScript] ? (
+              {Object.entries(props.row.original.scripts || {}).length > 0 
+              // &&
+              // permissions[viewKeyScript] 
+              
+              ? (
                 <Button
                   size="xs"
                   style={{ padding: "4px" }}
@@ -781,7 +784,7 @@ const CardResidentialComplex = () => {
                             {script.script_location?.value || "Не указано"}
                           </p>
                         </li>
-                      ),
+                      )
                     )}
                   </ul>
                 </div>
@@ -808,7 +811,8 @@ const CardResidentialComplex = () => {
         cell: (props) => {
           return (
             <>
-              {permissions[viewKeyWorkTime] ? (
+              {/* {
+              permissions[viewKeyWorkTime] ? ( */}
                 <Button
                   size="xs"
                   style={{ padding: "4px" }}
@@ -817,9 +821,9 @@ const CardResidentialComplex = () => {
                 >
                   <p style={{ textDecoration: "underline" }}>Посмотреть</p>
                 </Button>
-              ) : (
+              {/* ) : (
                 "-"
-              )}
+              )} */}
               <Dialog
                 width={580}
                 isOpen={isOpen?.work_time?.[props.row.original.id]}
@@ -983,14 +987,14 @@ const CardResidentialComplex = () => {
                       Number(
                         props.row.original?.square
                           ?.toString()
-                          ?.replace(/\D/g, ""),
-                      ),
+                          ?.replace(/\D/g, "")
+                      )
                     )}
                     onChange={(e) =>
                       handleInputChangeObject(
                         props.row.original.id,
                         "square",
-                        e.target.value,
+                        e.target.value
                       )
                     }
                   />
@@ -1043,14 +1047,14 @@ const CardResidentialComplex = () => {
                     size="xs"
                     defaultValue={thousandSeparatorValue(
                       Number(
-                        props.row.original.price.toString().replace(/\D/g, ""),
-                      ),
+                        props.row.original.price.toString().replace(/\D/g, "")
+                      )
                     )}
                     onChange={(e) =>
                       handleInputChangeObject(
                         props.row.original.id,
                         "price",
-                        e.target.value,
+                        e.target.value
                       )
                     }
                   />
@@ -1092,16 +1096,16 @@ const CardResidentialComplex = () => {
 
   const handleUpdate = async (form: FormEssence<RealEstateBuilding>) => {
     try {
-      await UpdateData({ id: id, ...form }).unwrap();
+      await UpdateData({ id: item?.id, ...form }).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`),
+        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`)
       );
       setIsEdit(false);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -1113,17 +1117,17 @@ const CardResidentialComplex = () => {
       } as any).then((res) => {
         //@ts-ignore
         if (res?.data.success) {
-          getData({ id: id, params: paramCache } as any);
+          // getData({ id: id, params: paramCache } as any);
         }
       });
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.OFFER}.update`),
+        t(`toast.message.${TableTextConst.OFFER}.update`)
       );
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -1133,9 +1137,10 @@ const CardResidentialComplex = () => {
     if (!deletedItem?.data.error) {
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.delete`),
+        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.delete`)
       );
-      navigate(`${routePrefix.real_estate_building}`);
+      dispatch(setDrawerState(false));
+      // navigate(`${routePrefix.real_estate_building}`);
     }
   };
 
@@ -1146,13 +1151,13 @@ const CardResidentialComplex = () => {
   }, []);
 
   return (
-    <Loading loading={!data && isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
+    <Loading /* loading={!data && isLoading} type="cover" */>
+      {/* {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)} */}
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
             {t(`${TableTextConst.REALESTATEBUILDING}Page.card.title`)}{" "}
-            {data?.data.name}
+            {item?.name}
           </h3>
           <div className="mb-1 flex justify-end flex-row">
             {isEdit ? (
@@ -1164,7 +1169,7 @@ const CardResidentialComplex = () => {
                 onClick={() => setIsEdit((prev) => !prev)}
               />
             ) : (
-              permissions[updateKey] && (
+              // permissions[updateKey] && (
                 <Button
                   shape="circle"
                   variant="plain"
@@ -1172,31 +1177,31 @@ const CardResidentialComplex = () => {
                   icon={<HiPencil size={15} />}
                   onClick={() => setIsEdit((prev) => !prev)}
                 />
-              )
+              // )
             )}
-            {permissions[deleteSoftKey] && (
+            {/* {permissions[deleteSoftKey] && ( */}
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
                 icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(id as string)}
+                onClick={() => handleDelete(item?.id as string)}
               />
-            )}
+            {/* )} */}
           </div>
         </div>
 
         {isEdit ? (
           <FormResidentialComplex
             duplicate={isDuplicatePage}
-            data={formData}
+            data={item}
             onNextChange={handleUpdate}
-            isLoadingEndpoint={isLoading}
+            // isLoadingEndpoint={isLoading}
             isEdit
           />
         ) : (
           <>
-            {data?.data?.images && data?.data?.images?.length > 0 && (
+            {/* {data?.data?.images && data?.data?.images?.length > 0 && (
               <div style={{ flexWrap: "wrap" }}>
                 <p>{t("formInput.residentialComplexes.photo")}</p>
                 {data?.data.images?.map((photo: any) => {
@@ -1211,27 +1216,27 @@ const CardResidentialComplex = () => {
                   );
                 })}
               </div>
-            )}
+            )} */}
             <Card>
               <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.id")}
-                    value={data?.data.int_id || t("global.noDataAvailable")}
+                    value={item?.int_id || t("global.noDataAvailable")}
                   />
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.name")}
-                    value={data?.data.name || t("global.noDataAvailable")}
+                    value={item?.name || t("global.noDataAvailable")}
                   />
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.developer")}
                     value={
-                      data?.data?.developer ? (
+                      item?.developer ? (
                         <ActionLink
                           target="_blank"
-                          to={`${routePrefix.developer}/${data?.data?.developer.id}`}
+                          to={`${routePrefix.developer}/${item?.developer.id}`}
                         >
-                          {data?.data?.developer.name}
+                          {item?.developer?.name}
                         </ActionLink>
                       ) : (
                         t("global.noDataAvailable")
@@ -1241,12 +1246,12 @@ const CardResidentialComplex = () => {
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.city")}
                     value={
-                      data?.data?.city ? (
+                      item?.city ? (
                         <ActionLink
                           target="_blank"
-                          to={`${routePrefix.city}/${data?.data?.city.id}`}
+                          to={`${routePrefix.city}/${item?.city.id}`}
                         >
-                          {data?.data?.city.name}
+                          {item?.city.name}
                         </ActionLink>
                       ) : (
                         t("global.noDataAvailable")
@@ -1256,25 +1261,25 @@ const CardResidentialComplex = () => {
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.region")}
                     value={
-                      data?.data.is_region
+                      item?.is_region
                         ? "Да"
                         : "Нет" || t("global.noDataAvailable")
                     }
                   />
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.latitude")}
-                    value={data?.data.latitude || t("global.noDataAvailable")}
+                    value={item?.latitude || t("global.noDataAvailable")}
                   />
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.longitude")}
-                    value={data?.data.longitude || t("global.noDataAvailable")}
+                    value={item?.longitude || t("global.noDataAvailable")}
                   />
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.website")}
                     value={
-                      data?.data.site ? (
-                        <ActionLink target="_blank" to={data?.data.site}>
-                          {data?.data.site}
+                      item?.site ? (
+                        <ActionLink target="_blank" to={item?.site}>
+                          {item?.site}
                         </ActionLink>
                       ) : (
                         t("global.noDataAvailable")
@@ -1283,12 +1288,12 @@ const CardResidentialComplex = () => {
                   />
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.location")}
-                    value={data?.data.location || t("global.noDataAvailable")}
+                    value={item?.location || t("global.noDataAvailable")}
                   />
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.description")}
                     value={
-                      data?.data.description || t("global.noDataAvailable")
+                      item?.description || t("global.noDataAvailable")
                     }
                   />
                 </div>
@@ -1299,26 +1304,27 @@ const CardResidentialComplex = () => {
         {!isEdit && (
           <Tabs value={currentTab} onChange={(val) => setCurrentTab(val)}>
             <TabList>
-              {permissions[viewKeyPaymentMethod] && (
+              {/* {permissions[viewKeyPaymentMethod] && ( */}
                 <TabNav value={PAYMENT_METHODS}>
                   {t("tabsText.paymentMethods")}
                 </TabNav>
-              )}
-              {data?.info[METRO_STATIONS] &&
-                permissions[viewKeyMetroStastion] && (
+              {/* )} */}
+              {/* {data?.info[METRO_STATIONS] &&
+                permissions[viewKeyMetroStastion] && ( */}
                   <TabNav value={METRO_STATIONS}>
                     {t("tabsText.metroStations")}
                   </TabNav>
-                )}
-              {permissions[viewKeyTag] && (
+                {/* )
+                } */}
+              {/* {permissions[viewKeyTag] && ( */}
                 <TabNav value={TAGS}>{t("tabsText.tags")}</TabNav>
-              )}
-              {permissions[viewKeyObject] && (
+              {/* )} */}
+              {/* {permissions[viewKeyObject] && ( */}
                 <TabNav value={OBJECTS}>{t("tabsText.objects")}</TabNav>
-              )}
-              {permissions[viewKeyOffer] && (
+              {/* )} */}
+              {/* {permissions[viewKeyOffer] && ( */}
                 <TabNav value={OFFERS}>{t("tabsText.offers")}</TabNav>
-              )}
+              {/* )} */}
               {currentTab === METRO_STATIONS && bindMode && (
                 <Input
                   style={{ maxWidth: "300px" }}
@@ -1338,20 +1344,21 @@ const CardResidentialComplex = () => {
                   update={UpdateData}
                   setBindMode={setBindMode}
                   bindMode={bindMode}
-                  info={data?.info.payment_methods}
-                  cityId={data?.data.city?.id}
+                  // info={data?.info.payment_methods}
+                  info={[]}
+                  // cityId={data?.data.city?.id}
                   columns={columnsPaymentMethods}
                   type={PAYMENT_METHODS}
                   textConst={TableTextConst.PAYMENT_METHOD}
-                  data={
-                    bindMode
-                      ? data?.info.payment_methods
-                      : data?.data.payment_methods
-                  }
-                  loading={isFetching}
-                  getData={(req) => {
-                    getData({ id, params: req } as any);
-                  }}
+                  // data={
+                  //   bindMode
+                  //     ? data?.info.payment_methods
+                  //     : data?.data.payment_methods
+                  // }
+                  // loading={isFetching}
+                  // getData={(req) => {
+                  //   getData({ id, params: req } as any);
+                  // }}
                   SoftDelete={(req) => SoftDeletePaymentMethod(req)}
                 />
               </TabContent>
@@ -1363,16 +1370,16 @@ const CardResidentialComplex = () => {
                   setBindMode={setBindMode}
                   bindMode={bindMode}
                   isMetroStationTableBind
-                  info={data?.info}
-                  cityId={data?.data.city?.id}
+                  // info={data?.info}
+                  // cityId={data?.data.city?.id}
                   columns={columnsMetroStations}
                   type={METRO_STATIONS}
                   textConst={TableTextConst.METRO_STATION}
-                  data={bindMode ? searchStations : data?.data.metro_stations}
-                  loading={isFetching}
-                  getData={(req) => {
-                    getData({ id, params: req } as any);
-                  }}
+                  // data={bindMode ? searchStations : data?.data.metro_stations}
+                  // loading={isFetching}
+                  // getData={(req) => {
+                  //   getData({ id, params: req } as any);
+                  // }}
                   SoftDelete={(req) => SoftDeleteMetroStation(req)}
                   setParamCache={setParamCache}
                 />
@@ -1384,16 +1391,16 @@ const CardResidentialComplex = () => {
                   update={UpdateData}
                   setBindMode={setBindMode}
                   bindMode={bindMode}
-                  info={data?.info}
-                  cityId={data?.data.city?.id}
+                  // info={data?.info}
+                  // cityId={data?.data.city?.id}
                   columns={columnsTags}
                   type={TAGS}
                   textConst={TableTextConst.TAG}
-                  data={bindMode ? data?.info.tags : data?.data.tags}
-                  loading={isFetching}
-                  getData={(req) => {
-                    getData({ id, params: req } as any);
-                  }}
+                  // data={bindMode ? data?.info.tags : data?.data.tags}
+                  // loading={isFetching}
+                  // getData={(req) => {
+                  //   getData({ id, params: req } as any);
+                  // }}
                   SoftDelete={(req) => SoftDeletePaymentMethod(req)}
                 />
               </TabContent>
@@ -1403,11 +1410,11 @@ const CardResidentialComplex = () => {
                   columns={columnsBuildingObject}
                   type={OBJECTS}
                   textConst={TableTextConst.REAL_ESTATE_OBJECT}
-                  data={data?.data.objects || []}
-                  loading={isFetching}
-                  getData={(req) => {
-                    getData({ id, params: req } as any);
-                  }}
+                  // data={data?.data.objects || []}
+                  // loading={isFetching}
+                  // getData={(req) => {
+                  //   getData({ id, params: req } as any);
+                  // }}
                   SoftDelete={(req) => SoftDeleteRealEstateObject(req)}
                 />
               </TabContent>
@@ -1417,11 +1424,11 @@ const CardResidentialComplex = () => {
                   columns={columnsOffers}
                   type={OFFERS}
                   textConst={TableTextConst.OFFER}
-                  data={data?.data.offers || []}
-                  loading={isLoadingUpdate || isFetching}
-                  getData={(req) => {
-                    getData({ id, params: req } as any);
-                  }}
+                  // data={data?.data.offers || []}
+                  // loading={isLoadingUpdate || isFetching}
+                  // getData={(req) => {
+                  //   getData({ id, params: req } as any);
+                  // }}
                   SoftDelete={(req) => SoftDeleteOffer(req)}
                   setParamCache={setParamCache}
                 />

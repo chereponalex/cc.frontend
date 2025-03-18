@@ -95,11 +95,11 @@ const navigationConfig: NavigationTree[] = [
     permissionKey: "offers",
     matchingKey: "Оферы",
     authority: [
-      "api.v1.crm.offer.view",
-      "api.v1.crm.marketplace.view",
-      "api.v1.crm.work_time.view",
-      "api.v1.crm.question.view",
-      "api.v1.crm.script.view",
+      // "api.v1.crm.offer.view",
+      // "api.v1.crm.marketplace.view",
+      // "api.v1.crm.work_time.view",
+      // "api.v1.crm.question.view",
+      // "api.v1.crm.script.view",
     ],
     subMenu: [
       {
@@ -111,7 +111,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "offer",
         matchingKey: "Оферы",
-        authority: ["api.v1.crm.offer.view"],
+        authority: [/* "api.v1.crm.offer.view" */],
         subMenu: [],
       },
       {
@@ -123,7 +123,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "marketplace",
         matchingKey: "Площадки",
-        authority: ["api.v1.crm.marketplace.view"],
+        authority: [/* "api.v1.crm.marketplace.view" */],
         subMenu: [],
       },
       {
@@ -135,7 +135,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "work_time",
         matchingKey: "Рабочее время оферов",
-        authority: ["api.v1.crm.work_time.view"],
+        authority: [/* "api.v1.crm.work_time.view" */],
         subMenu: [],
       },
       {
@@ -147,7 +147,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "question",
         matchingKey: "Вопросы",
-        authority: ["api.v1.crm.question.view"],
+        authority: [/* "api.v1.crm.question.view" */],
         subMenu: [],
       },
       {
@@ -159,7 +159,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "script",
         matchingKey: "Скрипты",
-        authority: ["api.v1.crm.script.view"],
+        authority: [/* "api.v1.crm.script.view" */],
         subMenu: [],
       },
     ],
@@ -198,7 +198,7 @@ const navigationConfig: NavigationTree[] = [
     type: NAV_ITEM_TYPE_COLLAPSE,
     permissionKey: "transfer",
     matchingKey: "Переводы",
-    authority: ["api.v1.crm.transfer.view", "api.v1.crm.rating.view"],
+    authority: [/* "api.v1.crm.transfer.view", "api.v1.crm.rating.view" */],
     subMenu: [
       {
         key: "transfer-list",
@@ -209,7 +209,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "transfer",
         matchingKey: "Переводы",
-        authority: ["api.v1.crm.transfer.view"],
+        authority: [/* "api.v1.crm.transfer.view" */],
         subMenu: [],
       },
       {
@@ -221,7 +221,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "rating",
         matchingKey: "Рейтинг",
-        authority: ["api.v1.crm.rating.view"],
+        authority: [/* "api.v1.crm.rating.view" */],
         subMenu: [],
       },
     ],
@@ -235,7 +235,7 @@ const navigationConfig: NavigationTree[] = [
     type: NAV_ITEM_TYPE_COLLAPSE,
     permissionKey: "objects",
     matchingKey: "Объекты недвижимости",
-    authority: ["api.v1.crm.real_estate_object.view"],
+    authority: [/* "api.v1.crm.real_estate_object.view" */],
     subMenu: [
       {
         key: "objects",
@@ -246,7 +246,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "real_estate_object",
         matchingKey: "Объекты недвижимости",
-        authority: ["api.v1.crm.real_estate_object.view"],
+        authority: [/* "api.v1.crm.real_estate_object.view" */],
         subMenu: [],
       },
     ],
@@ -261,11 +261,11 @@ const navigationConfig: NavigationTree[] = [
     permissionKey: "cities_and_metro",
     matchingKey: "Города и метро",
     authority: [
-      "api.v1.crm.country.view",
-      "api.v1.crm.region.view",
-      "api.v1.crm.city.view",
-      "api.v1.crm.metro_line.view",
-      "api.v1.crm.metro_station.view",
+      // "api.v1.crm.country.view",
+      // "api.v1.crm.region.view",
+      // "api.v1.crm.city.view",
+      // "api.v1.crm.metro_line.view",
+      // "api.v1.crm.metro_station.view",
     ],
     subMenu: [
       {
@@ -277,7 +277,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "country",
         matchingKey: "Страны",
-        authority: ["api.v1.crm.country.view"],
+        authority: [/* "api.v1.crm.country.view" */],
         subMenu: [],
       },
       {
@@ -289,7 +289,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "region",
         matchingKey: "Области",
-        authority: ["api.v1.crm.region.view"],
+        authority: [/* "api.v1.crm.region.view" */],
         subMenu: [],
       },
       {
@@ -301,7 +301,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "city",
         matchingKey: "Города",
-        authority: ["api.v1.crm.city.view"],
+        authority: [/* "api.v1.crm.city.view" */],
         subMenu: [],
       },
       {
@@ -313,7 +313,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "metro_line",
         matchingKey: "Линии метро",
-        authority: ["api.v1.crm.metro_line.view"],
+        authority: [/* "api.v1.crm.metro_line.view" */],
         subMenu: [],
       },
       {
@@ -325,7 +325,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "metro_station",
         matchingKey: "Станции метро",
-        authority: ["api.v1.crm.metro_station.view"],
+        authority: [/* "api.v1.crm.metro_station.view" */],
         subMenu: [],
       },
     ],
@@ -340,11 +340,11 @@ const navigationConfig: NavigationTree[] = [
     permissionKey: "system",
     matchingKey: "Система",
     authority: [
-      "api.v1.crm.employee.view",
-      "api.v1.crm.black_list.view",
-      "api.v1.crm.role.view",
-      "api.v1.crm.groups.view",
-      "api.v1.crm.settings.view",
+      // "api.v1.crm.employee.view",
+      // "api.v1.crm.black_list.view",
+      // "api.v1.crm.role.view",
+      // "api.v1.crm.groups.view",
+      // "api.v1.crm.settings.view",
     ],
     subMenu: [
       {
@@ -356,7 +356,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "employee",
         matchingKey: "Сотрудники",
-        authority: ["api.v1.crm.employee.view"],
+        authority: [/* "api.v1.crm.employee.view" */],
         subMenu: [],
       },
       {
@@ -368,7 +368,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "black_list",
         matchingKey: "Черный список",
-        authority: ["api.v1.crm.black_list.view"],
+        authority: [/* "api.v1.crm.black_list.view" */],
         subMenu: [],
       },
       {
@@ -380,7 +380,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "role",
         matchingKey: "Роли пользователей",
-        authority: ["api.v1.crm.role.view"],
+        authority: [/* "api.v1.crm.role.view" */],
         subMenu: [],
       },
       {
@@ -394,7 +394,7 @@ const navigationConfig: NavigationTree[] = [
         //employees_group
         permissionKey: "groups",
         matchingKey: "Группы пользователей",
-        authority: ["api.v1.crm.groups.view"],
+        authority: [/* "api.v1.crm.groups.view" */],
         subMenu: [],
       },
       {
@@ -406,7 +406,7 @@ const navigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_ITEM,
         permissionKey: "settings",
         matchingKey: "Настройки",
-        authority: ["api.v1.crm.settings.view"],
+        authority: [/* "api.v1.crm.settings.view" */],
         subMenu: [],
       },
     ],

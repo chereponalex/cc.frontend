@@ -16,23 +16,17 @@ import { City, TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
 
-const CreatNewCity = () => {
+const CreatNewCity = ({ item }: any) => {
   const { t } = useTranslation();
-  const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetCityByIdQuery(id as string, { skip: !id });
   const [creatNew, { isLoading: isLoadingCreate }] = useCreatNewCityMutation();
-
-  const formData = useMemo(() => {
-    return data ? omit(data.data, ["id", "links"]) : data;
-  }, [data]);
 
   const openNotification = (type: ToastType, text: string) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>,
+      </Notification>
     );
   };
 
@@ -41,25 +35,20 @@ const CreatNewCity = () => {
       await creatNew(form).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.CITY}.create`),
+        t(`toast.message.${TableTextConst.CITY}.create`)
       );
       navigate(`${routePrefix.city}`);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
 
   return (
     <Loading loading={isLoadingCreate} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
-      <FormCity
-        data={formData}
-        onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoading}
-      />
+      <FormCity data={item} onNextChange={handleCreatNew} />
     </Loading>
   );
 };

@@ -1,6 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-
 import { FormEssenceCountry } from "@/@types/form";
 import { CreatNewFormCountryProps } from "@/@types/props";
 
@@ -13,7 +11,8 @@ import Input from "@/components/ui/Input";
 import { useMemo } from "react";
 import { validationSchemaCountry } from "@/utils/validationForm";
 import { TableTextConst } from "@/@types";
-import routePrefix from "@/configs/routes.config/routePrefix";
+import { useAppDispatch } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const FormCountry = ({
   data,
@@ -22,10 +21,11 @@ const FormCountry = ({
   isLoadingEndpoint,
 }: CreatNewFormCountryProps) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onNext = (values: FormEssenceCountry) => {
     onNextChange?.(values);
+    dispatch(setDrawerState(false));
   };
 
   const initialValues: FormEssenceCountry = useMemo(() => {
@@ -70,7 +70,7 @@ const FormCountry = ({
                 <div className="flex justify-end mt-4 gap-2">
                   <Button
                     type="button"
-                    onClick={() => navigate(`${routePrefix.country}`)}
+                    onClick={() => dispatch(setDrawerState(false))}
                   >
                     {t("global.close")}
                   </Button>

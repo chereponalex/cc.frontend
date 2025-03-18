@@ -16,6 +16,8 @@ import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
 import { ActionLink } from "@/components/shared";
 import cutString from "@/utils/cutString";
+import CardResidentialComplex from "./CardResidentialComplex";
+import CreatNewResidentialComplex from "./CreatNewResidentialComplex";
 
 const ResidentialComplexes = () => {
   const { t } = useTranslation();
@@ -47,7 +49,7 @@ const ResidentialComplexes = () => {
         cell: function (props) {
           return useCustomLink(
             routePrefix.real_estate_building,
-            props.row.original,
+            props.row.original
           );
         },
       },
@@ -57,7 +59,7 @@ const ResidentialComplexes = () => {
         cell: function (props) {
           return useCustomLink(
             routePrefix.developer,
-            props.row.original.developer,
+            props.row.original.developer
           );
         },
       },
@@ -131,6 +133,10 @@ const ResidentialComplexes = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<RealEstateBuilding>
+        childrenDrawer={{
+          card: CardResidentialComplex,
+          create: CreatNewResidentialComplex,
+        }}
         columns={columns}
         textConst={TableTextConst.REALESTATEBUILDING}
         data={realEstateBuildings}

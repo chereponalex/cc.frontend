@@ -16,26 +16,22 @@ import { useMemo } from "react";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
 
-const CreatNewResidentialComplexes = () => {
+const CreatNewResidentialComplexes = ({ item }: any) => {
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetRealEstateBuildingByIdQuery(id as string, {
-    skip: !id,
-  });
+  // const { data, isLoading } = useGetRealEstateBuildingByIdQuery(id as string, {
+  //   skip: !id,
+  // });
   const [creatNew, { isLoading: isLoadingCreate }] =
     useCreatNewRealEstateBuildingMutation();
-
-  const formData = useMemo(() => {
-    return data ? omit(data.data, ["id", "links"]) : data;
-  }, [data]);
 
   const openNotification = (type: ToastType, text: string) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>,
+      </Notification>
     );
   };
 
@@ -55,26 +51,23 @@ const CreatNewResidentialComplexes = () => {
       await creatNew(form as any).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.create`),
+        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.create`)
       );
       navigate(`${routePrefix.real_estate_building}`);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
 
   return (
-    <Loading loading={isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
-      <FormResidentialComplex
-        data={formData}
-        onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoadingCreate}
-      />
-    </Loading>
+    <FormResidentialComplex
+      data={item}
+      onNextChange={handleCreatNew}
+      isLoadingEndpoint={isLoadingCreate}
+    />
   );
 };
 

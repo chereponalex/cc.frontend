@@ -16,6 +16,8 @@ import usePermissionLink from "@/utils/hooks/usePermissionLink";
 import useCustomLink from "@/utils/hooks/useCustomLink";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
+import CardCountry from "./CardCountry";
+import CreatNewCountry from "./CreatNewCountry";
 
 const Countries = () => {
   const { t } = useTranslation();
@@ -48,6 +50,10 @@ const Countries = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<Country>
+        childrenDrawer={{
+          card: CardCountry,
+          create: CreatNewCountry,
+        }}
         columns={columns}
         textConst={TableTextConst.COUNTRY}
         data={countries}
