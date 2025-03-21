@@ -9,6 +9,8 @@ import { validationSchemaTag } from "@/utils/validationForm";
 import { FormEssence } from "@/@types/form";
 import { PaymentMethod, TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
+import { setDrawerState } from "@/store/slices/actionState";
+import { useAppDispatch } from "@/store";
 
 const FormPaymentMethod = ({
   data = {
@@ -19,7 +21,7 @@ const FormPaymentMethod = ({
   isLoadingEndpoint,
 }: CreatNewFormProps<FormEssence<PaymentMethod>>) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onNext = (values: FormEssence<PaymentMethod>) => {
     onNextChange?.(values);
@@ -59,7 +61,7 @@ const FormPaymentMethod = ({
               <div className="flex justify-end mt-4 gap-2">
                 <Button
                   type="button"
-                  onClick={() => navigate(`${routePrefix.payment_method}`)}
+                  onClick={() => dispatch(setDrawerState(false))}
                 >
                   {t("global.close")}
                 </Button>

@@ -177,7 +177,7 @@ const FormResidentialComplex = ({
                           options={developers}
                           value={developers.filter(
                             (developer) =>
-                              developer.value === values.developer_id
+                              developer.value === values.developer_id,
                           )}
                           onChange={(developer) => {
                             if (developer) {
@@ -205,7 +205,7 @@ const FormResidentialComplex = ({
                           form={form}
                           options={cities}
                           value={cities.filter(
-                            (city) => city.value === values.city_id
+                            (city) => city.value === values.city_id,
                           )}
                           onChange={(city) => {
                             if (city) {
@@ -382,7 +382,7 @@ const FormResidentialComplex = ({
                     {isEdit
                       ? t("global.save")
                       : t(
-                          `${TableTextConst.REALESTATEBUILDING}Page.buttons.createNew`
+                          `${TableTextConst.REALESTATEBUILDING}Page.buttons.createNew`,
                         )}
                   </Button>
                 </div>

@@ -17,6 +17,8 @@ import CheckCircleSvg from "@/assets/svg/CheckCircleSvg";
 import useCustomLink from "@/utils/hooks/useCustomLink";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
+import CardVenue from "./CardVenue";
+import CreatNewVenue from "./CreatNewVenue";
 
 const Venues = () => {
   const { t } = useTranslation();
@@ -44,26 +46,16 @@ const Venues = () => {
           return useCustomLink(routePrefix.marketplace, props.row.original);
         },
       },
-      {
-        header: t("table.columnsHeader.expertOffer"),
-        id: "expert_mode",
-        cell: (props) => (
-          <div style={{ display: "flex", justifyContent: "start" }}>
-            {props.row.original.expert_mode ? (
-              <CheckCircleSvg color="#22c55e" />
-            ) : (
-              <XCircleSvg color="#ef4444" />
-            )}
-          </div>
-        ),
-      },
       // {
-      //   header: t("table.columnsHeader.otherDevelopers"),
-      //   accessorKey: "otherDevelopers",
+      //   header: t("table.columnsHeader.expertOffer"),
+      //   id: "expert_mode",
       //   cell: (props) => (
-      //     <div>
-      //       {/*@ts-ignore*/}
-      //       <span>{`${props.getValue() || t("global.noDataAvailable")}`}</span>
+      //     <div style={{ display: "flex", justifyContent: "start" }}>
+      //       {props.row.original.expert_mode ? (
+      //         <CheckCircleSvg color="#22c55e" />
+      //       ) : (
+      //         <XCircleSvg color="#ef4444" />
+      //       )}
       //     </div>
       //   ),
       // },
@@ -74,6 +66,10 @@ const Venues = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<Marketplace>
+        childrenDrawer={{
+          card: CardVenue,
+          create: CreatNewVenue,
+        }}
         columns={columns}
         textConst={TableTextConst.VENUE}
         data={marketplaces}

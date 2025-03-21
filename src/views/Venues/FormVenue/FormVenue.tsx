@@ -9,21 +9,23 @@ import { validationSchemaVenue } from "@/utils/validationForm";
 import { FormEssence } from "@/@types/form";
 import { Marketplace } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
+import { setDrawerState } from "@/store/slices/actionState";
+import { useAppDispatch } from "@/store";
 
 const FormVenue = ({
   data = {
     name: "",
-    expert_mode: false,
   } as any,
   isEdit = false,
   onNextChange,
   isLoadingEndpoint,
 }: CreatNewFormProps<FormEssence<Marketplace>>) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onNext = (values: FormEssence<Marketplace>) => {
     onNextChange?.(values);
+    dispatch(setDrawerState(false));
   };
 
   return (
@@ -55,7 +57,7 @@ const FormVenue = ({
                     component={Input}
                   />
                 </FormItem>
-                <FormItem
+                {/* <FormItem
                   // noPadding
                   label={t("formInput.venues.expertMode")}
                   invalid={errors.expert_mode && touched.expert_mode}
@@ -63,13 +65,13 @@ const FormVenue = ({
                   layout="horizontal"
                 >
                   <Field name="expert_mode" component={Checkbox} />
-                </FormItem>
+                </FormItem> */}
               </Card>
 
               <div className="flex justify-end mt-4 gap-2">
                 <Button
                   type="button"
-                  onClick={() => navigate(`${routePrefix.marketplace}`)}
+                  onClick={() => dispatch(setDrawerState(false))}
                 >
                   {t("global.close")}
                 </Button>

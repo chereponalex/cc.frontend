@@ -31,7 +31,7 @@ const CreatNewResidentialComplexes = ({ item }: any) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>
+      </Notification>,
     );
   };
 
@@ -51,13 +51,13 @@ const CreatNewResidentialComplexes = ({ item }: any) => {
       await creatNew(form as any).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.create`)
+        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.create`),
       );
       navigate(`${routePrefix.real_estate_building}`);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };

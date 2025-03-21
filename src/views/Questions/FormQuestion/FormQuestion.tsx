@@ -14,6 +14,8 @@ import { useMemo } from "react";
 import { TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import { validationSchemaQuestion } from "@/utils/validationForm";
+import { useAppDispatch } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const RadioComponent = ({ form, field }: any) => {
   const onChangeRadio = (val: string) => {
@@ -22,8 +24,8 @@ const RadioComponent = ({ form, field }: any) => {
 
   return (
     <Radio.Group value={field.value} key={field.value} onChange={onChangeRadio}>
-      <Radio value="Да">Да</Radio>
-      <Radio value="Нет">Нет</Radio>
+      <Radio value={true}>Да</Radio>
+      <Radio value={false}>Нет</Radio>
     </Radio.Group>
   );
 };
@@ -36,7 +38,7 @@ const FormQuestion = ({
   duplicate,
 }: CreatNewFormQuestionProps) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onNext = (values: any, duplicate: boolean) => {
     const onlyChangeFields = {} as any;
@@ -48,12 +50,13 @@ const FormQuestion = ({
       });
     }
     onNextChange?.(duplicate === null ? onlyChangeFields : values);
+    dispatch(setDrawerState(false));
   };
 
   const initialValues: any = useMemo(() => {
     return {
       text: data?.text || "",
-      reply: data?.reply.value || "",
+      reply: data?.reply,
     };
   }, [data]);
 
@@ -66,6 +69,7 @@ const FormQuestion = ({
         onSubmit={(values) => onNext(values, duplicate)}
       >
         {({ values, touched, errors }) => {
+          console.log(values, "values");
           return (
             <Form>
               <FormContainer>
@@ -116,7 +120,7 @@ const FormQuestion = ({
                 <div className="flex justify-end mt-4 gap-2">
                   <Button
                     type="button"
-                    onClick={() => navigate(`${routePrefix.question}`)}
+                    onClick={() => dispatch(setDrawerState(false))}
                   >
                     {t("global.close")}
                   </Button>

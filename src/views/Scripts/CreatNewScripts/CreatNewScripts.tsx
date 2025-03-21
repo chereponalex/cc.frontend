@@ -13,15 +13,17 @@ import { Script, TableTextConst } from "@/@types";
 import FormScripts from "@/views/Scripts/FormScripts";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
+import { useAppDispatch } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
-const CreatNewScripts = () => {
+const CreatNewScripts = ({ item }: any) => {
   const { t } = useTranslation();
   const { id } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const { data, isLoading } = useGetScriptByIdQuery(id as string, {
-    skip: !id,
-  });
+  // const { data, isLoading } = useGetScriptByIdQuery(id as string, {
+  //   skip: !id,
+  // });
   const [creatNew, { isLoading: isLoadingCreate }] =
     useCreatNewScriptMutation();
 
@@ -40,7 +42,7 @@ const CreatNewScripts = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.SCRIPT}.create`),
       );
-      navigate(`${routePrefix.script}`);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
@@ -50,14 +52,13 @@ const CreatNewScripts = () => {
   };
 
   return (
-    <Loading loading={isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
-      <FormScripts
-        data={data?.data}
-        onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoadingCreate}
-      />
-    </Loading>
+    // <Loading loading={isLoading} type="cover">
+    <FormScripts
+      data={item}
+      onNextChange={handleCreatNew}
+      // isLoadingEndpoint={isLoadingCreate}
+    />
+    // </Loading>
   );
 };
 

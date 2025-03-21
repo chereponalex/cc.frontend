@@ -23,7 +23,7 @@ import { setDrawerState } from "@/store/slices/actionState";
 
 const CardCity = ({ item }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions
+    (state) => state.auth.user.role?.permissions,
   );
   const updateKey = `api.v1.crm.${TableTextConst.CITY}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.CITY}.delete_soft`;
@@ -40,7 +40,7 @@ const CardCity = ({ item }: any) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>
+      </Notification>,
     );
   };
 
@@ -49,14 +49,14 @@ const CardCity = ({ item }: any) => {
       await UpdateData({ id: item?.id, ...form }).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.CITY}.update`)
+        t(`toast.message.${TableTextConst.CITY}.update`),
       );
       setIsEdit(false);
       // dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };
@@ -66,7 +66,7 @@ const CardCity = ({ item }: any) => {
     if (!deletedItem?.data.error) {
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.CITY}.delete`)
+        t(`toast.message.${TableTextConst.CITY}.delete`),
       );
       dispatch(setDrawerState(false));
       // navigate(`${routePrefix.city}`);

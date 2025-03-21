@@ -27,7 +27,7 @@ const CreatNewRegion = ({ item }: any) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>
+      </Notification>,
     );
   };
 
@@ -36,13 +36,13 @@ const CreatNewRegion = ({ item }: any) => {
       await creatNew(form).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.REGION}.create`)
+        t(`toast.message.${TableTextConst.REGION}.create`),
       );
       navigate(`${routePrefix.region}`);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };

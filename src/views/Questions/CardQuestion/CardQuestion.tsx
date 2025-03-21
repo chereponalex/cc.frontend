@@ -20,23 +20,22 @@ import routePrefix from "@/configs/routes.config/routePrefix";
 import extractYearAndQuarter from "@/utils/extractYearAndQuarter";
 import FormQuestion from "../FormQuestion";
 import methodInsert from "@/utils/methodInsertBread";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
-const CardQuestion = () => {
+const CardQuestion = ({ item }: any) => {
   const permissions: any = useAppSelector(
     (state) => state.auth.user.role?.permissions,
   );
+  const dispatch = useAppDispatch();
   const updateKey = `api.v1.crm.${TableTextConst.QUESTION}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.QUESTION}.delete_soft`;
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const searchParams = new URLSearchParams(location.search);
   const isEditPage = searchParams.get("editPage");
   const isDuplicatePage = searchParams.get("duplicate");
 
-  const { data, isLoading } = useGetQuestionByIdQuery(id as string);
   const [UpdateData] = useUpdateQuestionByIdMutation();
   const [SoftDelete] = useSoftDeleteQuestionByIdMutation();
   const openNotification = (type: ToastType, text: string) => {
@@ -50,7 +49,7 @@ const CardQuestion = () => {
   const handleUpdate = async (form: Partial<Question>) => {
     try {
       await UpdateData({
-        id,
+        id: item?.id,
         ...form,
       }).unwrap();
       openNotification(
@@ -73,7 +72,7 @@ const CardQuestion = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.QUESTION}.delete`),
       );
-      navigate(`${routePrefix.question}`);
+      dispatch(setDrawerState(false));
     }
   };
 
@@ -84,12 +83,11 @@ const CardQuestion = () => {
   }, []);
 
   return (
-    <Loading loading={!data && isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.text)}
+    <Loading /* loading={!data && isLoading} type="cover" */>
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
-            {t(`${TableTextConst.QUESTION}Page.card.title`)} {data?.data.text}
+            {t(`${TableTextConst.QUESTION}Page.card.title`)} {item?.text}
           </h3>
           <div className="mb-1 flex justify-end flex-row">
             {isEdit ? (
@@ -101,33 +99,33 @@ const CardQuestion = () => {
                 onClick={() => setIsEdit((prev) => !prev)}
               />
             ) : (
-              permissions[updateKey] && (
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="md"
-                  icon={<HiPencil size={15} />}
-                  onClick={() => setIsEdit((prev) => !prev)}
-                />
-              )
-            )}
-            {permissions[deleteSoftKey] && (
+              // permissions[updateKey] && (
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
-                icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(id as string)}
+                icon={<HiPencil size={15} />}
+                onClick={() => setIsEdit((prev) => !prev)}
               />
+              // )
             )}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Button
+              shape="circle"
+              variant="plain"
+              size="md"
+              icon={<HiTrash size={15} />}
+              onClick={() => handleDelete(item?.id as string)}
+            />
+            {/* )} */}
           </div>
         </div>
         {isEdit ? (
           <FormQuestion
             duplicate={isDuplicatePage}
-            data={data?.data as any}
+            data={item}
             onNextChange={handleUpdate}
-            isLoadingEndpoint={isLoading}
+            // isLoadingEndpoint={isLoading}
             isEdit
           />
         ) : (
@@ -136,11 +134,13 @@ const CardQuestion = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                 <CustomerInfoField
                   title={t("formInput.question.question")}
-                  value={data?.data.text || t("global.noDataAvailable")}
+                  value={item?.text || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.question.answer")}
-                  value={data?.data.reply.value || t("global.noDataAvailable")}
+                  value={
+                    item?.reply ? "Да" : "Нет" || t("global.noDataAvailable")
+                  }
                 />
               </div>
             </div>

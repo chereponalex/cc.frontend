@@ -26,7 +26,7 @@ const CreatNewCity = ({ item }: any) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>
+      </Notification>,
     );
   };
 
@@ -35,13 +35,13 @@ const CreatNewCity = ({ item }: any) => {
       await creatNew(form).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.CITY}.create`)
+        t(`toast.message.${TableTextConst.CITY}.create`),
       );
       navigate(`${routePrefix.city}`);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };

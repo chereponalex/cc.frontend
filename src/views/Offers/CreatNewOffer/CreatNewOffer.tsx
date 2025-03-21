@@ -13,7 +13,7 @@ import routePrefix from "@/configs/routes.config/routePrefix";
 import { TableTextConst } from "@/@types";
 import methodInsert from "@/utils/methodInsertBread";
 
-const CreatNewOffer = () => {
+const CreatNewOffer = ({ item }: any) => {
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -71,15 +71,14 @@ const CreatNewOffer = () => {
   };
 
   return (
-    <Loading loading={isLoading && isLoadingCreate} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
-      <FormOffer
-        object_id={objectID}
-        data={data?.data as any}
-        onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoadingCreate}
-      />
-    </Loading>
+    // <Loading loading={isLoading && isLoadingCreate} type="cover">
+    <FormOffer
+      object_id={objectID}
+      data={item}
+      onNextChange={handleCreatNew}
+      isLoadingEndpoint={isLoadingCreate}
+    />
+    // </Loading>
   );
 };
 

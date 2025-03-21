@@ -166,7 +166,7 @@ const FormCity = ({
                         const filteredRegions = values.country_id
                           ? countries.find(
                               (country: any) =>
-                                country.value === values.country_id
+                                country.value === values.country_id,
                             )?.regions || []
                           : [];
                         return (

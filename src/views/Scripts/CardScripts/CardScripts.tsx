@@ -17,33 +17,33 @@ import CustomerInfoField from "@/components/ui/CustomerInfoField";
 import { Script, TableTextConst } from "@/@types";
 import FormScripts from "@/views/Scripts/FormScripts";
 import methodInsert from "@/utils/methodInsertBread";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import routePrefix from "@/configs/routes.config/routePrefix";
+import { objScriptLocations } from "../Scripts";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const RadioComponent = ({ value }: any) => {
   return (
     <Radio.Group disabled={true} value={value} key={value}>
-      <Radio value="Да">Да</Radio>
-      <Radio value="Нет">Нет</Radio>
+      <Radio value={true}>Да</Radio>
+      <Radio value={false}>Нет</Radio>
     </Radio.Group>
   );
 };
 
-const CardScripts = () => {
+const CardScripts = ({ item }: any) => {
   const permissions: any = useAppSelector(
     (state) => state.auth.user.role?.permissions,
   );
+  const dispatch = useAppDispatch();
   const updateKey = `api.v1.crm.${TableTextConst.SCRIPT}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.SCRIPT}.delete_soft`;
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const isEditPage = searchParams.get("editPage");
   const isDuplicatePage = searchParams.get("duplicate");
 
-  const { data, isLoading } = useGetScriptByIdQuery(id as string);
   const [UpdateData] = useUpdateScriptByIdMutation();
   const [SoftDeleteScript] = useSoftDeleteScriptByIdMutation();
 
@@ -57,12 +57,13 @@ const CardScripts = () => {
 
   const handleUpdate = async (form: FormEssence<Script>) => {
     try {
-      await UpdateData({ id: id, ...form }).unwrap();
+      await UpdateData({ id: item?.id, ...form }).unwrap();
       openNotification(
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.SCRIPT}.update`),
       );
       setIsEdit(false);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
@@ -78,7 +79,7 @@ const CardScripts = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.SCRIPT}.delete`),
       );
-      navigate(`${routePrefix.script}`);
+      dispatch(setDrawerState(false));
     }
   };
 
@@ -89,50 +90,49 @@ const CardScripts = () => {
   }, []);
 
   return (
-    <Loading loading={!data && isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
+    <Loading /* loading={!data && isLoading} type="cover" */>
       <>
-        <div className="mb-8">
-          <h3 className="mb-2">
-            {t(`${TableTextConst.SCRIPT}Page.card.title`)} {data?.data.name}
+        <div className="mb-1 flex justify-between items-center w-full">
+          <h3 className="mb-2 text-base">
+            {t(`${TableTextConst.SCRIPT}Page.card.title`)} {item?.name}
           </h3>
         </div>
-        <div className="my-4 flex justify-end flex-col xl:flex-row gap-2">
+        <div className="mb-1 flex justify-end flex-row">
           {isEdit ? (
             <Button
               shape="circle"
               variant="plain"
               size="md"
-              icon={<HiEye />}
+              icon={<HiEye size={15} />}
               onClick={() => setIsEdit((prev) => !prev)}
             />
           ) : (
-            permissions[updateKey] && (
-              <Button
-                shape="circle"
-                variant="plain"
-                size="md"
-                icon={<HiPencil />}
-                onClick={() => setIsEdit((prev) => !prev)}
-              />
-            )
-          )}
-          {permissions[deleteSoftKey] && (
+            // permissions[updateKey] && (
             <Button
               shape="circle"
               variant="plain"
               size="md"
-              icon={<HiTrash />}
-              onClick={() => handleDelete(id as string)}
+              icon={<HiPencil size={15} />}
+              onClick={() => setIsEdit((prev) => !prev)}
             />
+            // )
           )}
+          {/* {permissions[deleteSoftKey] && ( */}
+          <Button
+            shape="circle"
+            variant="plain"
+            size="md"
+            icon={<HiTrash size={15} />}
+            onClick={() => handleDelete(item?.id as string)}
+          />
+          {/* )} */}
         </div>
         {isEdit ? (
           <FormScripts
             duplicate={isDuplicatePage}
-            data={data?.data}
+            data={item}
             onNextChange={handleUpdate}
-            isLoadingEndpoint={isLoading}
+            // isLoadingEndpoint={isLoading}
             isEdit
           />
         ) : (
@@ -141,48 +141,44 @@ const CardScripts = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                 <CustomerInfoField
                   title={t("formInput.scripts.id")}
-                  value={data?.data.int_id || t("global.noDataAvailable")}
+                  value={item?.int_id || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.scripts.name")}
-                  value={data?.data.name || t("global.noDataAvailable")}
+                  value={item?.name || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.scripts.script")}
-                  value={data?.data.text || t("global.noDataAvailable")}
+                  value={item?.text || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.scripts.script_location")}
                   value={
-                    data?.data?.script_location?.value ||
+                    objScriptLocations[item?.script_location] ||
                     t("global.noDataAvailable")
                   }
                 />
-                {data?.data.script_location.key === "TRANSFER" && (
+                {item?.script_location.key === "TRANSFER" && (
                   <CustomerInfoField
                     title={t("formInput.scripts.types_transfers")}
-                    value={
-                      data?.data?.type?.value || t("global.noDataAvailable")
-                    }
+                    value={item?.type?.value || t("global.noDataAvailable")}
                   />
                 )}
                 <CustomerInfoField
                   title={t("formInput.scripts.question")}
                   value={
-                    ((data && data.data?.questions?.length > 0 && (
+                    ((item && item?.questions?.length > 0 && (
                       <div>
-                        {data.data.questions.map(
-                          (question: any, index: number) => {
-                            return (
-                              <div key={index} style={{ marginBottom: "12px" }}>
-                                <p>
-                                  {index + 1} - {question.text}
-                                </p>
-                                <RadioComponent value={question.reply} />
-                              </div>
-                            );
-                          },
-                        )}
+                        {item.questions.map((question: any, index: number) => {
+                          return (
+                            <div key={index} style={{ marginBottom: "12px" }}>
+                              <p>
+                                {index + 1} - {question.text}
+                              </p>
+                              <RadioComponent value={question.reply} />
+                            </div>
+                          );
+                        })}
                       </div>
                     )) as any) || t("global.noDataAvailable")
                   }

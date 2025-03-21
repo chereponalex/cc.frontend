@@ -31,10 +31,10 @@ const FormRegion = ({
   const { data: selectInfo = null, isLoading: isLoadingCountries } =
     //@ts-ignore
     useSelectInfoCountriesQuery();
-    const countries = (selectInfo?.data || []) as SelectInfoCountry[];
+  const countries = (selectInfo?.data || []) as SelectInfoCountry[];
   const onNext = (values: FormEssenceRegion) => {
     onNextChange?.(values);
-    dispatch(setDrawerState(false))
+    dispatch(setDrawerState(false));
   };
 
   const initialValues: FormEssenceRegion = useMemo(() => {
@@ -94,7 +94,7 @@ const FormRegion = ({
                           options={countries}
                           value={countries?.filter(
                             (country: any) =>
-                              country.value === values.country_id
+                              country.value === values.country_id,
                           )}
                           onChange={(country) => {
                             if (country) {

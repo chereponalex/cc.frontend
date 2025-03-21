@@ -115,47 +115,47 @@ export const FormBindToBuilding = ({
                       </>
                     ) : (
                       <>
-                        {permissions[updateKey] && (
-                          <Button
-                            type="button"
-                            size="md"
-                            style={{ minWidth: "100px", marginTop: "0.5rem" }}
-                            className="float-right ml-5 pl-2 pr-2"
-                            icon={<HiPlus />}
-                            onClick={() => setBindMode(true)}
-                          >
-                            <p style={{ fontSize: "12px" }}>
-                              {t(
-                                `${
-                                  TableTextConst.REALESTATEBUILDING
-                                }Page.buttons.${t(textConst)}AttachNew`,
-                              )}
-                            </p>
-                          </Button>
-                        )}
+                        {/* {permissions[updateKey] && ( */}
+                        <Button
+                          type="button"
+                          size="md"
+                          style={{ minWidth: "100px", marginTop: "0.5rem" }}
+                          className="float-right ml-5 pl-2 pr-2"
+                          icon={<HiPlus />}
+                          onClick={() => setBindMode(true)}
+                        >
+                          <p style={{ fontSize: "12px" }}>
+                            {t(
+                              `${
+                                TableTextConst.REALESTATEBUILDING
+                              }Page.buttons.${t(textConst)}AttachNew`,
+                            )}
+                          </p>
+                        </Button>
+                        {/* )} */}
                       </>
                     )}
                   </>
                 ) : (
                   <>
-                    {permissions[`api.v1.crm.${textConst}.create`] && (
-                      <Button
-                        type="submit"
-                        size="md"
-                        style={{ minWidth: "100px", marginTop: "0.5rem" }}
-                        className="float-right ml-5 pl-2 pr-2"
-                        icon={<HiPlus />}
-                        onClick={() => onSubmit()}
-                      >
-                        <p style={{ fontSize: "12px" }}>
-                          {t(
-                            `${
-                              TableTextConst.REALESTATEBUILDING
-                            }Page.buttons.${t(textConst)}AttachNew`,
-                          )}
-                        </p>
-                      </Button>
-                    )}
+                    {/* {permissions[`api.v1.crm.${textConst}.create`] && ( */}
+                    <Button
+                      type="submit"
+                      size="md"
+                      style={{ minWidth: "100px", marginTop: "0.5rem" }}
+                      className="float-right ml-5 pl-2 pr-2"
+                      icon={<HiPlus />}
+                      onClick={() => onSubmit()}
+                    >
+                      <p style={{ fontSize: "12px" }}>
+                        {t(
+                          `${TableTextConst.REALESTATEBUILDING}Page.buttons.${t(
+                            textConst,
+                          )}AttachNew`,
+                        )}
+                      </p>
+                    </Button>
+                    {/* )} */}
                   </>
                 )}
               </FormContainer>

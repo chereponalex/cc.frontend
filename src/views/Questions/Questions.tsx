@@ -14,6 +14,8 @@ import TablePage from "@/components/shared/TablePage";
 import useCustomLink from "@/utils/hooks/useCustomLink";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
+import CreatNewQuestion from "./CreatNewQuestion";
+import CardQuestion from "./CardQuestion";
 
 const Questions = () => {
   const { t } = useTranslation();
@@ -37,7 +39,10 @@ const Questions = () => {
       },
       {
         header: t("table.columnsHeader.answer"),
-        accessorKey: "reply.value",
+        accessorKey: "reply",
+        cell: function (props) {
+          return props.row.original.reply ? "Да" : "Нет";
+        },
       },
     ];
   }, []);
@@ -46,6 +51,10 @@ const Questions = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"), "вопрос")}
       <TablePage<Question>
+        childrenDrawer={{
+          card: CardQuestion,
+          create: CreatNewQuestion,
+        }}
         columns={columns}
         textConst={TableTextConst.QUESTION}
         data={questions}

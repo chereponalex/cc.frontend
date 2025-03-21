@@ -23,6 +23,8 @@ import Dialog from "@/components/ui/Dialog";
 import TableWorkHoursBindOffer from "@/components/shared/TableWorkHoursBindOffer";
 import methodInsert from "@/utils/methodInsertBread";
 import { useAppSelector } from "@/store";
+import CardOffer from "./CardOffer";
+import CreatNewOffer from "./CreatNewOffer";
 
 const SwitcherComponent = ({ value, onClick }: any) => {
   const permissions: any = useAppSelector(
@@ -373,6 +375,10 @@ const Offers = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<Offer>
+        childrenDrawer={{
+          card: CardOffer,
+          create: CreatNewOffer,
+        }}
         columns={columns}
         textConst={TableTextConst.OFFER}
         data={offers}

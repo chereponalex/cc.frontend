@@ -1,35 +1,22 @@
 import { useTranslation } from "react-i18next";
-import {
-  useCreatNewMarketplaceMutation,
-  useGetMarketplaceByIdQuery,
-} from "@/services/RtkQueryService";
+import { useCreatNewMarketplaceMutation } from "@/services/RtkQueryService";
 import { Loading } from "@/components/shared";
 import { toast } from "@/components/ui";
 import Notification from "@/components/ui/Notification";
 import { ToastType } from "@/@types/toast";
 import { FormEssence } from "@/@types/form";
-import { useNavigate, useParams } from "react-router-dom";
-import { useMemo } from "react";
-import { omit } from "lodash";
 import { Marketplace, TableTextConst } from "@/@types";
 import FormVenue from "@/views/Venues/FormVenue";
-import routePrefix from "@/configs/routes.config/routePrefix";
-import methodInsert from "@/utils/methodInsertBread";
 
-const CreatNewVenue = () => {
+import { setDrawerState } from "@/store/slices/actionState";
+import { useAppDispatch } from "@/store";
+
+const CreatNewVenue = ({ item }: any) => {
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const { data, isLoading } = useGetMarketplaceByIdQuery(id as string, {
-    skip: !id,
-  });
   const [creatNew, { isLoading: isLoadingCreate }] =
     useCreatNewMarketplaceMutation();
-
-  const formData = useMemo(() => {
-    return data ? omit(data.data, ["id", "links"]) : data;
-  }, [data]);
 
   const openNotification = (type: ToastType, text: string) => {
     toast.push(
@@ -46,7 +33,7 @@ const CreatNewVenue = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.VENUE}.create`),
       );
-      navigate(`${routePrefix.marketplace}`);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
@@ -55,16 +42,7 @@ const CreatNewVenue = () => {
     }
   };
 
-  return (
-    <Loading loading={isLoadingCreate} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
-      <FormVenue
-        data={formData}
-        onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoading}
-      />
-    </Loading>
-  );
+  return <FormVenue data={item} onNextChange={handleCreatNew} />;
 };
 
 export default CreatNewVenue;

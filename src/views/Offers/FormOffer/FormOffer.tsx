@@ -12,15 +12,19 @@ import { FormItem, FormContainer } from "@/components/ui/Form";
 
 import Input from "@/components/ui/Input";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
-import { TableTextConst } from "@/@types";
+import { SelectInfoOfferCombined, TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import { validationSchemaOffer } from "@/utils/validationForm";
-import { useGetOfferActionInfoQuery } from "@/services/RtkQueryService";
-import { useAppSelector } from "@/store";
+import {
+  useGetOfferActionInfoQuery,
+  useSelectInfoMarketplacesQuery,
+} from "@/services/RtkQueryService";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { components } from "react-select";
 import useDarkMode from "@/utils/hooks/useDarkmode";
 import cs from "classnames";
 import "../index.css";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const SwitcherComponent = ({ form, field, value }: any) => {
   const onSwitcherToggle = (value: boolean) => {
@@ -75,18 +79,26 @@ const FormOffer = ({
   object_id,
 }: CreatNewFormOfferProps) => {
   const [isDark] = useDarkMode();
+  const dispatch = useAppDispatch();
   const { mode } = useAppSelector((state) => state.theme);
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const {
+    data: selectInfoMarketplaces,
+    isLoading: isLoadingSelectInfoMarketplaces,
+  } =
+    //@ts-ignore
+    useSelectInfoMarketplacesQuery();
+
+  const marketplaceOptions = selectInfoMarketplaces?.data?.marketplaces;
+  const cityOptions = (selectInfoMarketplaces?.data?.combinedSelect ||
+    []) as SelectInfoOfferCombined[];
 
   const { data: selectInfo, isLoading: isLoadingSelectInfo } =
     //@ts-ignore
     useGetOfferActionInfoQuery();
 
-  const real_estate_buildings = selectInfo?.data.real_estate_buildings || {};
-  const marketplaces = selectInfo?.data.marketplaces || {};
-  const cities = selectInfo?.data.cities || {};
-  const developers = selectInfo?.data.developers || {};
   const scripts = selectInfo?.data.scripts || {};
 
   const onNext = (values: any, duplicate: boolean) => {
@@ -105,6 +117,7 @@ const FormOffer = ({
       });
     }
     onNextChange?.(duplicate === null ? onlyChangeFields : copiedValues);
+    dispatch(setDrawerState(false));
   };
 
   const initialValues: any = useMemo(() => {
@@ -135,27 +148,6 @@ const FormOffer = ({
     };
   }, [data]);
 
-  const optionsMarketPlaces = useMemo(() => {
-    const data = Object.entries(marketplaces);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [marketplaces]);
-
-  const optionsCities = useMemo(() => {
-    const result = [];
-    for (const cityId in cities) {
-      for (const valueId in cities[cityId]) {
-        result.push({
-          label: cities[cityId][valueId],
-          value: valueId,
-        });
-      }
-    }
-    return result;
-  }, [cities]);
-
   const optionsScripts = useMemo(() => {
     const data = Object.entries(scripts);
     return data.map(([id, value]) => ({
@@ -163,15 +155,6 @@ const FormOffer = ({
       value: id,
     }));
   }, [scripts]);
-
-  const actualOptions = (dataObj: any) => {
-    if (dataObj) {
-      return Object.entries(dataObj)?.map(([value, label]) => ({
-        label,
-        value,
-      }));
-    }
-  };
 
   return (
     <Loading type="cover" loading={data && isLoadingSelectInfo}>
@@ -275,8 +258,8 @@ const FormOffer = ({
                           field={field}
                           form={form}
                           components={{ NoOptionsMessage }}
-                          options={optionsMarketPlaces}
-                          value={optionsMarketPlaces.filter((market: any) => {
+                          options={marketplaceOptions}
+                          value={marketplaceOptions?.filter((market: any) => {
                             return market.value === values.marketplace_id;
                           })}
                           onChange={(market) => {
@@ -302,8 +285,8 @@ const FormOffer = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsCities}
-                          value={optionsCities.filter((city: any) => {
+                          options={cityOptions}
+                          value={cityOptions?.filter((city: any) => {
                             return city.value === values.city_id;
                           })}
                           onChange={(city: any) => {
@@ -331,35 +314,40 @@ const FormOffer = ({
                     asterisk
                   >
                     <Field name="real_estate_building_id">
-                      {({ field, form }: FieldProps) => (
-                        <Select
-                          size="xs"
-                          placeholder=""
-                          isDisabled={!values.city_id}
-                          field={field}
-                          form={form}
-                          options={actualOptions(
-                            real_estate_buildings[values.city_id],
-                          )}
-                          value={actualOptions(
-                            real_estate_buildings[values.city_id],
-                          )?.filter((object: any) => {
-                            return (
-                              object.value === values.real_estate_building_id
-                            );
-                          })}
-                          onChange={(object) => {
-                            if (object) {
-                              form.setFieldValue(field.name, object.value);
-                              form.setFieldValue(
-                                "developer_id",
-                                null,
-                                // developers[values.real_estate_building_id],
+                      {({ field, form }: FieldProps) => {
+                        const selectedCity = cityOptions?.find(
+                          (city: any) => city.value === values.city_id,
+                        );
+
+                        const optionsBuildings =
+                          selectedCity?.realEstateBuildings || [];
+
+                        return (
+                          <Select
+                            size="xs"
+                            placeholder=""
+                            isDisabled={!values.city_id}
+                            field={field}
+                            form={form}
+                            options={optionsBuildings}
+                            value={optionsBuildings?.filter((object: any) => {
+                              return (
+                                object.value === values.real_estate_building_id
                               );
-                            }
-                          }}
-                        />
-                      )}
+                            })}
+                            onChange={(object) => {
+                              if (object) {
+                                form.setFieldValue(field.name, object.value);
+                                form.setFieldValue(
+                                  "developer_id",
+                                  null,
+                                  // developers[values.real_estate_building_id],
+                                );
+                              }
+                            }}
+                          />
+                        );
+                      }}
                     </Field>
                   </FormItem>
                   <FormItem
@@ -372,37 +360,44 @@ const FormOffer = ({
                     asterisk
                   >
                     <Field name="developer_id">
-                      {({ field, form }: FieldProps) => (
-                        <Select
-                          size="xs"
-                          placeholder=""
-                          field={field}
-                          form={form}
-                          isDisabled={
-                            !values.real_estate_building_id ||
-                            !values.real_estate_building_id
-                          }
-                          options={actualOptions(
-                            developers[values.real_estate_building_id],
-                          )}
-                          value={
-                            developers[values.real_estate_building_id]
-                              ? actualOptions(
-                                  developers[values.real_estate_building_id],
-                                )?.filter((developer: any) => {
-                                  return (
-                                    developer.value === values.developer_id
-                                  );
-                                })
-                              : null
-                          }
-                          onChange={(developer) => {
-                            if (developer) {
-                              form.setFieldValue(field.name, developer.value);
+                      {({ field, form }: FieldProps) => {
+                        const selectedCity = cityOptions?.find(
+                          (city: any) => city.value === values.city_id,
+                        );
+
+                        const selectedBuilding =
+                          selectedCity?.realEstateBuildings?.find(
+                            (building: any) =>
+                              building.value === values.real_estate_building_id,
+                          );
+
+                        const optionsDevelopers = selectedBuilding?.developer
+                          ? [selectedBuilding.developer]
+                          : [];
+                        return (
+                          <Select
+                            size="xs"
+                            placeholder=""
+                            field={field}
+                            form={form}
+                            isDisabled={
+                              !values.real_estate_building_id ||
+                              !values.real_estate_building_id
                             }
-                          }}
-                        />
-                      )}
+                            options={optionsDevelopers}
+                            value={optionsDevelopers?.filter(
+                              (developer: any) => {
+                                return developer.value === values.developer_id;
+                              },
+                            )}
+                            onChange={(developer) => {
+                              if (developer) {
+                                form.setFieldValue(field.name, developer.value);
+                              }
+                            }}
+                          />
+                        );
+                      }}
                     </Field>
                   </FormItem>
                   <FormItem
@@ -608,12 +603,13 @@ const FormOffer = ({
                   >
                     <Button
                       type="button"
-                      onClick={() =>
-                        navigate(
-                          object_id
-                            ? `${routePrefix.real_estate_building}/${object_id}`
-                            : `${routePrefix.offer}`,
-                        )
+                      onClick={
+                        () => dispatch(setDrawerState(false))
+                        // navigate(
+                        //   object_id
+                        //     ? `${routePrefix.real_estate_building}/${object_id}`
+                        //     : `${routePrefix.offer}`,
+                        // )
                       }
                     >
                       {t("global.close")}

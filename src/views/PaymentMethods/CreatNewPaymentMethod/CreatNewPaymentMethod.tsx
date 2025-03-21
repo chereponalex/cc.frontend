@@ -15,21 +15,23 @@ import { PaymentMethod, TableTextConst } from "@/@types";
 import FormPaymentMethod from "@/views/PaymentMethods/FormPaymentMethod";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
+import { setDrawerState } from "@/store/slices/actionState";
+import { useAppDispatch } from "@/store";
 
-const CreatNewPaymentMethod = () => {
+const CreatNewPaymentMethod = ({ item }: any) => {
   const { t } = useTranslation();
-  const { id } = useParams();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetPaymentMethodByIdQuery(id as string, {
-    skip: !id,
-  });
+  // const { data, isLoading } = useGetPaymentMethodByIdQuery(id as string, {
+  //   skip: !id,
+  // });
   const [creatNew, { isLoading: isLoadingCreate }] =
     useCreatNewPaymentMethodMutation();
 
-  const formData = useMemo(() => {
-    return data ? omit(data.data, ["id", "links"]) : data;
-  }, [data]);
+  // const formData = useMemo(() => {
+  //   return data ? omit(data.data, ["id", "links"]) : data;
+  // }, [data]);
 
   const openNotification = (type: ToastType, text: string) => {
     toast.push(
@@ -46,6 +48,7 @@ const CreatNewPaymentMethod = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.PAYMENT_METHOD}.create`),
       );
+      dispatch(setDrawerState(false));
       navigate(`${routePrefix.payment_method}`);
     } catch (error) {
       openNotification(
@@ -57,11 +60,10 @@ const CreatNewPaymentMethod = () => {
 
   return (
     <Loading loading={isLoadingCreate} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
       <FormPaymentMethod
-        data={formData}
+        data={item}
         onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoading}
+        // isLoadingEndpoint={isLoading}
       />
     </Loading>
   );

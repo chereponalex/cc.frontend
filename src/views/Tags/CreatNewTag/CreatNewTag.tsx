@@ -15,18 +15,14 @@ import { TableTextConst, Tag } from "@/@types";
 import FormTag from "@/views/Tags/FormTag";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
+import { setDrawerState } from "@/store/slices/actionState";
+import { useAppDispatch } from "@/store";
 
-const CreatNewTag = () => {
+const CreatNewTag = ({ item }: any) => {
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const { data, isLoading } = useGetTagByIdQuery(id as string, { skip: !id });
   const [creatNew, { isLoading: isLoadingCreate }] = useCreatNewTagMutation();
-
-  const formData = useMemo(() => {
-    return data ? omit(data.data, ["id", "links"]) : data;
-  }, [data]);
 
   const openNotification = (type: ToastType, text: string) => {
     toast.push(
@@ -43,7 +39,7 @@ const CreatNewTag = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.TAG}.create`),
       );
-      navigate(`${routePrefix.tag}`);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
@@ -54,12 +50,7 @@ const CreatNewTag = () => {
 
   return (
     <Loading loading={isLoadingCreate} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
-      <FormTag
-        data={formData}
-        onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoading}
-      />
+      <FormTag data={item} onNextChange={handleCreatNew} />
     </Loading>
   );
 };

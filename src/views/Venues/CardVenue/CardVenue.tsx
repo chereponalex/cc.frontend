@@ -18,23 +18,22 @@ import { omit } from "lodash";
 import { Marketplace, TableTextConst, TypeField } from "@/@types";
 import FormVenue from "@/views/Venues/FormVenue";
 import methodInsert from "@/utils/methodInsertBread";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import routePrefix from "@/configs/routes.config/routePrefix";
+import { setDrawerState } from "@/store/slices/actionState";
 
-const CardVenue = () => {
+const CardVenue = ({ item }: any) => {
+  const dispatch = useAppDispatch();
   const permissions: any = useAppSelector(
     (state) => state.auth.user.role?.permissions,
   );
   const updateKey = `api.v1.crm.${TableTextConst.VENUE}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.VENUE}.delete_soft`;
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const isEditPage = searchParams.get("editPage");
 
-  const { data, isLoading } = useGetMarketplaceByIdQuery(id as string);
   const [UpdateData] = useUpdateMarketplaceByIdMutation();
   const [SoftDeleteMarket] = useSoftDeleteMarketplaceByIdMutation();
   const openNotification = (type: ToastType, text: string) => {
@@ -45,18 +44,15 @@ const CardVenue = () => {
     );
   };
 
-  const formData = useMemo(() => {
-    return data ? omit(data.data, ["id", "links"]) : data;
-  }, [data]);
-
   const handleUpdate = async (form: FormEssence<Marketplace>) => {
     try {
-      await UpdateData({ id: id, ...form }).unwrap();
+      await UpdateData({ id: item?.id, ...form }).unwrap();
       openNotification(
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.VENUE}.update`),
       );
       setIsEdit(false);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
@@ -72,7 +68,7 @@ const CardVenue = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.VENUE}.delete`),
       );
-      navigate(`${routePrefix.marketplace}`);
+      dispatch(setDrawerState(false));
     }
   };
 
@@ -83,12 +79,11 @@ const CardVenue = () => {
   }, []);
 
   return (
-    <Loading loading={!data && isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
+    <Loading /* loading={!data && isLoading} type="cover" */>
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
-            {t(`${TableTextConst.VENUE}Page.card.title`)} {data?.data.name}
+            {t(`${TableTextConst.VENUE}Page.card.title`)} {item?.name}
           </h3>
           <div className="mb-1 flex justify-end flex-row">
             {isEdit ? (
@@ -100,33 +95,33 @@ const CardVenue = () => {
                 onClick={() => setIsEdit((prev) => !prev)}
               />
             ) : (
-              permissions[updateKey] && (
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="md"
-                  icon={<HiPencil size={15} />}
-                  onClick={() => setIsEdit((prev) => !prev)}
-                />
-              )
-            )}
-            {permissions[deleteSoftKey] && (
+              // permissions[updateKey] && (
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
-                icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(id as string)}
+                icon={<HiPencil size={15} />}
+                onClick={() => setIsEdit((prev) => !prev)}
               />
+              // )
             )}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Button
+              shape="circle"
+              variant="plain"
+              size="md"
+              icon={<HiTrash size={15} />}
+              onClick={() => handleDelete(item?.id as string)}
+            />
+            {/* )} */}
           </div>
         </div>
 
         {isEdit ? (
           <FormVenue
-            data={formData}
+            data={item}
             onNextChange={handleUpdate}
-            isLoadingEndpoint={isLoading}
+            // isLoadingEndpoint={isLoading}
             isEdit
           />
         ) : (
@@ -134,14 +129,18 @@ const CardVenue = () => {
             <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                 <CustomerInfoField
-                  title={t("formInput.venues.name")}
-                  value={data?.data.name || t("global.noDataAvailable")}
+                  title={t("formInput.venues.id")}
+                  value={item?.int_id}
                 />
                 <CustomerInfoField
+                  title={t("formInput.venues.name")}
+                  value={item?.name || t("global.noDataAvailable")}
+                />
+                {/* <CustomerInfoField
                   title={t("formInput.venues.expertMode")}
                   value={data?.data.expert_mode}
                   type={TypeField.ICON}
-                />
+                /> */}
               </div>
             </div>
           </Card>

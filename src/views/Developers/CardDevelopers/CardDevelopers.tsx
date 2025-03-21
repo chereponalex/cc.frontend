@@ -23,7 +23,7 @@ import { useAppSelector } from "@/store";
 
 const CardDeveloper = ({ item }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions
+    (state) => state.auth.user.role?.permissions,
   );
   const updateKey = `api.v1.crm.${TableTextConst.DEVELOPERS}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.DEVELOPERS}.delete_soft`;
@@ -44,7 +44,7 @@ const CardDeveloper = ({ item }: any) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>
+      </Notification>,
     );
   };
 
@@ -57,13 +57,13 @@ const CardDeveloper = ({ item }: any) => {
       await UpdateData({ id: item.id, ...form }).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.DEVELOPERS}.update`)
+        t(`toast.message.${TableTextConst.DEVELOPERS}.update`),
       );
       setIsEdit(false);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };
@@ -73,7 +73,7 @@ const CardDeveloper = ({ item }: any) => {
     if (!deletedItem?.data.error) {
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.DEVELOPERS}.delete`)
+        t(`toast.message.${TableTextConst.DEVELOPERS}.delete`),
       );
       navigate(`${routePrefix.developer}`);
     }
@@ -91,7 +91,9 @@ const CardDeveloper = ({ item }: any) => {
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
-            {t(`${TableTextConst.DEVELOPERS}Page.card.title`)} {/* {data?.data.name} */}{item?.name}
+            {t(`${TableTextConst.DEVELOPERS}Page.card.title`)}{" "}
+            {/* {data?.data.name} */}
+            {item?.name}
           </h3>
           <div className="mb-1 flex justify-end flex-row">
             {isEdit ? (

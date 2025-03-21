@@ -20,7 +20,7 @@ const CreatNewDevelopers = ({ item }: any) => {
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
-console.log(item, 'item')
+  console.log(item, "item");
   // const { data, isLoading } = useGetDeveloperByIdQuery(id as string, {
   //   skip: !id,
   // });
@@ -31,7 +31,7 @@ console.log(item, 'item')
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>
+      </Notification>,
     );
   };
 
@@ -40,13 +40,13 @@ console.log(item, 'item')
       await creatNew(form).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.DEVELOPERS}.create`)
+        t(`toast.message.${TableTextConst.DEVELOPERS}.create`),
       );
       navigate(`${routePrefix.developer}`);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };

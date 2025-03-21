@@ -18,24 +18,23 @@ import { omit } from "lodash";
 import { TableTextConst, Tag } from "@/@types";
 import FormTag from "@/views/Tags/FormTag";
 import methodInsert from "@/utils/methodInsertBread";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import routePrefix from "@/configs/routes.config/routePrefix";
+import { setDrawerState } from "@/store/slices/actionState";
 
-const CardTag = () => {
+const CardTag = ({ item }: any) => {
   const permissions: any = useAppSelector(
     (state) => state.auth.user.role?.permissions,
   );
   const updateKey = `api.v1.crm.${TableTextConst.TAG}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.TAG}.delete_soft`;
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [isEdit, setIsEdit] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const isEditPage = searchParams.get("editPage");
 
-  const { data, isLoading } = useGetTagByIdQuery(id as string);
   const [UpdateData] = useUpdateTagByIdMutation();
   const [SoftDeleteTag] = useSoftDeleteTagByIdMutation();
   const openNotification = (type: ToastType, text: string) => {
@@ -46,18 +45,15 @@ const CardTag = () => {
     );
   };
 
-  const formData = useMemo(() => {
-    return data ? omit(data.data, ["id", "links"]) : data;
-  }, [data]);
-
   const handleCreatNew = async (form: FormEssence<Tag>) => {
     try {
-      await UpdateData({ id: id, ...form }).unwrap();
+      await UpdateData({ id: item?.id, ...form }).unwrap();
       openNotification(
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.TAG}.update`),
       );
       setIsEdit(false);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
@@ -73,7 +69,7 @@ const CardTag = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.TAG}.delete`),
       );
-      navigate(`${routePrefix.tag}`);
+      dispatch(setDrawerState(false));
     }
   };
 
@@ -84,12 +80,11 @@ const CardTag = () => {
   }, []);
 
   return (
-    <Loading loading={!data && isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
+    <Loading /* loading={!data && isLoading} type="cover" */>
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
-            {t(`${TableTextConst.TAG}Page.card.title`)} {data?.data.name}
+            {t(`${TableTextConst.TAG}Page.card.title`)} {item?.name}
           </h3>
           <div className="mb-1 flex justify-end flex-row">
             {isEdit ? (
@@ -101,33 +96,33 @@ const CardTag = () => {
                 onClick={() => setIsEdit((prev) => !prev)}
               />
             ) : (
-              permissions[updateKey] && (
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="md"
-                  icon={<HiPencil size={15} />}
-                  onClick={() => setIsEdit((prev) => !prev)}
-                />
-              )
-            )}
-            {permissions[deleteSoftKey] && (
+              // permissions[updateKey] && (
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
-                icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(id as string)}
+                icon={<HiPencil size={15} />}
+                onClick={() => setIsEdit((prev) => !prev)}
               />
+              // )
             )}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Button
+              shape="circle"
+              variant="plain"
+              size="md"
+              icon={<HiTrash size={15} />}
+              onClick={() => handleDelete(item?.id as string)}
+            />
+            {/* )} */}
           </div>
         </div>
 
         {isEdit ? (
           <FormTag
-            data={formData}
+            data={item}
             onNextChange={handleCreatNew}
-            isLoadingEndpoint={isLoading}
+            // isLoadingEndpoint={isLoading}
             isEdit
           />
         ) : (
@@ -136,7 +131,7 @@ const CardTag = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                 <CustomerInfoField
                   title={t("formInput.tags.name")}
-                  value={data?.data.name || t("global.noDataAvailable")}
+                  value={item?.name || t("global.noDataAvailable")}
                 />
               </div>
             </div>

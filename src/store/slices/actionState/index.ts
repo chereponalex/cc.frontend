@@ -1,7 +1,6 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import actions, { ActionState } from "./actionStateSlice";
 
-
 const reducer = combineReducers({
   actions,
 });

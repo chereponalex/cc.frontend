@@ -16,6 +16,14 @@ import routePrefix from "@/configs/routes.config/routePrefix";
 import Dialog from "@/components/ui/Dialog";
 import { Button } from "@/components/ui";
 import methodInsert from "@/utils/methodInsertBread";
+import CreatNewScripts from "./CreatNewScripts";
+import CardScripts from "./CardScripts";
+
+export const objScriptLocations: { [key: string]: string } = {
+  PRESENTATION: "К блоку Презентация",
+  QUESTION: "К блоку Вопросы",
+  TRANSFER: "К блоку Перевод",
+};
 
 const Scripts = () => {
   const { t } = useTranslation();
@@ -92,9 +100,9 @@ const Scripts = () => {
       },
       {
         header: t("table.columnsHeader.script_location"),
-        accessorKey: "script",
+        accessorKey: "script_location",
         cell: function (props) {
-          return <>{props.row.original?.script_location?.value}</>;
+          return <>{objScriptLocations[props.row.original?.script_location]}</>;
         },
       },
     ];
@@ -104,6 +112,10 @@ const Scripts = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<Script>
+        childrenDrawer={{
+          card: CardScripts,
+          create: CreatNewScripts,
+        }}
         columns={columns}
         textConst={TableTextConst.SCRIPT}
         data={scripts}

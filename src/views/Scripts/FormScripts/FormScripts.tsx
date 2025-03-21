@@ -11,14 +11,18 @@ import { Script, TableTextConst } from "@/@types";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import routePrefix from "@/configs/routes.config/routePrefix";
-import { useGetScriptActionInfoQuery } from "@/services/RtkQueryService";
+import {
+  useGetScriptActionInfoQuery,
+  useSelectInfoScriptQuery,
+} from "@/services/RtkQueryService";
 import TableScript from "@/components/shared/TableScript";
 import { useEffect, useMemo, useState } from "react";
 import { Loading } from "@/components/shared";
 import "./index.css";
 import cs from "classnames";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import useDarkMode from "@/utils/hooks/useDarkmode";
+import { setDrawerState } from "@/store/slices/actionState";
 
 type ScriptDataProps = {
   id: string;
@@ -33,21 +37,25 @@ const FormScripts = (
     duplicate,
   }: any /* CreatNewFormProps<FormEssence<Script>> */,
 ) => {
-  const { mode } = useAppSelector((state) => state.theme);
-  // const mode = useStorage().getItem("mode");
-
+  const dispatch = useAppDispatch();
   const [isDark] = useDarkMode();
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const {
     data: selectInfo,
     isLoading: isLoadingSelectInfo,
     //@ts-ignore
   } = useGetScriptActionInfoQuery();
 
+  const { data: selectInfoScript, isLoading: isLoadingSelectInfoScript } =
+    //@ts-ignore
+    useSelectInfoScriptQuery();
+  // console.log(selectInfoScript, 'selectInfoScript')
+
   const scriptLocations = selectInfo?.data.script_locations || {};
   const typesTransfers = selectInfo?.data.types || {};
 
+  const script_locations = selectInfoScript?.data?.script_location;
+  console.log(script_locations, "script_locations");
   const optionsTypesTransfers = useMemo(() => {
     return Object.entries(typesTransfers).map(([value, label]) => ({
       label,
@@ -92,13 +100,14 @@ const FormScripts = (
             { ...values, questions: filtered }
           : { ...values, questions: filtered },
     );
+    // dispatch(setDrawerState(false));
   };
 
   const initialValues: any = useMemo(() => {
     return {
       name: data?.name || "",
       text: data?.text || "",
-      script_location: data?.script_location.key || "",
+      script_location: data?.script_location || "",
       type: data?.type?.key || "",
     };
   }, [data]);
@@ -112,6 +121,7 @@ const FormScripts = (
         onSubmit={(values) => onNext(values, duplicate)}
       >
         {({ values, touched, errors }) => {
+          console.log(values, "values");
           return (
             <Form>
               <FormContainer>
@@ -146,17 +156,16 @@ const FormScripts = (
                     <Field name="script_location">
                       {({ field, form }: FieldProps) => (
                         <Select
+                          isLoading={isLoadingSelectInfoScript}
                           size="xs"
                           menuPlacement="auto"
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsScriptLocations}
-                          value={optionsScriptLocations.filter(
-                            (location: any) => {
-                              return location.value === values.script_location;
-                            },
-                          )}
+                          options={script_locations}
+                          value={script_locations?.filter((location: any) => {
+                            return location.value === values.script_location;
+                          })}
                           onChange={(location: any) => {
                             if (location) {
                               form.setFieldValue(field.name, location.value);
@@ -177,6 +186,7 @@ const FormScripts = (
                       <Field name="type">
                         {({ field, form }: FieldProps) => (
                           <Select
+                            isLoading={isLoadingSelectInfoScript}
                             size="xs"
                             menuPlacement="auto"
                             placeholder=""
@@ -228,7 +238,7 @@ const FormScripts = (
                   </FormItem>
                   <TableScript
                     loading={isLoadingSelectInfo}
-                    selectInfo={selectInfo?.data}
+                    selectInfo={selectInfoScript?.data}
                     dataCollection={dataCollection}
                     setDataColletion={setDataColletion}
                   />
@@ -246,7 +256,7 @@ const FormScripts = (
                 >
                   <Button
                     type="button"
-                    onClick={() => navigate(`${routePrefix.script}`)}
+                    onClick={() => dispatch(setDrawerState(false))}
                   >
                     {t("global.close")}
                   </Button>

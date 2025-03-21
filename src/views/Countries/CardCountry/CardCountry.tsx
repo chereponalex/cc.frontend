@@ -23,7 +23,7 @@ import { useAppSelector } from "@/store";
 
 const CardCountry = ({ item }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions
+    (state) => state.auth.user.role?.permissions,
   );
   const updateKey = `api.v1.crm.${TableTextConst.COUNTRY}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.COUNTRY}.delete_soft`;
@@ -41,7 +41,7 @@ const CardCountry = ({ item }: any) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>
+      </Notification>,
     );
   };
 
@@ -53,13 +53,13 @@ const CardCountry = ({ item }: any) => {
       }).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.COUNTRY}.update`)
+        t(`toast.message.${TableTextConst.COUNTRY}.update`),
       );
       setIsEdit(false);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };
@@ -69,7 +69,7 @@ const CardCountry = ({ item }: any) => {
     if (!deletedItem?.data.error) {
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.COUNTRY}.delete`)
+        t(`toast.message.${TableTextConst.COUNTRY}.delete`),
       );
       navigate(`${routePrefix.country}`);
     }

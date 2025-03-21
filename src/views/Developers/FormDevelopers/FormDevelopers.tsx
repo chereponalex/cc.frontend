@@ -21,7 +21,7 @@ const FormDevelopers = ({
 }: CreatNewFormProps<FormEssence<Developer>>) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const onNext = (values: FormEssenceDeveloper, duplicate: any) => {
     const onlyChangeFields = {} as any;
@@ -35,7 +35,7 @@ const FormDevelopers = ({
       });
     }
     onNextChange?.(duplicate === null ? onlyChangeFields : values);
-    dispatch(setDrawerState(false))
+    dispatch(setDrawerState(false));
   };
 
   const initialValues = {

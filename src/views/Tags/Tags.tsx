@@ -14,6 +14,8 @@ import TablePage from "@/components/shared/TablePage";
 import useCustomLink from "@/utils/hooks/useCustomLink";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
+import CardTag from "./CardTag";
+import CreatNewTag from "./CreatNewTag";
 
 const Tags = () => {
   const { t } = useTranslation();
@@ -46,6 +48,10 @@ const Tags = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<Tag>
+        childrenDrawer={{
+          card: CardTag,
+          create: CreatNewTag,
+        }}
         columns={columns}
         textConst={TableTextConst.TAG}
         data={tags}

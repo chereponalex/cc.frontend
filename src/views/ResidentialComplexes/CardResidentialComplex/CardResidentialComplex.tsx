@@ -72,7 +72,7 @@ const { METRO_STATIONS, PAYMENT_METHODS, TAGS, OBJECTS, OFFERS } =
 
 const SwitcherComponent = ({ value, onClick }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions
+    (state) => state.auth.user.role?.permissions,
   );
   const updateKeyOffer = `api.v1.crm.${TableTextConst.OFFER}.update`;
 
@@ -94,7 +94,7 @@ const SwitcherComponent = ({ value, onClick }: any) => {
 
 const CardResidentialComplex = ({ item }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions
+    (state) => state.auth.user.role?.permissions,
   );
 
   // const updateKey = `api.v1.crm.${TableTextConst.REALESTATEBUILDING}.update`;
@@ -123,7 +123,7 @@ const CardResidentialComplex = ({ item }: any) => {
     [key: string]: { square: string | null; price: string | null };
   }>({});
   const [isEditDriving, setIsEditDriving] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
   const [isEditSquare, setIsEditSquare] = useState<Record<string, boolean>>({});
   const [isEditPrice, setIsEditPrice] = useState<Record<string, boolean>>({});
@@ -218,7 +218,7 @@ const CardResidentialComplex = ({ item }: any) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>
+      </Notification>,
     );
   };
   const bindItemToBuilding = async (newIds: {
@@ -270,7 +270,7 @@ const CardResidentialComplex = ({ item }: any) => {
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };
@@ -367,13 +367,13 @@ const CardResidentialComplex = ({ item }: any) => {
         }
         openNotification(
           ToastType.SUCCESS,
-          t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`)
+          t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`),
         );
       }
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };
@@ -435,13 +435,13 @@ const CardResidentialComplex = ({ item }: any) => {
       }
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.METRO_STATION}.update`)
+        t(`toast.message.${TableTextConst.METRO_STATION}.update`),
       );
     } catch (error) {
       console.log(error, "error");
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };
@@ -450,7 +450,7 @@ const CardResidentialComplex = ({ item }: any) => {
       fetchLoading.current = true;
       const fieldToUpdate = type === "price" ? "price" : "square";
       const updatedValue = Number(
-        inputChangeObject.current[rowId]?.[fieldToUpdate]?.replace(/\s/g, "")
+        inputChangeObject.current[rowId]?.[fieldToUpdate]?.replace(/\s/g, ""),
       );
       const res: any = await UpdateDataObject({
         id: rowId,
@@ -471,7 +471,7 @@ const CardResidentialComplex = ({ item }: any) => {
       console.log(error, "error");
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };
@@ -491,7 +491,7 @@ const CardResidentialComplex = ({ item }: any) => {
   const handleInputChangeObject = (
     rowId: string,
     field: string,
-    value: string
+    value: string,
   ) => {
     if (rowId) {
       inputChangeObject.current = {
@@ -539,7 +539,7 @@ const CardResidentialComplex = ({ item }: any) => {
                     handleInputChange(
                       props.row.original.id,
                       "time_on_car",
-                      e.target.value
+                      e.target.value,
                     )
                   }
                 />
@@ -553,7 +553,7 @@ const CardResidentialComplex = ({ item }: any) => {
                       handleInputChange(
                         props.row.original.id,
                         "time_on_car",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                   />
@@ -604,7 +604,7 @@ const CardResidentialComplex = ({ item }: any) => {
                     handleInputChange(
                       props.row.original.id,
                       "time_on_foot",
-                      e.target.value
+                      e.target.value,
                     )
                   }
                 />
@@ -618,7 +618,7 @@ const CardResidentialComplex = ({ item }: any) => {
                       handleInputChange(
                         props.row.original.id,
                         "time_on_foot",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                   />
@@ -726,7 +726,7 @@ const CardResidentialComplex = ({ item }: any) => {
           return useCustomLink(
             routePrefix.marketplace,
             props.row.original.marketplace,
-            maxLength
+            maxLength,
           );
         },
       },
@@ -737,7 +737,7 @@ const CardResidentialComplex = ({ item }: any) => {
           return useCustomLink(
             routePrefix.developer,
             props.row.original.developer,
-            maxLength
+            maxLength,
           );
         },
       },
@@ -747,11 +747,10 @@ const CardResidentialComplex = ({ item }: any) => {
         cell: function (props) {
           return (
             <>
-              {Object.entries(props.row.original.scripts || {}).length > 0 
-              // &&
-              // permissions[viewKeyScript] 
-              
-              ? (
+              {Object.entries(props.row.original.scripts || {}).length > 0 ? (
+                // &&
+                // permissions[viewKeyScript]
+
                 <Button
                   size="xs"
                   style={{ padding: "4px" }}
@@ -784,7 +783,7 @@ const CardResidentialComplex = ({ item }: any) => {
                             {script.script_location?.value || "Не указано"}
                           </p>
                         </li>
-                      )
+                      ),
                     )}
                   </ul>
                 </div>
@@ -813,14 +812,14 @@ const CardResidentialComplex = ({ item }: any) => {
             <>
               {/* {
               permissions[viewKeyWorkTime] ? ( */}
-                <Button
-                  size="xs"
-                  style={{ padding: "4px" }}
-                  variant="plain"
-                  onClick={() => openDialog(props.row.original.id, "work_time")}
-                >
-                  <p style={{ textDecoration: "underline" }}>Посмотреть</p>
-                </Button>
+              <Button
+                size="xs"
+                style={{ padding: "4px" }}
+                variant="plain"
+                onClick={() => openDialog(props.row.original.id, "work_time")}
+              >
+                <p style={{ textDecoration: "underline" }}>Посмотреть</p>
+              </Button>
               {/* ) : (
                 "-"
               )} */}
@@ -987,14 +986,14 @@ const CardResidentialComplex = ({ item }: any) => {
                       Number(
                         props.row.original?.square
                           ?.toString()
-                          ?.replace(/\D/g, "")
-                      )
+                          ?.replace(/\D/g, ""),
+                      ),
                     )}
                     onChange={(e) =>
                       handleInputChangeObject(
                         props.row.original.id,
                         "square",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                   />
@@ -1047,14 +1046,14 @@ const CardResidentialComplex = ({ item }: any) => {
                     size="xs"
                     defaultValue={thousandSeparatorValue(
                       Number(
-                        props.row.original.price.toString().replace(/\D/g, "")
-                      )
+                        props.row.original.price.toString().replace(/\D/g, ""),
+                      ),
                     )}
                     onChange={(e) =>
                       handleInputChangeObject(
                         props.row.original.id,
                         "price",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                   />
@@ -1099,13 +1098,13 @@ const CardResidentialComplex = ({ item }: any) => {
       await UpdateData({ id: item?.id, ...form }).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`)
+        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`),
       );
       setIsEdit(false);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };
@@ -1122,12 +1121,12 @@ const CardResidentialComplex = ({ item }: any) => {
       });
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.OFFER}.update`)
+        t(`toast.message.${TableTextConst.OFFER}.update`),
       );
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };
@@ -1137,7 +1136,7 @@ const CardResidentialComplex = ({ item }: any) => {
     if (!deletedItem?.data.error) {
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.delete`)
+        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.delete`),
       );
       dispatch(setDrawerState(false));
       // navigate(`${routePrefix.real_estate_building}`);
@@ -1170,23 +1169,23 @@ const CardResidentialComplex = ({ item }: any) => {
               />
             ) : (
               // permissions[updateKey] && (
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="md"
-                  icon={<HiPencil size={15} />}
-                  onClick={() => setIsEdit((prev) => !prev)}
-                />
-              // )
-            )}
-            {/* {permissions[deleteSoftKey] && ( */}
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
-                icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(item?.id as string)}
+                icon={<HiPencil size={15} />}
+                onClick={() => setIsEdit((prev) => !prev)}
               />
+              // )
+            )}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Button
+              shape="circle"
+              variant="plain"
+              size="md"
+              icon={<HiTrash size={15} />}
+              onClick={() => handleDelete(item?.id as string)}
+            />
             {/* )} */}
           </div>
         </div>
@@ -1292,9 +1291,7 @@ const CardResidentialComplex = ({ item }: any) => {
                   />
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.description")}
-                    value={
-                      item?.description || t("global.noDataAvailable")
-                    }
+                    value={item?.description || t("global.noDataAvailable")}
                   />
                 </div>
               </div>
@@ -1305,25 +1302,25 @@ const CardResidentialComplex = ({ item }: any) => {
           <Tabs value={currentTab} onChange={(val) => setCurrentTab(val)}>
             <TabList>
               {/* {permissions[viewKeyPaymentMethod] && ( */}
-                <TabNav value={PAYMENT_METHODS}>
-                  {t("tabsText.paymentMethods")}
-                </TabNav>
+              <TabNav value={PAYMENT_METHODS}>
+                {t("tabsText.paymentMethods")}
+              </TabNav>
               {/* )} */}
               {/* {data?.info[METRO_STATIONS] &&
                 permissions[viewKeyMetroStastion] && ( */}
-                  <TabNav value={METRO_STATIONS}>
-                    {t("tabsText.metroStations")}
-                  </TabNav>
-                {/* )
+              <TabNav value={METRO_STATIONS}>
+                {t("tabsText.metroStations")}
+              </TabNav>
+              {/* )
                 } */}
               {/* {permissions[viewKeyTag] && ( */}
-                <TabNav value={TAGS}>{t("tabsText.tags")}</TabNav>
+              <TabNav value={TAGS}>{t("tabsText.tags")}</TabNav>
               {/* )} */}
               {/* {permissions[viewKeyObject] && ( */}
-                <TabNav value={OBJECTS}>{t("tabsText.objects")}</TabNav>
+              <TabNav value={OBJECTS}>{t("tabsText.objects")}</TabNav>
               {/* )} */}
               {/* {permissions[viewKeyOffer] && ( */}
-                <TabNav value={OFFERS}>{t("tabsText.offers")}</TabNav>
+              <TabNav value={OFFERS}>{t("tabsText.offers")}</TabNav>
               {/* )} */}
               {currentTab === METRO_STATIONS && bindMode && (
                 <Input

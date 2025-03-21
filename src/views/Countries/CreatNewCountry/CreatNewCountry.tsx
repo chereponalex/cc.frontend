@@ -24,7 +24,7 @@ const CreatNewCountry = ({ item }: any) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>
+      </Notification>,
     );
   };
 
@@ -33,13 +33,13 @@ const CreatNewCountry = ({ item }: any) => {
       await creatNew(form).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.COUNTRY}.create`)
+        t(`toast.message.${TableTextConst.COUNTRY}.create`),
       );
       navigate(`${routePrefix.country}`);
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message
+        (error as { message: string }).message,
       );
     }
   };

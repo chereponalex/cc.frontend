@@ -29,7 +29,7 @@ const AllRoutes = (props: AllRoutesProps) => {
   const userAuthority = Object.entries(permissions || {})
     .filter(([key, value]) => value === true)
     .map(([key]) => key);
-console.log(userAuthority, 'userAuthority')
+  console.log(userAuthority, "userAuthority");
   // const userAuthority = useMemo(() => {
   //   return Object.entries(permissions || {})
   //     .filter(([key, value]) => value === true)

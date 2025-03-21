@@ -9,6 +9,8 @@ import { validationSchemaTag } from "@/utils/validationForm";
 import { FormEssence } from "@/@types/form";
 import { Tag } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
+import { useAppDispatch } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const FormTag = ({
   data = {
@@ -19,10 +21,11 @@ const FormTag = ({
   isLoadingEndpoint,
 }: CreatNewFormProps<FormEssence<Tag>>) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onNext = (values: FormEssence<Tag>) => {
     onNextChange?.(values);
+    dispatch(setDrawerState(false));
   };
 
   return (
@@ -59,7 +62,7 @@ const FormTag = ({
               <div className="flex justify-end mt-4 gap-2">
                 <Button
                   type="button"
-                  onClick={() => navigate(`${routePrefix.tag}`)}
+                  onClick={() => dispatch(setDrawerState(false))}
                 >
                   {t("global.close")}
                 </Button>

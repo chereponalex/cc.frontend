@@ -40,7 +40,7 @@ function useAuth() {
     try {
       const resp = await apiSignIn(values);
       if (resp.data) {
-        console.log(resp.data, 'resp')
+        console.log(resp.data, "resp");
         const { token } = resp.data;
         useStorage().setItem("token", token);
         dispatch(signInSuccess(token));

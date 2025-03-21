@@ -22,7 +22,7 @@ import methodInsert from "@/utils/methodInsertBread";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { setDrawerState } from "@/store/slices/actionState";
 
-const CardRegion = ({item}: any) => {
+const CardRegion = ({ item }: any) => {
   const permissions: any = useAppSelector(
     (state) => state.auth.user.role?.permissions,
   );
@@ -73,7 +73,7 @@ const CardRegion = ({item}: any) => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.REGION}.delete`),
       );
-      dispatch(setDrawerState(false))
+      dispatch(setDrawerState(false));
       // navigate(`${routePrefix.region}`);
     }
   };
@@ -103,23 +103,23 @@ const CardRegion = ({item}: any) => {
               />
             ) : (
               // permissions[updateKey] && (
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="md"
-                  icon={<HiPencil size={15} />}
-                  onClick={() => setIsEdit((prev) => !prev)}
-                />
-              // )
-            )}
-            {/* {permissions[deleteSoftKey] && ( */}
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
-                icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(item?.id as string)}
+                icon={<HiPencil size={15} />}
+                onClick={() => setIsEdit((prev) => !prev)}
               />
+              // )
+            )}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Button
+              shape="circle"
+              variant="plain"
+              size="md"
+              icon={<HiTrash size={15} />}
+              onClick={() => handleDelete(item?.id as string)}
+            />
             {/* )} */}
           </div>
         </div>

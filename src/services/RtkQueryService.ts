@@ -926,7 +926,7 @@ const RtkQueryService = createApi({
     getPaymentMethods: build.query<Response<PaymentMethod[]>, RtkRequest>({
       query: (params) => {
         return {
-          url: "/crm/payment_method",
+          url: "/api/payment_method",
           method: params.method,
           params: params.method === "GET" ? params.body : undefined,
           data: params.method === "PUT" ? params.body : undefined,
@@ -945,7 +945,7 @@ const RtkQueryService = createApi({
     }),
     creatNewPaymentMethod: build.mutation<string, FormEssence<PaymentMethod>>({
       query: (body) => ({
-        url: `/crm/payment_method`,
+        url: `/api/payment_method/create`,
         method: "POST",
         data: body,
       }),
@@ -953,7 +953,7 @@ const RtkQueryService = createApi({
     }),
     updatePaymentMethodById: build.mutation<string, Partial<PaymentMethod>>({
       query: ({ id, ...body }) => ({
-        url: `/crm/payment_method/${id}`,
+        url: `/api/payment_method/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -961,14 +961,14 @@ const RtkQueryService = createApi({
     }),
     recoveryPaymentMethodById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/payment_method/${id}`,
+        url: `/api/payment_method/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["PaymentMethods"],
     }),
     softDeletePaymentMethodById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/payment_method/soft/${id}`,
+        url: `/api/payment_method/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["PaymentMethods"],
@@ -1093,7 +1093,7 @@ const RtkQueryService = createApi({
     //Script
     getScripts: build.query<Response<Script[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/script",
+        url: "/api/script",
         method: params.method,
         params: params.method === "GET" ? params.body : undefined,
         data: params.method === "PUT" ? params.body : undefined,
@@ -1120,7 +1120,7 @@ const RtkQueryService = createApi({
     }),
     creatNewScript: build.mutation<string, FormEssence<Script>>({
       query: (body) => ({
-        url: `/crm/script`,
+        url: `/api/script/create`,
         method: "POST",
         data: body,
       }),
@@ -1128,7 +1128,7 @@ const RtkQueryService = createApi({
     }),
     updateScriptById: build.mutation<string, Partial<Script>>({
       query: ({ id, ...body }) => ({
-        url: `/crm/script/${id}`,
+        url: `/api/script/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -1136,14 +1136,14 @@ const RtkQueryService = createApi({
     }),
     recoveryScriptById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/script/${id}`,
+        url: `/api/script/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["Scripts"],
     }),
     softDeleteScriptById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/script/soft/${id}`,
+        url: `/api/script/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Scripts"],
@@ -1171,11 +1171,19 @@ const RtkQueryService = createApi({
       }),
       invalidatesTags: ["Scripts"],
     }),
+    selectInfoScript: build.query<Response<SelectInfo[]>, Request>({
+      query: () => ({
+        url: "/api/select-info/scripts",
+        method: "GET",
+      }),
+      providesTags: ["Scripts"],
+      keepUnusedDataFor: 0,
+    }),
 
     //Marketplace
     getMarketplaces: build.query<Response<Marketplace[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/marketplace",
+        url: "/api/marketplace",
         method: params.method,
         params: params.method == "GET" ? params.body : undefined,
         data: params.method == "PUT" ? params.body : undefined,
@@ -1193,7 +1201,7 @@ const RtkQueryService = createApi({
     }),
     creatNewMarketplace: build.mutation<string, FormEssence<Marketplace>>({
       query: (body) => ({
-        url: `/crm/marketplace`,
+        url: `/api/marketplace/create`,
         method: "POST",
         data: body,
       }),
@@ -1201,7 +1209,7 @@ const RtkQueryService = createApi({
     }),
     updateMarketplaceById: build.mutation<string, Partial<Marketplace>>({
       query: ({ id, ...body }) => ({
-        url: `/crm/marketplace/${id}`,
+        url: `/api/marketplace/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -1209,14 +1217,14 @@ const RtkQueryService = createApi({
     }),
     recoveryMarketplaceById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/marketplace/${id}`,
+        url: `/api/marketplace/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["Marketplaces"],
     }),
     softDeleteMarketplaceById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/marketplace/soft/${id}`,
+        url: `/api/marketplace/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Marketplaces"],
@@ -1246,11 +1254,19 @@ const RtkQueryService = createApi({
       }),
       invalidatesTags: ["Marketplaces"],
     }),
+    selectInfoMarketplaces: build.query<Response<SelectInfo[]>, Request>({
+      query: () => ({
+        url: "/api/select-info/marketplaces",
+        method: "GET",
+      }),
+      providesTags: ["Marketplaces"],
+      keepUnusedDataFor: 0,
+    }),
 
     //Offers
     getOffers: build.query<Response<Offer[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/offer",
+        url: "/api/offer",
         method: params.method,
         params: params.method == "GET" ? params.body : undefined,
         data: params.method == "PUT" ? params.body : undefined,
@@ -1334,7 +1350,7 @@ const RtkQueryService = createApi({
     //Questions
     getQuestions: build.query<Response<any[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/question",
+        url: "/api/question",
         method: params.method,
         params: params.method == "GET" ? params.body : undefined,
         data: params.method == "PUT" ? params.body : undefined,
@@ -1344,7 +1360,7 @@ const RtkQueryService = createApi({
     }),
     creatNewQuestion: build.mutation<string, FormEssence<any>>({
       query: (body) => ({
-        url: `/crm/question`,
+        url: `/api/question/create`,
         method: "POST",
         data: body,
       }),
@@ -1360,7 +1376,7 @@ const RtkQueryService = createApi({
     }),
     updateQuestionById: build.mutation<string, Partial<any>>({
       query: ({ id, ...body }) => ({
-        url: `/crm/question/${id}`,
+        url: `/api/question/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -1368,14 +1384,14 @@ const RtkQueryService = createApi({
     }),
     recoveryQuestionById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/question/${id}`,
+        url: `/api/question/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["Questions"],
     }),
     softDeleteQuestionById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/question/soft/${id}`,
+        url: `/api/question/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Questions"],
@@ -1666,7 +1682,7 @@ const RtkQueryService = createApi({
           method: "DELETE",
         }),
         invalidatesTags: ["RealEstateBuildings"],
-      }
+      },
     ),
     recoveryRealEstateBuildingById: build.mutation<string, string>({
       query: (id) => ({
@@ -1821,11 +1837,12 @@ const RtkQueryService = createApi({
     }),
 
     //Tags
-    getTags: build.query<Response<Tag[]>, Request>({
+    getTags: build.query<Response<PaymentMethod[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/tag",
-        method: "GET",
-        params: params,
+        url: "/api/tag",
+        method: params.method,
+        params: params.method === "GET" ? params.body : undefined,
+        data: params.method === "PUT" ? params.body : undefined,
       }),
       providesTags: ["Tags"],
       keepUnusedDataFor: 0,
@@ -1840,7 +1857,7 @@ const RtkQueryService = createApi({
     }),
     creatNewTag: build.mutation<string, FormEssence<Tag>>({
       query: (body) => ({
-        url: `/crm/tag`,
+        url: `/api/tag/create`,
         method: "POST",
         data: body,
       }),
@@ -1848,7 +1865,7 @@ const RtkQueryService = createApi({
     }),
     updateTagById: build.mutation<string, Partial<Tag>>({
       query: ({ id, ...body }) => ({
-        url: `/crm/tag/${id}`,
+        url: `/api/tag/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -1856,14 +1873,14 @@ const RtkQueryService = createApi({
     }),
     recoveryTagById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/tag/${id}`,
+        url: `/api/tag/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["Tags"],
     }),
     softDeleteTagById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/tag/soft/${id}`,
+        url: `/api/tag/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Tags"],
@@ -2261,6 +2278,7 @@ export const {
   // Marketplaces
   useLazyGetMarketplacesQuery,
   useGetMarketplaceByIdQuery,
+  useSelectInfoMarketplacesQuery,
   useCreatNewMarketplaceMutation,
   useUpdateMarketplaceByIdMutation,
   useRecoveryMarketplaceByIdMutation,
@@ -2346,6 +2364,7 @@ export const {
   useLazyGetScriptsQuery,
   useGetScriptActionInfoQuery,
   useGetScriptByIdQuery,
+  useSelectInfoScriptQuery,
   useCreatNewScriptMutation,
   useUpdateScriptByIdMutation,
   useSoftDeleteScriptByIdMutation,

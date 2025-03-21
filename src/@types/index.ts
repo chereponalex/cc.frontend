@@ -11,7 +11,19 @@ export interface SelectInfoCountry {
   }[];
 }
 
-export interface SelectInfo{
+export interface SelectInfoOfferCombined {
+  combinedSelect: {
+    label: string;
+    value: string;
+    realEstateBuildings: {
+      label: string;
+      value: string;
+      developer: { label: string; value: string }[];
+    }[];
+  };
+}
+
+export interface SelectInfo {
   label: string;
   value: string;
 }

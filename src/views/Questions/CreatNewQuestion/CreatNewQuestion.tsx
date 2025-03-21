@@ -12,15 +12,13 @@ import FormObject from "../FormQuestion";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import { TableTextConst } from "@/@types";
 import methodInsert from "@/utils/methodInsertBread";
+import { useAppDispatch } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
-const CreatNewQuestion = () => {
+const CreatNewQuestion = ({ item }: any) => {
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const { data, isLoading } = useGetQuestionByIdQuery(id as string, {
-    skip: !id,
-  });
   const [creatNew, { isLoading: isLoadingCreate }] =
     useCreatNewQuestionMutation();
 
@@ -39,7 +37,7 @@ const CreatNewQuestion = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.QUESTION}.create`),
       );
-      navigate(`${routePrefix.question}`);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
@@ -49,12 +47,11 @@ const CreatNewQuestion = () => {
   };
 
   return (
-    <Loading loading={isLoading && isLoadingCreate} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.text)}
+    <Loading /* loading={isLoading && isLoadingCreate} type="cover" */>
       <FormObject
-        data={data?.data as any}
+        data={item}
         onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoadingCreate}
+        // isLoadingEndpoint={isLoadingCreate}
       />
     </Loading>
   );

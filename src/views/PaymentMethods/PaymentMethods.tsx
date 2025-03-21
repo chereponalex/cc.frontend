@@ -14,6 +14,8 @@ import TablePage from "@/components/shared/TablePage";
 import useCustomLink from "@/utils/hooks/useCustomLink";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
+import CardPaymentMethod from "./CardPaymentMethod";
+import CreatNewPaymentMethod from "./CreatNewPaymentMethod";
 
 const PaymentMethods = () => {
   const { t } = useTranslation();
@@ -49,6 +51,10 @@ const PaymentMethods = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<PaymentMethod>
+        childrenDrawer={{
+          card: CardPaymentMethod,
+          create: CreatNewPaymentMethod,
+        }}
         columns={columns}
         textConst={TableTextConst.PAYMENT_METHOD}
         data={paymentMethods}

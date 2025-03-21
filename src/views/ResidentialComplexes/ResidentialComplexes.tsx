@@ -49,7 +49,7 @@ const ResidentialComplexes = () => {
         cell: function (props) {
           return useCustomLink(
             routePrefix.real_estate_building,
-            props.row.original
+            props.row.original,
           );
         },
       },
@@ -59,7 +59,7 @@ const ResidentialComplexes = () => {
         cell: function (props) {
           return useCustomLink(
             routePrefix.developer,
-            props.row.original.developer
+            props.row.original.developer,
           );
         },
       },
