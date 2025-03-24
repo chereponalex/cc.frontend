@@ -5,6 +5,7 @@ import HeaderLogo from "@/components/template/HeaderLogo";
 import MobileNav from "@/components/template/MobileNav";
 import HorizontalNav from "@/components/template/HorizontalNav";
 import View from "@/views";
+import MapLinkComponent from "../shared/MapLinkComponent";
 
 const HeaderActionsStart = () => {
   return (
@@ -19,6 +20,7 @@ const HeaderActionsEnd = () => {
   return (
     <>
       <SidePanel />
+      <MapLinkComponent />
       <UserDropdown hoverable={false} />
     </>
   );
@@ -36,6 +38,7 @@ const SimpleLayout = () => {
             headerMiddle={<HorizontalNav />}
             headerEnd={<HeaderActionsEnd />}
           />
+          <div id="breadcrumbs">{/* <Breadcrumbs /> */}</div>
           <View pageContainerType="contained" />
         </div>
       </div>

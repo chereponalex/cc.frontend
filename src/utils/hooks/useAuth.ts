@@ -45,6 +45,7 @@ function useAuth() {
         useStorage().setItem("token", token);
         dispatch(signInSuccess(token));
         dispatch(setDefaultCity(resp.data?.city));
+        console.log(resp, "resp");
         useStorage().setItem("defaultCity", resp.data?.city.id);
         if (resp.data.employee.id && resp.data?.websockets) {
           const websocketChannels = resp.data?.websockets.channels;

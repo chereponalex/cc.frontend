@@ -38,7 +38,7 @@ const SwitcherComponent = ({ value, onClick }: any) => {
   return (
     <div>
       <Switcher
-        disabled={!permissions[updateKey]}
+        // disabled={!permissions[updateKey]}
         checked={value}
         color="green-500"
         onChange={onSwitcherToggle}
@@ -113,7 +113,7 @@ const Offers = () => {
       },
       {
         header: t("table.columnsHeader.offeractive"),
-        accessorKey: "is_active",
+        accessorKey: "isActive",
         cell: (props) => {
           const value: any = props.getValue();
           const rowId = props.row.original.id;
@@ -200,11 +200,11 @@ const Offers = () => {
       },
       {
         header: t("table.columnsHeader.nameObject"),
-        accessorKey: "real_estate_building.name",
+        accessorKey: "realEstateBuilding.name",
         cell: function (props) {
           return useCustomLink(
             routePrefix.real_estate_building,
-            props.row.original.real_estate_building,
+            props.row.original.realEstateBuilding,
             maxLength,
           );
         },
@@ -215,19 +215,22 @@ const Offers = () => {
         cell: function (props) {
           return (
             <>
-              {Object.entries(props.row.original.scripts || {}).length > 0 &&
-              permissions[viewKeyScript] ? (
-                <Button
-                  size="xs"
-                  style={{ padding: "4px" }}
-                  variant="plain"
-                  onClick={() => openDialog(props.row.original.id, "script")}
-                >
-                  <p style={{ textDecoration: "underline" }}>Посмотреть</p>
-                </Button>
-              ) : (
-                "-"
-              )}
+              {
+                Object.entries(props.row.original.scripts || {}).length > 0 && (
+                  // permissions[viewKeyScript] ? (
+                  <Button
+                    size="xs"
+                    style={{ padding: "4px" }}
+                    variant="plain"
+                    onClick={() => openDialog(props.row.original.id, "script")}
+                  >
+                    <p style={{ textDecoration: "underline" }}>Посмотреть</p>
+                  </Button>
+                )
+                // ) : (
+                //   "-"
+                // )
+              }
 
               <Dialog
                 width={580}
@@ -281,18 +284,18 @@ const Offers = () => {
         cell: (props) => {
           return (
             <>
-              {permissions[viewKeyWorkTime] ? (
-                <Button
-                  size="xs"
-                  style={{ padding: "4px" }}
-                  variant="plain"
-                  onClick={() => openDialog(props.row.original.id, "work_time")}
-                >
-                  <p style={{ textDecoration: "underline" }}>Посмотреть</p>
-                </Button>
-              ) : (
+              {/* {permissions[viewKeyWorkTime] ? ( */}
+              <Button
+                size="xs"
+                style={{ padding: "4px" }}
+                variant="plain"
+                onClick={() => openDialog(props.row.original.id, "work_time")}
+              >
+                <p style={{ textDecoration: "underline" }}>Посмотреть</p>
+              </Button>
+              {/* ) : (
                 "-"
-              )}
+              )} */}
               <Dialog
                 width={580}
                 isOpen={isOpen?.work_time?.[props.row.original.id]}

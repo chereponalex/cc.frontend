@@ -20,9 +20,10 @@ import routePrefix from "@/configs/routes.config/routePrefix";
 import FormOffer from "../FormOffer";
 import TableWorkHoursBindOffer from "@/components/shared/TableWorkHoursBindOffer";
 import methodInsert from "@/utils/methodInsertBread";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
-const CardOffer = () => {
+const CardOffer = ({ item }: any) => {
   const permissions: any = useAppSelector(
     (state) => state.auth.user.role?.permissions,
   );
@@ -32,14 +33,15 @@ const CardOffer = () => {
   const createKey = `api.v1.crm.${TableTextConst.WORK_TIME}.create`;
   const viewKey = `api.v1.crm.${TableTextConst.WORK_TIME}.view`;
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  // const { id } = useParams();
+  // const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const searchParams = new URLSearchParams(location.search);
   const isEditPage = searchParams.get("editPage");
   const isDuplicatePage = searchParams.get("duplicate");
 
-  const { data, isLoading, refetch } = useGetOfferByIdQuery(id as string);
+  // const { data, isLoading, refetch } = useGetOfferByIdQuery(id as string);
   const [UpdateData, { isLoading: updateLoading }] =
     useUpdateOfferByIdMutation();
   const [SoftDelete] = useSoftDeleteOfferByIdMutation();
@@ -62,7 +64,7 @@ const CardOffer = () => {
   const handleUpdate = async (form: Partial<Offer>) => {
     try {
       const updated = await UpdateData({
-        id,
+        id: item?.id,
         ...form,
       }).unwrap();
       if (updated?.error && updated?.error.hasOwnProperty("uis")) {
@@ -76,6 +78,7 @@ const CardOffer = () => {
           ToastType.SUCCESS,
           t(`toast.message.${TableTextConst.OFFER}.update`),
         );
+        dispatch(setDrawerState(false));
       }
       setIsEdit(false);
     } catch (error) {
@@ -93,7 +96,7 @@ const CardOffer = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.OFFER}.delete`),
       );
-      navigate(`${routePrefix.offer}`);
+      dispatch(setDrawerState(false));
     }
   };
 
@@ -104,12 +107,11 @@ const CardOffer = () => {
   }, []);
 
   return (
-    <Loading loading={(!data && isLoading) || updateLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
+    <Loading /* loading={(!data && isLoading) || updateLoading} type="cover" */>
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
-            {t(`${TableTextConst.OFFER}Page.card.title`)} {data?.data.name}
+            {t(`${TableTextConst.OFFER}Page.card.title`)} {item?.name}
           </h3>
           <div className="mb-1 flex justify-end flex-row">
             {isEdit ? (
@@ -121,34 +123,34 @@ const CardOffer = () => {
                 onClick={() => setIsEdit((prev) => !prev)}
               />
             ) : (
-              permissions[updateKey] && (
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="md"
-                  icon={<HiPencil size={15} />}
-                  onClick={() => setIsEdit((prev) => !prev)}
-                />
-              )
-            )}
-            {permissions[deleteSoftKey] && (
+              // permissions[updateKey] && (
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
-                icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(id as string)}
+                icon={<HiPencil size={15} />}
+                onClick={() => setIsEdit((prev) => !prev)}
               />
+              // )
             )}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Button
+              shape="circle"
+              variant="plain"
+              size="md"
+              icon={<HiTrash size={15} />}
+              onClick={() => handleDelete(item?.id as string)}
+            />
+            {/* )} */}
           </div>
         </div>
 
         {isEdit ? (
           <FormOffer
             duplicate={isDuplicatePage}
-            data={data?.data as any}
+            data={item}
             onNextChange={handleUpdate}
-            isLoadingEndpoint={isLoading || updateLoading}
+            // isLoadingEndpoint={isLoading || updateLoading}
             isEdit
           />
         ) : (
@@ -158,9 +160,7 @@ const CardOffer = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                   <CustomerInfoField
                     title={t("formInput.offer.external_id")}
-                    value={
-                      data?.data.external_id || t("global.noDataAvailable")
-                    }
+                    value={item?.external_id || t("global.noDataAvailable")}
                   />
                   {/* <FormItem
                     label={t("formInput.offer.is_active")}
@@ -172,7 +172,7 @@ const CardOffer = () => {
                       <Switcher
                         color="green-500"
                         disabled
-                        checked={data?.data.is_active}
+                        checked={item?.isActive}
                       />
                     }
                   />
@@ -180,60 +180,52 @@ const CardOffer = () => {
                   <CustomerInfoField
                     title={t("formInput.offer.priority")}
                     value={
-                      data?.data.priority?.toString() ||
-                      t("global.noDataAvailable")
+                      item?.priority?.toString() || t("global.noDataAvailable")
                     }
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.name")}
-                    value={data?.data.name || t("global.noDataAvailable")}
+                    value={item?.name || t("global.noDataAvailable")}
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.expert_mode")}
                     value={
-                      <Checkbox
-                        disabled
-                        checked={data?.data.expert_mode || false}
-                      />
+                      <Checkbox disabled checked={item?.expert_mode || false} />
                     }
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.marketplace")}
                     value={
-                      data?.data.marketplace?.name ||
-                      t("global.noDataAvailable")
+                      item?.marketplace?.name || t("global.noDataAvailable")
                     }
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.city")}
-                    value={data?.data.city?.name || t("global.noDataAvailable")}
+                    value={item?.city?.name || t("global.noDataAvailable")}
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.real_estate_buildings")}
                     value={
-                      data?.data.real_estate_building?.name ||
+                      item?.realEstateBuilding?.name ||
                       t("global.noDataAvailable")
                     }
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.developer")}
-                    value={
-                      data?.data.developer?.name || t("global.noDataAvailable")
-                    }
+                    value={item?.developer?.name || t("global.noDataAvailable")}
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.scripts")}
                     value={
                       (
                         <ul>
-                          {Object.entries(data?.data?.scripts || {}).map(
+                          {Object.entries(item?.scripts || {}).map(
                             ([key, script]: any) => (
                               <li key={script.id} className="mb-2">
                                 <h6>Название: {script.name}</h6>
                                 <p>
                                   Относится к:{" "}
-                                  {script.script_location?.value ||
-                                    "Не указано"}
+                                  {script.script_location || "Не указано"}
                                 </p>
                               </li>
                             ),
@@ -245,33 +237,31 @@ const CardOffer = () => {
                   <CustomerInfoField
                     title={t("formInput.offer.price")}
                     value={
-                      data?.data.price?.toString() ||
-                      t("global.noDataAvailable")
+                      item?.price?.toString() || t("global.noDataAvailable")
                     }
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.operator_award")}
                     value={
-                      data?.data.operator_award.toString() ||
+                      item?.operator_award.toString() ||
                       t("global.noDataAvailable")
                     }
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.sip_uri")}
-                    value={data?.data.sip_uri || t("global.noDataAvailable")}
+                    value={item?.sip_uri || t("global.noDataAvailable")}
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.uniqueness_period")}
                     value={
-                      data?.data.uniqueness_period?.toString() ||
+                      item?.uniqueness_period?.toString() ||
                       t("global.noDataAvailable")
                     }
                   />
                   <CustomerInfoField
                     title={t("formInput.offer.limit")}
                     value={
-                      data?.data.limit?.toString() ||
-                      t("global.noDataAvailable")
+                      item?.limit?.toString() || t("global.noDataAvailable")
                     }
                   />
                   <FormItem
@@ -280,7 +270,7 @@ const CardOffer = () => {
                   >
                     <Checkbox
                       disabled
-                      checked={data?.data.not_looking_for_himself || false}
+                      checked={item?.not_looking_for_himself || false}
                     />
                   </FormItem>
                   <FormItem
@@ -289,36 +279,36 @@ const CardOffer = () => {
                   >
                     <Checkbox
                       disabled
-                      checked={data?.data.client_is_out_of_town || false}
+                      checked={item?.client_is_out_of_town || false}
                     />
                   </FormItem>
                 </div>
               </div>
               <div className="flex justify-start items-center mb-10">
-                {permissions[createKey] && (
-                  <>
-                    <p className="mr-5">Время работы:</p>
-                    <Button
-                      // style={{ minWidth: "30%" }}
-                      size="xs"
-                      type="button"
-                      onClick={() =>
-                        navigate(
-                          `${routePrefix.work_time}/creat-new?offerID=${id}`,
-                        )
-                      }
-                    >
-                      {t(`${TableTextConst.OFFER}Page.buttons.redirect`)}
-                    </Button>
-                  </>
-                )}
+                {/* {permissions[createKey] && ( */}
+                <>
+                  <p className="mr-5">Время работы:</p>
+                  <Button
+                    // style={{ minWidth: "30%" }}
+                    size="xs"
+                    type="button"
+                    // onClick={() =>
+                    //   navigate(
+                    //     `${routePrefix.work_time}/creat-new?offerID=${id}`
+                    //   )
+                    // }
+                  >
+                    {t(`${TableTextConst.OFFER}Page.buttons.redirect`)}
+                  </Button>
+                </>
+                {/* )} */}
               </div>
-              {!isLoading && permissions[viewKey] && (
-                <TableWorkHoursBindOffer
-                  refetch={refetch}
-                  data={data?.data.work_time}
+              {
+                /* !isLoading &&  */ /* permissions[viewKey] && */ <TableWorkHoursBindOffer
+                // refetch={refetch}
+                // data={data?.data.work_time}
                 />
-              )}
+              }
             </Card>
           </>
         )}

@@ -55,7 +55,6 @@ const FormScripts = (
   const typesTransfers = selectInfo?.data.types || {};
 
   const script_locations = selectInfoScript?.data?.script_location;
-  console.log(script_locations, "script_locations");
   const optionsTypesTransfers = useMemo(() => {
     return Object.entries(typesTransfers).map(([value, label]) => ({
       label,

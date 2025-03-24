@@ -29,6 +29,7 @@ import {
   Report,
   SelectInfoCountry,
   SelectInfo,
+  SelectInfoOfferCombined,
 } from "@/@types";
 import {
   FormEssence,
@@ -1254,14 +1255,6 @@ const RtkQueryService = createApi({
       }),
       invalidatesTags: ["Marketplaces"],
     }),
-    selectInfoMarketplaces: build.query<Response<SelectInfo[]>, Request>({
-      query: () => ({
-        url: "/api/select-info/marketplaces",
-        method: "GET",
-      }),
-      providesTags: ["Marketplaces"],
-      keepUnusedDataFor: 0,
-    }),
 
     //Offers
     getOffers: build.query<Response<Offer[]>, RtkRequest>({
@@ -1293,7 +1286,7 @@ const RtkQueryService = createApi({
     }),
     creatNewOffer: build.mutation<Response<Offer>, FormEssence<Offer>>({
       query: (body) => ({
-        url: `/crm/offer`,
+        url: `/api/offer/create`,
         method: "POST",
         data: body,
       }),
@@ -1302,7 +1295,7 @@ const RtkQueryService = createApi({
     updateOfferById: build.mutation<Response<Offer>, Partial<Offer>>({
       query: ({ id, ...body }) => {
         return {
-          url: `/crm/offer/${id}`,
+          url: `/api/offer/edit/${id}`,
           method: "PATCH",
           data: body,
         };
@@ -1311,14 +1304,14 @@ const RtkQueryService = createApi({
     }),
     recoveryOfferById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/offer/${id}`,
+        url: `/api/offer/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["Offers"],
     }),
     softDeleteOfferById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/offer/soft/${id}`,
+        url: `/api/offer/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Offers"],
@@ -1346,6 +1339,16 @@ const RtkQueryService = createApi({
       }),
       invalidatesTags: ["Offers"],
     }),
+    selectInfoOffers: build.query<Response<SelectInfoOfferCombined[]>, Request>(
+      {
+        query: () => ({
+          url: "/api/select-info/offers",
+          method: "GET",
+        }),
+        providesTags: ["Offers"],
+        keepUnusedDataFor: 0,
+      },
+    ),
 
     //Questions
     getQuestions: build.query<Response<any[]>, RtkRequest>({
@@ -2001,7 +2004,7 @@ const RtkQueryService = createApi({
     getMapObjects: build.query<Response<any>, Request>({
       query: (params) => {
         return {
-          url: "/map/objects",
+          url: "api/map/objects",
           method: "GET",
           params: params,
         };
@@ -2026,7 +2029,7 @@ const RtkQueryService = createApi({
     getMapObjectById: build.query<Response<MapPoint>, any>({
       query: ({ id, params }) => {
         return {
-          url: `/map/object/${id}`,
+          url: `api/map/object/${id}`,
           method: "GET",
           params: params,
         };
@@ -2278,7 +2281,6 @@ export const {
   // Marketplaces
   useLazyGetMarketplacesQuery,
   useGetMarketplaceByIdQuery,
-  useSelectInfoMarketplacesQuery,
   useCreatNewMarketplaceMutation,
   useUpdateMarketplaceByIdMutation,
   useRecoveryMarketplaceByIdMutation,
@@ -2290,6 +2292,7 @@ export const {
   // Offers
   useLazyGetOffersQuery,
   useGetOfferActionInfoQuery,
+  useSelectInfoOffersQuery,
   useGetOffersQuery,
   useGetOfferByIdQuery,
   useCreatNewOfferMutation,

@@ -14,6 +14,7 @@ import routePrefix from "@/configs/routes.config/routePrefix";
 import {
   LAYOUT_TYPE_MAP,
   LAYOUT_TYPE_MODERN,
+  LAYOUT_TYPE_SIMPLE,
 } from "@/constants/theme.constant";
 
 export type AppRouteProps<T> = {
@@ -40,7 +41,7 @@ const AppRoute = <T extends Record<string, unknown>>({
     if (location.pathname === routePrefix.map) {
       dispatch(setLayoutMap(LAYOUT_TYPE_MAP));
     } else {
-      dispatch(setLayout(LAYOUT_TYPE_MODERN));
+      dispatch(setLayout(LAYOUT_TYPE_SIMPLE));
     }
   }, [location]);
 

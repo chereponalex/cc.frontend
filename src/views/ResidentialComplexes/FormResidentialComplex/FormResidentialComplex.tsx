@@ -90,7 +90,6 @@ const FormResidentialComplex = ({
 
   const onNext = (values: FormEssence<RealEstateBuilding>, duplicate: any) => {
     onNextChange?.(values);
-    dispatch(setDrawerState(false));
   };
 
   const initialValues: any = useMemo(() => {

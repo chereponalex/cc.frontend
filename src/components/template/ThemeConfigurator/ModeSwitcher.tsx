@@ -20,9 +20,9 @@ const ModeSwitcher = () => {
   };
 
   const onSwitchChange = useCallback(
-    (e: boolean) => {
-      // setIsDark(checked ? "dark" : "light");
+    (e: any) => {
       setIsDark(e.target.checked ? "dark" : "light");
+      // setIsDark(e.target.checked ? "dark" : "light");
     },
     [setIsDark],
   );

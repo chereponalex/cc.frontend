@@ -2,6 +2,7 @@ import hours_glass from "../assets/svg/hours-glass.svg";
 import pieChartGenerate from "./pieChartGenerate";
 
 const customMarkers = (point: MapPoint, yMap: any, clickArea?: any) => {
+  console.log(point, "point");
   const urlParams = new URLSearchParams(window.location.search);
   const pointId = urlParams.get("pointId");
   const { latitude, longitude, objects, is_region, name, deadline, id } = point;
@@ -58,17 +59,17 @@ const customMarkers = (point: MapPoint, yMap: any, clickArea?: any) => {
     return [location, {}, defaultStyleFunc(1, ["red"], Boolean(hasAward))];
   }
 
-  if (!is_region && objects.is_apartments) {
+  if (!is_region && objects?.is_apartments) {
     return [
       location,
       {},
       defaultStyleFunc(2, ["red", "#068809"], Boolean(hasAward)),
     ];
   }
-  if (is_region && objects.is_apartments && !objects.is_flats) {
+  if (is_region && objects?.is_apartments && !objects.is_flats) {
     return [location, {}, defaultStyleFunc(1, ["red"], Boolean(hasAward))];
   }
-  if (is_region && objects.is_apartments) {
+  if (is_region && objects?.is_apartments) {
     return [
       location,
       {},

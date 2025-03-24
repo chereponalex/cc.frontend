@@ -16,6 +16,7 @@ const Header = (props: HeaderProps) => {
   return (
     <header className={classNames("header", className)}>
       <div
+        // style={{marginLeft: "10px", marginRight: "10px"}}
         className={classNames(
           "header-wrapper",
           HEADER_HEIGHT_CLASS,

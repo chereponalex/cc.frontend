@@ -12,17 +12,17 @@ import FormOffer from "../FormOffer";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import { TableTextConst } from "@/@types";
 import methodInsert from "@/utils/methodInsertBread";
+import { setDrawerState } from "@/store/slices/actionState";
+import { useAppDispatch } from "@/store";
 
 const CreatNewOffer = ({ item }: any) => {
   const { t } = useTranslation();
   const { id } = useParams();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const objectID = searchParams.get("objectID");
 
-  const { data, isLoading } = useGetOfferByIdQuery(id as string, {
-    skip: !id,
-  });
   const [creatNew, { isLoading: isLoadingCreate }] = useCreatNewOfferMutation();
 
   const openNotification = (
@@ -44,7 +44,6 @@ const CreatNewOffer = ({ item }: any) => {
   const handleCreatNew = async (form: any) => {
     try {
       const created = await creatNew(form).unwrap();
-      console.log(created, "created");
       if (created?.error && created?.error.hasOwnProperty("uis")) {
         openNotification(
           ToastType.WARNING,
@@ -56,6 +55,7 @@ const CreatNewOffer = ({ item }: any) => {
           ToastType.SUCCESS,
           t(`toast.message.${TableTextConst.OFFER}.create`),
         );
+        dispatch(setDrawerState(false));
       }
       navigate(
         objectID

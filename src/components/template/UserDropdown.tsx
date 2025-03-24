@@ -16,6 +16,8 @@ import displayStep from "@/utils/displayProgressStep";
 import { useEffect, useState } from "react";
 import useElementWidthStatic from "@/utils/hooks/useElementWidthStatic";
 import { Loading } from "@/components/shared";
+import Spinner from "@/components/ui/Spinner";
+import { ImSpinner9 } from "react-icons/im";
 
 type DropdownList = {
   label: string;
@@ -68,11 +70,11 @@ const _UserDropdown = ({ className }: CommonProps) => {
         style={{
           width: `${width + 20}px`,
         }}
-        className="absolute bottom-[-8px] left-[52px] flex"
+        className="absolute bottom-[4px] left-[52px] flex"
       >
         {isLoading ? (
           <div className="w-[15px] absolute bottom-[-8px]">
-            <Loading loading={true} />
+            <Spinner isSpining={true} size={15} indicator={ImSpinner9} />
           </div>
         ) : (
           <Progress

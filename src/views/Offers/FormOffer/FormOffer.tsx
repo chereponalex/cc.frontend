@@ -1,24 +1,14 @@
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import Radio from "@/components/ui/Radio";
-import BaseService from "@/services/BaseService";
-
 import { CreatNewFormOfferProps } from "@/@types/props";
-
 import { Loading } from "@/components/shared";
 import { Field, FieldProps, Form, Formik } from "formik";
 import { Button, Card, Checkbox, Select, Switcher } from "@/components/ui";
 import { FormItem, FormContainer } from "@/components/ui/Form";
-
 import Input from "@/components/ui/Input";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { SelectInfoOfferCombined, TableTextConst } from "@/@types";
-import routePrefix from "@/configs/routes.config/routePrefix";
 import { validationSchemaOffer } from "@/utils/validationForm";
-import {
-  useGetOfferActionInfoQuery,
-  useSelectInfoMarketplacesQuery,
-} from "@/services/RtkQueryService";
+import { useSelectInfoOffersQuery } from "@/services/RtkQueryService";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { components } from "react-select";
 import useDarkMode from "@/utils/hooks/useDarkmode";
@@ -82,24 +72,20 @@ const FormOffer = ({
   const dispatch = useAppDispatch();
   const { mode } = useAppSelector((state) => state.theme);
   const { t } = useTranslation();
-  const navigate = useNavigate();
-
-  const {
-    data: selectInfoMarketplaces,
-    isLoading: isLoadingSelectInfoMarketplaces,
-  } =
-    //@ts-ignore
-    useSelectInfoMarketplacesQuery();
-
-  const marketplaceOptions = selectInfoMarketplaces?.data?.marketplaces;
-  const cityOptions = (selectInfoMarketplaces?.data?.combinedSelect ||
-    []) as SelectInfoOfferCombined[];
 
   const { data: selectInfo, isLoading: isLoadingSelectInfo } =
     //@ts-ignore
-    useGetOfferActionInfoQuery();
+    useSelectInfoOffersQuery();
 
-  const scripts = selectInfo?.data.scripts || {};
+  const marketplaceOptions = selectInfo?.data?.marketplaces;
+  const cityOptions = (selectInfo?.data?.combinedSelect ||
+    []) as SelectInfoOfferCombined[];
+  const scripts = (selectInfo?.data?.scripts ||
+    []) as SelectInfoOfferCombined[];
+
+  // const { data: selectInfo, isLoading: isLoadingSelectInfo } =
+  //   //@ts-ignore
+  //   useGetOfferActionInfoQuery();
 
   const onNext = (values: any, duplicate: boolean) => {
     const copiedValues = { ...values };
@@ -117,7 +103,6 @@ const FormOffer = ({
       });
     }
     onNextChange?.(duplicate === null ? onlyChangeFields : copiedValues);
-    dispatch(setDrawerState(false));
   };
 
   const initialValues: any = useMemo(() => {
@@ -127,14 +112,14 @@ const FormOffer = ({
       priority: data?.priority?.toString() || "",
       name: data?.name || "",
       expert_mode: data?.expert_mode || false,
-      real_estate_building_id: data?.real_estate_building.id || "",
+      real_estate_building_id: data?.realEstateBuilding?.id || "",
       marketplace_id: data?.marketplace?.id || "",
       city_id: data?.city?.id || "",
       developer_id: data?.developer?.id || "",
-      scripts: data
-        ? Object.values(data?.scripts || {})?.map((el: any) => ({
-            label: el.name,
-            value: el.id,
+      scripts: data?.scripts
+        ? data?.scripts.map((script: { [key: string]: string }) => ({
+            label: script.name,
+            value: script.id,
           }))
         : [],
       price: data?.price?.toString() || "",
@@ -148,16 +133,8 @@ const FormOffer = ({
     };
   }, [data]);
 
-  const optionsScripts = useMemo(() => {
-    const data = Object.entries(scripts);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [scripts]);
-
   return (
-    <Loading type="cover" loading={data && isLoadingSelectInfo}>
+    <Loading /* type="cover" loading={data && isLoadingSelectInfo} */>
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
@@ -433,9 +410,9 @@ const FormOffer = ({
                           })}
                           size="xs"
                           placeholder=""
-                          isLoading={data && isLoadingSelectInfo}
+                          // isLoading={data && isLoadingSelectInfo}
                           isMulti
-                          options={optionsScripts}
+                          options={scripts}
                           closeMenuOnSelect={false}
                           hideSelectedOptions={false}
                           components={{ Option }}
@@ -615,7 +592,7 @@ const FormOffer = ({
                       {t("global.close")}
                     </Button>
                     <Button
-                      loading={isLoadingEndpoint || isLoadingSelectInfo}
+                      // loading={isLoadingEndpoint || isLoadingSelectInfo}
                       variant="solid"
                       type="submit"
                     >

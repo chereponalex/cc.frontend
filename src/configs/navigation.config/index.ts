@@ -7,18 +7,18 @@ import type { NavigationTree } from "@/@types/navigation";
 import routePrefix from "@/configs/routes.config/routePrefix";
 
 const navigationConfig: NavigationTree[] = [
-  {
-    key: "home",
-    path: routePrefix.home,
-    title: "Home",
-    translateKey: "nav.home.text",
-    icon: "home",
-    type: NAV_ITEM_TYPE_ITEM,
-    permissionKey: "home",
-    matchingKey: "Главная страница",
-    authority: [],
-    subMenu: [],
-  },
+  // {
+  //   key: "home",
+  //   path: routePrefix.home,
+  //   title: "Home",
+  //   translateKey: "nav.home.text",
+  //   icon: "home",
+  //   type: NAV_ITEM_TYPE_ITEM,
+  //   permissionKey: "home",
+  //   matchingKey: "Главная страница",
+  //   authority: [],
+  //   subMenu: [],
+  // },
   {
     key: "developersAndResidentialComplexes",
     path: "",

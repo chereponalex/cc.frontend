@@ -4,6 +4,7 @@ import "../../views/ManagerPage/index.css";
 import { useSearchParams } from "react-router-dom";
 
 export const MapComponent = ({ data, loading }: MapProps) => {
+  console.log(data?.data, "data?.data");
   const initialized = useRef(false);
   const [queryParams, setQueryParams] = useSearchParams();
   const pointId = queryParams.get("pointId");

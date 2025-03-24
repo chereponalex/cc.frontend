@@ -34,7 +34,7 @@ import { TypeTab } from "@/@types/tabs";
 import RestoreFromTrashSvg from "@/assets/svg/RestoreFromTrashSvg";
 import Tabs from "@/components/ui/Tabs";
 import { ToastType } from "@/@types/toast";
-import { toast } from "@/components/ui";
+import { Card, toast } from "@/components/ui";
 import Notification from "@/components/ui/Notification";
 import { UseQueryStateResult } from "@reduxjs/toolkit/dist/query/react/buildHooks";
 import { useNavigate } from "react-router-dom";
@@ -745,26 +745,27 @@ function _TablePage<T>(props: TablePageProps<T>) {
   };
 
   return (
-    <div className="overflow-x-none">
-      <div
-        className={`bg-white dark:bg-gray-800 z-[3] border-gray-200 dark:border-gray-700`}
-      >
-        {!!tableFiltersData?.length && (
-          <div ref={focusRef}>
-            <div className="flex items-center justify-between">
-              <div
-                className="flex items-center gap-1 cursor-pointer select-none"
-                onClick={onCollapse}
-              >
-                <span className="text-lg">
-                  {!collapse ? <HiChevronRight /> : <HiChevronDown />}
-                </span>
-                <h6>{t("global.filters")}</h6>
-                <HiOutlineFilter />
-                <span>({tableFiltersData.length})</span>
-              </div>
-              <hr className="ml-3 w-full" />
-              {/* {!!Object.keys(tableFilters).length && (
+    <Card>
+      <div className="overflow-x-none">
+        <div
+          className={`bg-white dark:bg-gray-800 z-[3] border-gray-200 dark:border-gray-700`}
+        >
+          {!!tableFiltersData?.length && (
+            <div ref={focusRef}>
+              <div className="flex items-center justify-between">
+                <div
+                  className="flex items-center gap-1 cursor-pointer select-none"
+                  onClick={onCollapse}
+                >
+                  <span className="text-lg">
+                    {!collapse ? <HiChevronRight /> : <HiChevronDown />}
+                  </span>
+                  <h6>{t("global.filters")}</h6>
+                  <HiOutlineFilter />
+                  <span>({tableFiltersData.length})</span>
+                </div>
+                <hr className="ml-3 w-full" />
+                {/* {!!Object.keys(tableFilters).length && (
               <Tooltip title={t("global.resetAllFilters")}>
                 <Button
                   shape="circle"
@@ -775,238 +776,244 @@ function _TablePage<T>(props: TablePageProps<T>) {
                 />
               </Tooltip>
             )} */}
-            </div>
-            <motion.div
-              ref={heightRef}
-              className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-2 gap-y-0.5 mb-1"
-              initial={{ opacity: 0, height: 0, overflow: "hidden" }}
-              animate={{
-                opacity: !collapse ? 0 : 1,
-                height: !collapse ? 0 : "auto",
-                overflow: !collapse ? "hidden" : "visible",
-              }}
-              transition={{ duration: 0.15 }}
-              onAnimationComplete={handleAnimationComplete}
-            >
-              {tableFiltersData.map((elm, i) => {
-                const options =
-                  elm?.options?.length > 0
-                    ? elm.options.filter(
-                        (option: Option) =>
-                          option.value !== null && option.value !== "",
-                      )
-                    : [];
-                options.unshift({ value: "all", label: "Все" });
+              </div>
+              <motion.div
+                ref={heightRef}
+                className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-2 gap-y-0.5 mb-1"
+                initial={{ opacity: 0, height: 0, overflow: "hidden" }}
+                animate={{
+                  opacity: !collapse ? 0 : 1,
+                  height: !collapse ? 0 : "auto",
+                  overflow: !collapse ? "hidden" : "visible",
+                }}
+                transition={{ duration: 0.15 }}
+                onAnimationComplete={handleAnimationComplete}
+              >
+                {tableFiltersData.map((elm, i) => {
+                  const options =
+                    elm?.options?.length > 0
+                      ? elm.options.filter(
+                          (option: Option) =>
+                            option.value !== null && option.value !== "",
+                        )
+                      : [];
+                  options.unshift({ value: "all", label: "Все" });
 
-                const dropdownCheckboxVal = options.filter((el: any) =>
-                  elm.type === "dropdown-checkbox"
-                    ? elm.value?.includes(el.value)
-                    : elm.value == el.value,
-                );
+                  const dropdownCheckboxVal = options.filter((el: any) =>
+                    elm.type === "dropdown-checkbox"
+                      ? elm.value?.includes(el.value)
+                      : elm.value == el.value,
+                  );
 
-                const singleDropDownCheckBoxVal =
-                  elm?.options?.length > 0
-                    ? elm?.options?.find((el: Option) => elm.value === el.value)
-                    : null;
+                  const singleDropDownCheckBoxVal =
+                    elm?.options?.length > 0
+                      ? elm?.options?.find(
+                          (el: Option) => elm.value === el.value,
+                        )
+                      : null;
 
-                return (
-                  <React.Fragment key={i}>
-                    {elm.type === TypeFilter.DATE && (
-                      <>
-                        <div key={`${elm.name}-start-${i}`}>
-                          <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
-                          <div className="flex items-center gap-1">
-                            <DatePicker.DateTimepicker
-                              initialTime={{ hours: 0, minutes: 0 }}
-                              amPm={false}
-                              inputPrefix={"с:"}
-                              noConfirmBtn
-                              inputFormat={"DD.MM.YYYY HH:mm"}
-                              size={"xs"}
-                              value={
-                                dateTimeFilters.start ||
-                                dayjs().startOf("day").toDate()
-                              }
-                              maxDate={dayjs(new Date()).add(0, "day").toDate()}
-                              placeholder={"__.__.__"}
-                              onChange={(e) => {
-                                if (e != null) {
-                                  setDateTimeFilters((prev) => {
-                                    prev.start = e;
-                                    return prev;
-                                  });
-                                  handleFiltersChange(elm.name, e, "start");
-                                } else {
+                  return (
+                    <React.Fragment key={i}>
+                      {elm.type === TypeFilter.DATE && (
+                        <>
+                          <div key={`${elm.name}-start-${i}`}>
+                            <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
+                            <div className="flex items-center gap-1">
+                              <DatePicker.DateTimepicker
+                                initialTime={{ hours: 0, minutes: 0 }}
+                                amPm={false}
+                                inputPrefix={"с:"}
+                                noConfirmBtn
+                                inputFormat={"DD.MM.YYYY HH:mm"}
+                                size={"xs"}
+                                value={
+                                  dateTimeFilters.start ||
+                                  dayjs().startOf("day").toDate()
+                                }
+                                maxDate={dayjs(new Date())
+                                  .add(0, "day")
+                                  .toDate()}
+                                placeholder={"__.__.__"}
+                                onChange={(e) => {
+                                  if (e != null) {
+                                    setDateTimeFilters((prev) => {
+                                      prev.start = e;
+                                      return prev;
+                                    });
+                                    handleFiltersChange(elm.name, e, "start");
+                                  } else {
+                                    setDateTimeFilters((prev) => {
+                                      prev.start = null;
+                                      return prev;
+                                    });
+                                    handleFiltersChange(elm.name, "");
+                                  }
+                                }}
+                                onClear={() => {
                                   setDateTimeFilters((prev) => {
                                     prev.start = null;
                                     return prev;
                                   });
                                   handleFiltersChange(elm.name, "");
-                                }
-                              }}
-                              onClear={() => {
-                                setDateTimeFilters((prev) => {
-                                  prev.start = null;
-                                  return prev;
-                                });
-                                handleFiltersChange(elm.name, "");
-                              }}
-                            />
+                                }}
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div key={`${elm.name}-end-${i}`} className="flex">
-                          <div className={"flex items-end gap-1 w-full"}>
-                            <DatePicker.DateTimepicker
-                              amPm={false}
-                              inputPrefix={"по:"}
-                              noConfirmBtn
-                              inputFormat={"DD.MM.YYYY HH:mm"}
-                              size={"xs"}
-                              initialTime={{ hours: 23, minutes: 59 }}
-                              value={dateTimeFilters.end}
-                              maxDate={dayjs(new Date()).add(0, "day").toDate()}
-                              placeholder={"__.__.__"}
-                              onChange={(e) => {
-                                if (e != null) {
-                                  setDateTimeFilters((prev) => {
-                                    prev.end = e;
-                                    return prev;
-                                  });
-                                  handleFiltersChange(elm.name, e, "end");
-                                } else {
+                          <div key={`${elm.name}-end-${i}`} className="flex">
+                            <div className={"flex items-end gap-1 w-full"}>
+                              <DatePicker.DateTimepicker
+                                amPm={false}
+                                inputPrefix={"по:"}
+                                noConfirmBtn
+                                inputFormat={"DD.MM.YYYY HH:mm"}
+                                size={"xs"}
+                                initialTime={{ hours: 23, minutes: 59 }}
+                                value={dateTimeFilters.end}
+                                maxDate={dayjs(new Date())
+                                  .add(0, "day")
+                                  .toDate()}
+                                placeholder={"__.__.__"}
+                                onChange={(e) => {
+                                  if (e != null) {
+                                    setDateTimeFilters((prev) => {
+                                      prev.end = e;
+                                      return prev;
+                                    });
+                                    handleFiltersChange(elm.name, e, "end");
+                                  } else {
+                                    setDateTimeFilters((prev) => {
+                                      prev.end = null;
+                                      return prev;
+                                    });
+                                    handleFiltersChange(elm.name, "");
+                                  }
+                                }}
+                                onClear={() => {
                                   setDateTimeFilters((prev) => {
                                     prev.end = null;
                                     return prev;
                                   });
                                   handleFiltersChange(elm.name, "");
-                                }
-                              }}
-                              onClear={() => {
-                                setDateTimeFilters((prev) => {
-                                  prev.end = null;
-                                  return prev;
-                                });
-                                handleFiltersChange(elm.name, "");
-                              }}
-                            />
+                                }}
+                              />
+                            </div>
                           </div>
+                        </>
+                      )}
+                      {elm.type === TypeFilter.INPUT && (
+                        <div key={`${elm.name}-${i}`}>
+                          <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
+                          <Input
+                            size="xs"
+                            value={elm.value}
+                            placeholder={elm.placeholder || ""}
+                            onChange={(e) => {
+                              handleFiltersChange(elm.name, e.target.value);
+                            }}
+                          />
                         </div>
-                      </>
-                    )}
-                    {elm.type === TypeFilter.INPUT && (
-                      <div key={`${elm.name}-${i}`}>
-                        <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
-                        <Input
-                          size="xs"
-                          value={elm.value}
-                          placeholder={elm.placeholder || ""}
-                          onChange={(e) => {
-                            handleFiltersChange(elm.name, e.target.value);
-                          }}
-                        />
-                      </div>
-                    )}
-                    {elm.type === TypeFilter.NUMBER && (
-                      <div key={`${elm.name}-${i}`}>
-                        <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
-                        <Input
-                          size="xs"
-                          value={elm.value}
-                          type="number"
-                          placeholder={elm.placeholder || ""}
-                          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                            handleFiltersChange(elm.name, e.target.value);
-                          }}
-                        />
-                      </div>
-                    )}
-                    {elm.type === TypeFilter.SELECT && (
-                      <div key={`${elm.name}-${i}`}>
-                        <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
-                        <Select
-                          size="xs"
-                          value={singleDropDownCheckBoxVal as any}
-                          options={options as any}
-                          placeholder={elm.label || ""}
-                          closeMenuOnSelect={true}
-                          hideSelectedOptions={false}
-                          noOptionsMessage={() => t(`select.noOptions`)}
-                          onChange={(item) => {
-                            elm.value = item?.value;
-                            handleFiltersChange(elm.name, item?.value);
-                          }}
-                        />
-                      </div>
-                    )}
-                    {elm.type === TypeFilter.CHECKBOX && (
-                      <div key={`${elm.name}-${i}`}>
-                        <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
-                        <Select
-                          size="xs"
-                          menuPlacement={"auto"}
-                          isMulti
-                          value={dropdownCheckboxVal}
-                          menuPortalTarget={document.body}
-                          options={options}
-                          placeholder={elm.placeholder || ""}
-                          closeMenuOnSelect={false}
-                          hideSelectedOptions={false}
-                          noOptionsMessage={() => t(`select.noOptions`)}
-                          components={{
-                            ValueContainer,
-                          }}
-                          onChange={(items, value) => {
-                            if (value.action === "clear") {
-                              handleFiltersChange(elm.name, "all");
-                            }
-                            if (
-                              value.action === "select-option" &&
-                              value.option?.value === "all"
-                            ) {
-                              handleFiltersChange(
-                                elm.name,
-                                transformOptionsToString(
-                                  options.filter((el) => el.value !== "all"),
-                                ),
-                              );
-                            } else {
-                              let sendedVal = "";
-                              for (let i = 0; i < items.length; i++) {
-                                if (items[i].value === "all") {
-                                  continue;
-                                }
-                                if (i === 0 && items[i].value !== "all") {
-                                  sendedVal = `${items[i].value}`;
-                                } else {
-                                  sendedVal = `${sendedVal},${items[i].value}`;
-                                }
+                      )}
+                      {elm.type === TypeFilter.NUMBER && (
+                        <div key={`${elm.name}-${i}`}>
+                          <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
+                          <Input
+                            size="xs"
+                            value={elm.value}
+                            type="number"
+                            placeholder={elm.placeholder || ""}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                              handleFiltersChange(elm.name, e.target.value);
+                            }}
+                          />
+                        </div>
+                      )}
+                      {elm.type === TypeFilter.SELECT && (
+                        <div key={`${elm.name}-${i}`}>
+                          <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
+                          <Select
+                            size="xs"
+                            value={singleDropDownCheckBoxVal as any}
+                            options={options as any}
+                            placeholder={elm.label || ""}
+                            closeMenuOnSelect={true}
+                            hideSelectedOptions={false}
+                            noOptionsMessage={() => t(`select.noOptions`)}
+                            onChange={(item) => {
+                              elm.value = item?.value;
+                              handleFiltersChange(elm.name, item?.value);
+                            }}
+                          />
+                        </div>
+                      )}
+                      {elm.type === TypeFilter.CHECKBOX && (
+                        <div key={`${elm.name}-${i}`}>
+                          <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
+                          <Select
+                            size="xs"
+                            menuPlacement={"auto"}
+                            isMulti
+                            value={dropdownCheckboxVal}
+                            menuPortalTarget={document.body}
+                            options={options}
+                            placeholder={elm.placeholder || ""}
+                            closeMenuOnSelect={false}
+                            hideSelectedOptions={false}
+                            noOptionsMessage={() => t(`select.noOptions`)}
+                            components={{
+                              ValueContainer,
+                            }}
+                            onChange={(items, value) => {
+                              if (value.action === "clear") {
+                                handleFiltersChange(elm.name, "all");
                               }
-                              handleFiltersChange(
-                                elm.name,
-                                items.map((el) => el.value).join(","),
-                              );
-                            }
-                          }}
-                        />
-                      </div>
+                              if (
+                                value.action === "select-option" &&
+                                value.option?.value === "all"
+                              ) {
+                                handleFiltersChange(
+                                  elm.name,
+                                  transformOptionsToString(
+                                    options.filter((el) => el.value !== "all"),
+                                  ),
+                                );
+                              } else {
+                                let sendedVal = "";
+                                for (let i = 0; i < items.length; i++) {
+                                  if (items[i].value === "all") {
+                                    continue;
+                                  }
+                                  if (i === 0 && items[i].value !== "all") {
+                                    sendedVal = `${items[i].value}`;
+                                  } else {
+                                    sendedVal = `${sendedVal},${items[i].value}`;
+                                  }
+                                }
+                                handleFiltersChange(
+                                  elm.name,
+                                  items.map((el) => el.value).join(","),
+                                );
+                              }
+                            }}
+                          />
+                        </div>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+                <div className="xl:col-span-4 lg:col-span-3 md:col-span-2 col-span-1">
+                  {textConst === TableTextConst.TRANSFER &&
+                    permissions[reportKey] && (
+                      <Button
+                        size="xs"
+                        loading={loadingReport || reportLinkLoading}
+                        variant="solid"
+                        className="float-right ml-2"
+                        onClick={fetchCreateReport}
+                      >
+                        {t("global.requestReport")}
+                      </Button>
                     )}
-                  </React.Fragment>
-                );
-              })}
-              <div className="xl:col-span-4 lg:col-span-3 md:col-span-2 col-span-1">
-                {textConst === TableTextConst.TRANSFER &&
-                  permissions[reportKey] && (
-                    <Button
-                      size="xs"
-                      loading={loadingReport || reportLinkLoading}
-                      variant="solid"
-                      className="float-right ml-2"
-                      onClick={fetchCreateReport}
-                    >
-                      {t("global.requestReport")}
-                    </Button>
-                  )}
-                {/* {collapse &&
+                  {/* {collapse &&
                   textConst === TableTextConst.TRANSFER &&
                   !isVisibleElement && (
                     <div
@@ -1022,200 +1029,209 @@ function _TablePage<T>(props: TablePageProps<T>) {
                       <p>Всего записей: {data?.paginate?.total || 0}</p>
                     </div>
                   )} */}
-                <Button
-                  size="xs"
-                  className="float-right ml-2"
-                  onClick={applyFilters}
-                >
-                  {t("global.applyFilters")}
-                </Button>
-                <Button
-                  size="xs"
-                  className="float-right"
-                  onClick={handleResetAllFilters}
-                >
-                  {t("global.resetAllFilters")}
-                </Button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </div>
+                  <Button
+                    size="xs"
+                    className="float-right ml-2"
+                    onClick={applyFilters}
+                  >
+                    {t("global.applyFilters")}
+                  </Button>
+                  <Button
+                    size="xs"
+                    className="float-right"
+                    onClick={handleResetAllFilters}
+                  >
+                    {t("global.resetAllFilters")}
+                  </Button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </div>
 
-      {noTab ? (
-        <DataTable<T>
-          collapseHeight={activeHeight || 0}
-          totalEntity={data?.paginate?.total || 0}
-          transaction={textConst === TableTextConst.TRANSFER}
-          noCheckBoxes={noCheckBoxes}
-          setSelectedRowsData={setSelectedRowsData}
-          columns={currentColumns}
-          selectable
-          data={data?.data || []}
-          loading={loading}
-          pagingData={{
-            total: tableData.total,
-            pageIndex: tableData.pageIndex,
-            pageSize: tableData.pageSize,
-          }}
-          onPaginationChange={handlePaginationChange}
-          onSelectChange={handleSelectChange}
-          onSort={handleSort}
-          onCheckBoxChange={onRowSelect}
-        />
-      ) : (
-        <Tabs value={currentTab} onChange={(val) => setCurrentTab(val)}>
-          <TabList>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
+        {noTab ? (
+          <DataTable<T>
+            collapseHeight={activeHeight || 0}
+            totalEntity={data?.paginate?.total || 0}
+            transaction={textConst === TableTextConst.TRANSFER}
+            noCheckBoxes={noCheckBoxes}
+            setSelectedRowsData={setSelectedRowsData}
+            columns={currentColumns}
+            selectable
+            data={data?.data || []}
+            loading={loading}
+            pagingData={{
+              total: tableData.total,
+              pageIndex: tableData.pageIndex,
+              pageSize: tableData.pageSize,
+            }}
+            onPaginationChange={handlePaginationChange}
+            onSelectChange={handleSelectChange}
+            onSort={handleSort}
+            onCheckBoxChange={onRowSelect}
+          />
+        ) : (
+          <Tabs value={currentTab} onChange={(val) => setCurrentTab(val)}>
+            <TabList>
               <div
                 style={{
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
+                  justifyContent: "space-between",
                   width: "100%",
                 }}
               >
-                <>
-                  <TabNav value={TypeTab.ACTIVE}>{t("tabsText.active")}</TabNav>
-                  <TabNav value={TypeTab.BASKET}>{t("tabsText.basket")}</TabNav>
-                </>
-                {!noBtn && (
-                  <div className="flex justify-between py-2 w-full">
-                    <Input
-                      size="xs"
-                      style={{ maxWidth: "320px" }}
-                      placeholder={t("global.search")}
-                      className="max-w-80"
-                      onChange={debounce(async (e) => {
-                        setInputSearch(e.target.value);
-                      }, 500)}
-                    />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  <>
+                    <TabNav value={TypeTab.ACTIVE}>
+                      {t("tabsText.active")}
+                    </TabNav>
+                    <TabNav value={TypeTab.BASKET}>
+                      {t("tabsText.basket")}
+                    </TabNav>
+                  </>
+                  {!noBtn && (
+                    <div className="flex justify-between py-2 w-full">
+                      <Input
+                        size="xs"
+                        style={{ maxWidth: "320px" }}
+                        placeholder={t("global.search")}
+                        className="max-w-80"
+                        onChange={debounce(async (e) => {
+                          setInputSearch(e.target.value);
+                        }, 500)}
+                      />
 
-                    {/* {permissions[createKey] && ( */}
-                    <Button
-                      size="xs"
-                      className="float-right"
-                      icon={<HiPlus />}
-                      onClick={() => {
-                        //@ts-ignore
-                        handleOpenDrawer("create");
-                        dispatch(setDrawerState(true));
-                        // navigate(`${routePrefix[textConst]}/creat-new`);
-                      }}
-                    >
-                      {t(`${textConst}Page.buttons.createNew`)}
-                    </Button>
-                    {/* )} */}
-                  </div>
-                )}
+                      {/* {permissions[createKey] && ( */}
+                      <Button
+                        size="xs"
+                        className="float-right"
+                        icon={<HiPlus />}
+                        onClick={() => {
+                          //@ts-ignore
+                          handleOpenDrawer("create");
+                          dispatch(setDrawerState(true));
+                          // navigate(`${routePrefix[textConst]}/creat-new`);
+                        }}
+                      >
+                        {t(`${textConst}Page.buttons.createNew`)}
+                      </Button>
+                      {/* )} */}
+                    </div>
+                  )}
+                </div>
+                {currentTab === TypeTab.ACTIVE &&
+                  selectedRowsData.length > 0 && (
+                    <Tooltip title={t(`tooltip.${textConst}.delete`)}>
+                      <Button
+                        shape="circle"
+                        variant="plain"
+                        size="xs"
+                        icon={
+                          <HiTrash style={{ width: "30px", height: "30px" }} />
+                        }
+                        onClick={() => handleDeleteMass(selectedRowsData)}
+                      />
+                    </Tooltip>
+                  )}
+                {currentTab === TypeTab.BASKET &&
+                  selectedRowsData.length > 0 && (
+                    <Tooltip title={t(`tooltip.${textConst}.recovery`)}>
+                      <Button
+                        shape="circle"
+                        variant="plain"
+                        size="xs"
+                        icon={<RestoreMassSvg />}
+                        onClick={() => handleRecoveryMass(selectedRowsData)}
+                      />
+                    </Tooltip>
+                  )}
               </div>
-              {currentTab === TypeTab.ACTIVE && selectedRowsData.length > 0 && (
-                <Tooltip title={t(`tooltip.${textConst}.delete`)}>
-                  <Button
-                    shape="circle"
-                    variant="plain"
-                    size="xs"
-                    icon={<HiTrash style={{ width: "30px", height: "30px" }} />}
-                    onClick={() => handleDeleteMass(selectedRowsData)}
-                  />
-                </Tooltip>
-              )}
-              {currentTab === TypeTab.BASKET && selectedRowsData.length > 0 && (
-                <Tooltip title={t(`tooltip.${textConst}.recovery`)}>
-                  <Button
-                    shape="circle"
-                    variant="plain"
-                    size="xs"
-                    icon={<RestoreMassSvg />}
-                    onClick={() => handleRecoveryMass(selectedRowsData)}
-                  />
-                </Tooltip>
-              )}
+            </TabList>
+            <div className="py-4">
+              <TabContent value={TypeTab.ACTIVE}>
+                <DataTable<T>
+                  collapseHeight={activeHeight || 0}
+                  totalEntity={data?.paginate?.total || 0}
+                  transaction={textConst === TableTextConst.TRANSFER}
+                  noCheckBoxes={noCheckBoxes}
+                  setSelectedRowsData={setSelectedRowsData}
+                  columns={currentColumns}
+                  selectable
+                  data={data?.data || []}
+                  loading={loading}
+                  pagingData={{
+                    total: tableData.total,
+                    pageIndex: tableData.pageIndex,
+                    pageSize: tableData.pageSize,
+                  }}
+                  onPaginationChange={handlePaginationChange}
+                  onSelectChange={handleSelectChange}
+                  onSort={handleSort}
+                  onCheckBoxChange={onRowSelect}
+                />
+              </TabContent>
+              <TabContent value={TypeTab.BASKET}>
+                <DataTable<T>
+                  collapseHeight={activeHeight || 0}
+                  totalEntity={data?.paginate?.total || 0}
+                  transaction={textConst === TableTextConst.TRANSFER}
+                  noCheckBoxes={noCheckBoxes}
+                  setSelectedRowsData={setSelectedRowsData}
+                  columns={currentColumns}
+                  selectable
+                  data={data?.data || []}
+                  loading={loading}
+                  pagingData={{
+                    total: tableData.total,
+                    pageIndex: tableData.pageIndex,
+                    pageSize: tableData.pageSize,
+                  }}
+                  onPaginationChange={handlePaginationChange}
+                  onSelectChange={handleSelectChange}
+                  onSort={handleSort}
+                  onCheckBoxChange={onRowSelect}
+                />
+              </TabContent>
             </div>
-          </TabList>
-          <div className="py-4">
-            <TabContent value={TypeTab.ACTIVE}>
-              <DataTable<T>
-                collapseHeight={activeHeight || 0}
-                totalEntity={data?.paginate?.total || 0}
-                transaction={textConst === TableTextConst.TRANSFER}
-                noCheckBoxes={noCheckBoxes}
-                setSelectedRowsData={setSelectedRowsData}
-                columns={currentColumns}
-                selectable
-                data={data?.data || []}
-                loading={loading}
-                pagingData={{
-                  total: tableData.total,
-                  pageIndex: tableData.pageIndex,
-                  pageSize: tableData.pageSize,
-                }}
-                onPaginationChange={handlePaginationChange}
-                onSelectChange={handleSelectChange}
-                onSort={handleSort}
-                onCheckBoxChange={onRowSelect}
-              />
-            </TabContent>
-            <TabContent value={TypeTab.BASKET}>
-              <DataTable<T>
-                collapseHeight={activeHeight || 0}
-                totalEntity={data?.paginate?.total || 0}
-                transaction={textConst === TableTextConst.TRANSFER}
-                noCheckBoxes={noCheckBoxes}
-                setSelectedRowsData={setSelectedRowsData}
-                columns={currentColumns}
-                selectable
-                data={data?.data || []}
-                loading={loading}
-                pagingData={{
-                  total: tableData.total,
-                  pageIndex: tableData.pageIndex,
-                  pageSize: tableData.pageSize,
-                }}
-                onPaginationChange={handlePaginationChange}
-                onSelectChange={handleSelectChange}
-                onSort={handleSort}
-                onCheckBoxChange={onRowSelect}
-              />
-            </TabContent>
-          </div>
-        </Tabs>
-      )}
+          </Tabs>
+        )}
 
-      <Drawer
-        title={
-          drawerType === "card"
-            ? `Информация`
-            : t(`${textConst}Page.buttons.createNew`)
-        }
-        isOpen={isOpenDrawer}
-        placement={direction === "rtl" ? "left" : "right"}
-        width={
-          textConst === TableTextConst.REALESTATEBUILDING ||
-          textConst === TableTextConst.OFFER ||
-          textConst === TableTextConst.SCRIPT
-            ? 775
-            : 575
-        }
-        onClose={() => dispatch(setDrawerState(false))}
-        onRequestClose={() => dispatch(setDrawerState(false))}
-      >
-        <div>
-          <DrawerContent
-            item={selectedId}
-            onClose={() => dispatch(setDrawerState(false))}
-          />
-        </div>
-      </Drawer>
-    </div>
+        <Drawer
+          title={
+            drawerType === "card"
+              ? `Информация`
+              : t(`${textConst}Page.buttons.createNew`)
+          }
+          isOpen={isOpenDrawer}
+          placement={direction === "rtl" ? "left" : "right"}
+          width={
+            textConst === TableTextConst.REALESTATEBUILDING ||
+            textConst === TableTextConst.OFFER ||
+            textConst === TableTextConst.SCRIPT
+              ? 775
+              : 575
+          }
+          onClose={() => dispatch(setDrawerState(false))}
+          onRequestClose={() => dispatch(setDrawerState(false))}
+        >
+          <div>
+            <DrawerContent
+              item={selectedId}
+              onClose={() => dispatch(setDrawerState(false))}
+            />
+          </div>
+        </Drawer>
+      </div>
+    </Card>
   );
 }
 

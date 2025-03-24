@@ -1,8 +1,5 @@
 import { useTranslation } from "react-i18next";
-import {
-  useCreatNewRealEstateBuildingMutation,
-  useGetRealEstateBuildingByIdQuery,
-} from "@/services/RtkQueryService";
+import { useCreatNewRealEstateBuildingMutation } from "@/services/RtkQueryService";
 import { Loading } from "@/components/shared";
 import FormResidentialComplex from "@/views/ResidentialComplexes/FormResidentialComplex";
 import { toast } from "@/components/ui";
@@ -11,19 +8,14 @@ import { ToastType } from "@/@types/toast";
 import { FormEssence } from "@/@types/form";
 import { useNavigate, useParams } from "react-router-dom";
 import { RealEstateBuilding, TableTextConst } from "@/@types";
-import { omit } from "lodash";
-import { useMemo } from "react";
-import routePrefix from "@/configs/routes.config/routePrefix";
-import methodInsert from "@/utils/methodInsertBread";
+import { useAppDispatch } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const CreatNewResidentialComplexes = ({ item }: any) => {
   const { t } = useTranslation();
   const { id } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  // const { data, isLoading } = useGetRealEstateBuildingByIdQuery(id as string, {
-  //   skip: !id,
-  // });
   const [creatNew, { isLoading: isLoadingCreate }] =
     useCreatNewRealEstateBuildingMutation();
 
@@ -53,7 +45,7 @@ const CreatNewResidentialComplexes = ({ item }: any) => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.REALESTATEBUILDING}.create`),
       );
-      navigate(`${routePrefix.real_estate_building}`);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
