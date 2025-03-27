@@ -23,7 +23,8 @@ const appConfig: AppConfig = {
   fallbackLng: "ru",
   enableMock: false,
   // wsLink: "wss://dev.api.lidofon.com//ws",
-  wsLink: "wss://websocket.manager.place",
+  // wsLink: "wss://websocket.manager.place",
+  wsLink: "http://localhost:8000/websockets",
 };
 
 export default appConfig;
