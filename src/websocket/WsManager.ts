@@ -156,7 +156,6 @@ export default function WSManager(): null {
   }, []);
 
   useEffect(() => {
-    console.log('employee_id', token)
     socketInstance?.openSocketFx(
       { wsURL: `${appConfig.wsLink}?token=${token}` },
       wsListener,

@@ -37,7 +37,7 @@ export class SocketClass {
         this.callback({ type: SocketMessageType.ONOPEN, data: e });
       this.pingInterval = setInterval(() => {
         this.socket?.send(
-          JSON.stringify({ data: WS_SERVER_PING_REQUEST }),
+          JSON.stringify({ type: WS_SERVER_PING_REQUEST }),
         );
         this.pingTimeout = setTimeout(() => {
           this.callback &&
