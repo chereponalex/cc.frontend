@@ -61,7 +61,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
         <div className="hidden md:block">
           <div className="text-xs capitalize">{user.role?.name}</div>
           <div ref={ref} className="font-bold whitespace-nowrap">
-            {user.name} {user.last_name}
+            {user.first_name} {user.last_name}
           </div>
         </div>
       </div>

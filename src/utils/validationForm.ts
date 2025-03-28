@@ -30,7 +30,7 @@ export const validationSchemaCity = Yup.object().shape({
 });
 export const validationSchemaEmployee = Yup.object().shape({
   // staff_id: Yup.string().required(t("errorText.enterStaffId")),
-  name: Yup.string().required(t("errorText.enterYourUserName")),
+  first_name: Yup.string().required(t("errorText.enterYourUserName")),
   phone: Yup.string().required(t("errorText.enterPhone")),
   last_name: Yup.string().required(t("errorText.enterYourLastName")),
   date_of_birth: Yup.string().required(t("errorText.enterDateBirth")),
@@ -40,16 +40,17 @@ export const validationSchemaEmployee = Yup.object().shape({
   country_id: Yup.string().required(t("errorText.checkCountry")),
   region_id: Yup.string().required(t("errorText.checkRegion")),
   city_id: Yup.string().required(t("errorText.checkCity")),
+  status_id: Yup.string().required(t("errorText.checkStatus")),
 });
 
 export const validationSchemaEmployeeEdit = Yup.object().shape({
   // staff_id: Yup.string().required(t("errorText.enterStaffId")),
-  name: Yup.string().required(t("errorText.enterYourUserName")),
+  first_name: Yup.string().required(t("errorText.enterYourUserName")),
   phone: Yup.string().required(t("errorText.enterPhone")),
   last_name: Yup.string().required(t("errorText.enterYourLastName")),
   date_of_birth: Yup.string().required(t("errorText.enterDateBirth")),
   email: Yup.string().required(t("errorText.enterYourEmail")),
-  // password: Yup.string().required(t("errorText.enterYourPassword")),
+  password: Yup.string().required(t("errorText.enterYourPassword")),
   role_id: Yup.string().required(t("errorText.checkRole")),
   country_id: Yup.string().required(t("errorText.checkCountry")),
   region_id: Yup.string().required(t("errorText.checkRegion")),
@@ -160,7 +161,7 @@ export const validationSchemaBlackList = Yup.object().shape({
 });
 
 export const validationSchemaProfile = Yup.object().shape({
-  name: Yup.string().required(t("errorText.enterYourUserName")),
+  first_name: Yup.string().required(t("errorText.enterYourUserName")),
   last_name: Yup.string().required(t("errorText.enterYourUserLastName")),
   email: Yup.string().required(t("errorText.enterYourEmail")),
 });

@@ -1216,7 +1216,8 @@ function _TablePage<T>(props: TablePageProps<T>) {
           width={
             textConst === TableTextConst.REALESTATEBUILDING ||
             textConst === TableTextConst.OFFER ||
-            textConst === TableTextConst.SCRIPT
+            textConst === TableTextConst.SCRIPT ||
+            textConst === TableTextConst.EMPLOYEE
               ? 775
               : 575
           }

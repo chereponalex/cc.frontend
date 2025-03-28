@@ -545,11 +545,11 @@ const LeftSideBarMap = ({
     }
   }, [cityId]);
   const [priceFilter, setPriceFilter] = useState(
-    dataFilters?.filters.find((filter) => filter.name === "price") ?? null,
+    dataFilters?.filters?.find((filter) => filter.name === "price") ?? null,
   );
   useEffect(() => {
     const newPriceFilter =
-      dataFilters?.filters.find((filter) => filter.name === "price") ?? null;
+      dataFilters?.filters?.find((filter) => filter.name === "price") ?? null;
     setPriceFilter(newPriceFilter as any);
   }, [dataFilters]);
 
@@ -563,7 +563,38 @@ const LeftSideBarMap = ({
       );
     });
   }, [dataFilters]);
+  console.log(filterData, "fil");
+  // NUMBER = "number",
+  // DATE_PICKER = "date",
+  // DATE = "date-time-interval",
+  // DROP_DOWN = "dropdown-checkbox",
+  // CHECKBOX_SINGLE = "checkbox",
+  // RANGE = "number-interval",
+  // INPUT = "input",
+  // SELECT = "select",
+  // GROUP_CHECKBOX = "group-checkbox",
 
+  // element: {
+  //   name: string;
+  //   type: string;
+  //   options: { value: string; label: string }[] | any;
+  //   label: string;
+  //   placeholder?: string;
+  // };
+  // const test = data: [
+  // {name: "city", type: "select-single", options: cityOptions, label: "Города", placeholder: ""},
+  // {name: "roominess", type: "group-checkbox", options: romminessOptions, label: "Комнатность", placeholder: ""},
+  // {name: "deadline", type: "select-single", options: deadlineOptions, label: "Срок сдачи", placeholder: ""},
+  // {name: "finishing", type: "select-multi", options: finishingOptions, label: "Отделка", placeholder: ""},
+  // {name: "payment_methods", type: "select-multi", options: paymentMethodsOptions, label: "Способы оплаты", placeholder: ""},
+  // {name: "price", type: "number-interval", options: priceOptions, label: "Цена", placeholder: ""},
+  // {name: "client_is_out_of_town", type: "checkbox", options: isClientInCity, label: "Клиент за городом", placeholder: ""},
+  // {name: "not_looking_for_himself", type: "checkbox", options: isLookingFor, label: "Ищет не себе", placeholder: ""},
+  // {name: "is_active", type: "checkbox", options: isActive, label: "Нерабочее время", placeholder: ""},
+  // {name: "tags", type: "select-multi", options: tagOptions, label: "Теги", placeholder: ""},
+  // {name: "developers", type: "select-multi", options: developerOptions, label: "Застройщики", placeholder: ""},
+  // {name: "marketplaces", type: "select-multi", options: marketplaceOptions, label: "Площадки", placeholder: ""},
+  // ]
   const memorizedData: any[] = useMemo(() => {
     let arraySort = Array.from(Array(filterData?.length), () => null);
     // ToDo переписать с сортировочной функцией

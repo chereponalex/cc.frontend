@@ -3,6 +3,11 @@ export enum TypeTab {
   BASKET = "basket",
 }
 
+export enum TypeTabProfile {
+  PROFILE = "profile",
+  PASSWORD = "password",
+}
+
 export enum TypeTabTableResidentialComplex {
   OFFERS = "offers",
   OBJECTS = "objects",

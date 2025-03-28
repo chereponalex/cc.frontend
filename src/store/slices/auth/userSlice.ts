@@ -10,7 +10,7 @@ export type UserState = {
   email?: string;
   authority?: string[];
   role?: userRole | null;
-  name?: string;
+  first_name?: string;
   last_name?: string;
   id?: string;
   full_name: string;
@@ -25,7 +25,7 @@ const initialState: UserState = {
   email: (user as any)?.email || "",
   authority: [],
   role: (user as any)?.role || null,
-  name: (user as any)?.name || "",
+  first_name: (user as any)?.first_name || "",
   last_name: (user as any)?.last_name || "",
   id: (user as any)?.id || "",
   full_name: (user as any)?.full_name || "",
@@ -38,7 +38,7 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<UserState>) {
       state.id = action.payload.id;
-      state.name = action.payload?.name;
+      state.first_name = action.payload?.first_name;
       state.last_name = action.payload?.last_name;
       state.avatar = action.payload?.avatar;
       state.email = action.payload.email;
@@ -49,7 +49,7 @@ const userSlice = createSlice({
       state.status = action.payload?.status;
     },
     updateUser(state, action: PayloadAction<any>) {
-      state.name = action.payload.name;
+      state.first_name = action.payload.first_name;
       state.last_name = action.payload.last_name;
       state.role = action.payload.role;
       state.email = action.payload.email;

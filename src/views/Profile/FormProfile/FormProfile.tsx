@@ -17,12 +17,12 @@ const FormProfile = ({ onNextChange, setIsEdit, isLoading }: any) => {
   const { t } = useTranslation();
   const { user } = useAppSelector((state) => state.auth);
 
-  const { data: roles = null, isLoading: isLoadingRoles } = useGetRolesQuery({
-    per_page: "all",
-  });
+  // const { data: roles = null, isLoading: isLoadingRoles } = useGetRolesQuery({
+  //   per_page: "all",
+  // });
 
   const initialValues = {
-    name: user?.name || "",
+    first_name: user?.first_name || "",
     role: user?.role?.name || "",
     last_name: user?.last_name || "",
     email: user?.email || "",
@@ -41,7 +41,7 @@ const FormProfile = ({ onNextChange, setIsEdit, isLoading }: any) => {
   };
 
   return (
-    <Loading type="cover" loading={!roles && isLoadingRoles}>
+    <Loading type="cover" /*  loading={!roles && isLoadingRoles} */>
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
@@ -54,21 +54,24 @@ const FormProfile = ({ onNextChange, setIsEdit, isLoading }: any) => {
               <FormContainer>
                 <Card>
                   <FormItem
+                    size="xs"
                     label={t("formInput.profile.name")}
-                    invalid={errors.name && (touched.name as any)}
-                    errorMessage={errors.name as any}
+                    invalid={errors.first_name && (touched.first_name as any)}
+                    errorMessage={errors.first_name as any}
                     layout="vertical"
                     asterisk
                   >
                     <Field
+                      size="xs"
                       type="text"
                       autoComplete="off"
-                      name="name"
+                      name="first_name"
                       placeholder=""
                       component={Input}
                     />
                   </FormItem>
                   <FormItem
+                    size="xs"
                     label={t("formInput.profile.last_name")}
                     invalid={errors.last_name && (touched.last_name as any)}
                     errorMessage={errors.last_name as any}
@@ -76,6 +79,7 @@ const FormProfile = ({ onNextChange, setIsEdit, isLoading }: any) => {
                     asterisk
                   >
                     <Field
+                      size="xs"
                       type="text"
                       autoComplete="off"
                       name="last_name"
@@ -88,6 +92,7 @@ const FormProfile = ({ onNextChange, setIsEdit, isLoading }: any) => {
                     layout="vertical"
                   >
                     <Field
+                      size="xs"
                       type="text"
                       autoComplete="off"
                       name="role"
@@ -104,6 +109,7 @@ const FormProfile = ({ onNextChange, setIsEdit, isLoading }: any) => {
                     asterisk
                   >
                     <Field
+                      size="xs"
                       type="text"
                       autoComplete="off"
                       name="email"

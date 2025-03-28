@@ -381,12 +381,12 @@ const ManagerPage = () => {
           handleFiltersChange={handleFiltersChange}
         />
       </div>
-      {/* <LeftSideBarMap
+      <LeftSideBarMap
         count={dataRedux?.data?.length}
         isVisible={sideBarsControl.left}
         handleFiltersChange={handleFiltersChange}
         loading={isLoading && isFetching}
-      /> */}
+      />
       <div
         style={{
           top: "50%",

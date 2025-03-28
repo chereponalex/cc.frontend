@@ -586,11 +586,11 @@
       "offeractive": "Активный",
       "priority": "Приоритет",
       "script": "Скрипт",
-      "reward": "ВОЗНАГРАЖДЕНИЕ",
+      "reward": "Бонус",
       "sipUri": "SIP URI",
       "workTime": "время работы",
-      "period_of_uniqueness": "Срок уникальности",
-      "limit_call": "Лимит звонков",
+      "period_of_uniqueness": "Срок уникал.",
+      "limit_call": "Лим. звонков",
       "findFor": "Ищет не себе",
       "outsideCity": "Клиент не в городе",
       "roominess": "Комнатность",
@@ -603,7 +603,7 @@
       "name": "Имя",
       "email": "Email",
       "expertOffers": "Экспертный офферы",
-      "expertOffer": "Экспертный оффер",
+      "expertOffer": "Эксперт. оффер",
       "translationPagesOnly": "Только страницы переводы",
       "role": "Роль",
       "developerName": "Имя застройщика",
@@ -930,7 +930,8 @@
       "city": "Город",
       "staff_id": "Учетный номер",
       "phone": "Номер абонента",
-      "date_of_birth": "Дата рождения"
+      "date_of_birth": "Дата рождения",
+      "status": "Статус"
     },
     "developers": {
       "id": "ID",
