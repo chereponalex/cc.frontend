@@ -54,6 +54,7 @@ export default function WSManager(): null {
   const [queryParams, setQueryParams] = useSearchParams();
   const wsChannels = useAppSelector((state) => state.ws.wsChannels);
   const employee_id = useAppSelector((state) => state.auth.user.id);
+  const { token } = useAppSelector((state) => state.auth.session);
   const tab = queryParams.get("tab");
   const wsListener = (message: Args) => {
     switch (message?.type) {
@@ -132,7 +133,7 @@ export default function WSManager(): null {
   };
 
   const socketInstance: SocketClass | null = useMemo(() => {
-    return new SocketClass(`${appConfig.wsLink}`);
+    return new SocketClass();
   }, []);
 
   const sendMessage = (e: CustomEvent) => {
@@ -155,13 +156,20 @@ export default function WSManager(): null {
   }, []);
 
   useEffect(() => {
-    if (employee_id) {
-      socketInstance?.openSocketFx(
-        { channel: `connect:${employee_id}` },
-        wsListener,
-      );
-    } else socketInstance?.closeSocketFx(1000, "client disconnected");
-  }, [employee_id]);
+    socketInstance?.openSocketFx(
+      { wsURL: `${appConfig.wsLink}?token=${token}` },
+      wsListener,
+    );
+    // if (employee_id) {
+    //   socketInstance?.openSocketFx(
+    //     { channel: `connect:${employee_id}` },
+    //     wsListener,
+    //   );
+    // } else socketInstance?.closeSocketFx(1000, "client disconnected");
+    return () => {
+      socketInstance?.closeSocketFx(1000, "client disconnected");
+    }
+  }, [token]);
 
   return null;
 }

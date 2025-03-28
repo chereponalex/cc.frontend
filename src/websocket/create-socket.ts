@@ -14,18 +14,18 @@ export class SocketClass {
   reconnectTimeout: ReturnType<typeof setTimeout> | null;
   callback?: (args: { type: string; data?: any }) => any;
 
-  constructor(url: string) {
-    this.socketUrl = url;
+  constructor() {
     this.pingInterval = null;
     this.pingTimeout = null;
     this.reconnectTimeout = null;
   }
 
   openSocketFx(
-    { type, channel }: { channel: string; type?: string },
+    { type, wsURL }: { wsURL: string ;type?: string },
     cb: (args: { type: string; data?: any }) => any,
   ) {
     this.callback = cb;
+    this.socketUrl = wsURL;
     if (this.socket && type !== "reconnect") {
       return;
     }
@@ -37,7 +37,7 @@ export class SocketClass {
         this.callback({ type: SocketMessageType.ONOPEN, data: e });
       this.pingInterval = setInterval(() => {
         this.socket?.send(
-          JSON.stringify({ channel, data: WS_SERVER_PING_REQUEST }),
+          JSON.stringify({ type: WS_SERVER_PING_REQUEST }),
         );
         this.pingTimeout = setTimeout(() => {
           this.callback &&
@@ -53,7 +53,7 @@ export class SocketClass {
       clearInterval(this.pingInterval as any);
       if (e.code !== 1000) {
         this.reconnectTimeout = setTimeout(() => {
-          this.openSocketFx({ type: "reconnect", channel: channel }, cb);
+          this.openSocketFx({ type: "reconnect", wsURL: this.socketUrl }, cb);
         }, WS_TIMER_RECONNECT);
       }
     };
