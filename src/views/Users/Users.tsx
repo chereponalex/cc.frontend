@@ -18,6 +18,8 @@ import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
 import { ActionLink } from "@/components/shared";
 import formatDate from "@/utils/formatDate";
+import CardUser from "./CardUser";
+import CreatNewUser from "./CreatNewUser";
 
 const Users = () => {
   const { t } = useTranslation();
@@ -45,7 +47,7 @@ const Users = () => {
               target="_blank"
               to={`${routePrefix.employee}/${props.row.original.id}`}
             >
-              {props.row.original.full_name}
+              {props.row.original.first_name} {props.row.original.last_name}
             </ActionLink>
           );
           // return useCustomLink(routePrefix.employee, props.row.original);
@@ -78,7 +80,7 @@ const Users = () => {
       },
       {
         header: t("table.columnsHeader.country"),
-        accessorKey: "country.name",
+        accessorKey: "country",
         cell: function (props) {
           return useCustomLink(routePrefix.country, props.row.original.country);
         },
@@ -100,6 +102,10 @@ const Users = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<Employee>
+        childrenDrawer={{
+          card: CardUser,
+          create: CreatNewUser,
+        }}
         columns={columns}
         textConst={TableTextConst.EMPLOYEE}
         data={employees}

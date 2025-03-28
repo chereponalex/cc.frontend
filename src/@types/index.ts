@@ -23,6 +23,26 @@ export interface SelectInfoOfferCombined {
   };
 }
 
+export interface SelectInfoEmployeeCombined {
+  combinedSelect: {
+    label: string;
+    value: string;
+    realEstateBuildings: {
+      label: string;
+      value: string;
+      developer: { label: string; value: string }[];
+    }[];
+  };
+  roles: {
+    label: string;
+    value: string;
+  };
+  statuses: {
+    label: string;
+    value: string;
+  };
+}
+
 export interface SelectInfo {
   label: string;
   value: string;
@@ -353,7 +373,7 @@ export interface Employee extends Entity {
   call_number: string;
   date_of_birth: string;
   email: string;
-  full_name: string;
+  first_name: string;
   is_blocked: boolean;
   last_name: string;
   login: string;

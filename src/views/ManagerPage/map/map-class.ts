@@ -89,7 +89,6 @@ export default class Map {
   }
 
   changeZoom(coordinates: [number, number] | [string, string], zoom: number) {
-    console.log(coordinates, zoom, "!!!");
     return new Promise<void>((resolve, reject) => {
       try {
         this.map?.setCenter(coordinates, zoom, {

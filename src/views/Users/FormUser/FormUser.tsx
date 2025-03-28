@@ -19,15 +19,21 @@ import {
   validationSchemaEmployee,
   validationSchemaEmployeeEdit,
 } from "@/utils/validationForm";
-import { TableTextConst } from "@/@types";
+import {
+  SelectInfoCountry,
+  SelectInfoEmployeeCombined,
+  TableTextConst,
+} from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
-import { useGetEmployeesActionInfoQuery } from "@/services/RtkQueryService";
-import { useAppSelector } from "@/store";
+import { useSelectInfoEmployeeQuery } from "@/services/RtkQueryService";
+import { useAppDispatch, useAppSelector } from "@/store";
 import useDarkMode from "@/utils/hooks/useDarkmode";
 import DatePicker from "@/components/ui/DatePicker";
 import "../FormUser/index.css";
 import timezoneClient from "@/utils/timezone";
 import cs from "classnames";
+import { setDrawerState } from "@/store/slices/actionState";
+import PasswordInput from "@/components/shared/PasswordInput";
 
 interface DatePickerProps<V = any, FormValues = any> {
   field: FieldInputProps<V>;
@@ -77,17 +83,23 @@ const FormUser = ({
   isLoadingEndpoint,
   duplicate,
 }: any) => {
+  const dispatch = useAppDispatch();
   const [isDark] = useDarkMode();
-  const { mode } = useAppSelector((state) => state.theme);
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { data: selectInfo, isLoading: isLoadingSelectInfo } =
     //@ts-ignore
-    useGetEmployeesActionInfoQuery();
-  const countries = selectInfo?.data.countries || {};
-  const regions = selectInfo?.data.regions || {};
-  const cities = selectInfo?.data.cities || {};
-  const roles = selectInfo?.data.roles || {};
+    useSelectInfoEmployeeQuery();
+
+  const countries = (selectInfo?.data?.combinedSelect ||
+    []) as SelectInfoCountry[];
+  const roles = (selectInfo?.data?.roles || []) as {
+    value: string;
+    label: string;
+  }[];
+  const statuses = (selectInfo?.data?.statuses || []) as {
+    value: string;
+    label: string;
+  }[];
 
   const onNext = (values: any, duplicate: boolean) => {
     const onlyChangeFields = {} as any;
@@ -103,7 +115,7 @@ const FormUser = ({
 
   const initialValues: any = useMemo(() => {
     return {
-      name: data?.name || "",
+      first_name: data?.first_name || "",
       last_name: data?.last_name || "",
       date_of_birth: data?.date_of_birth || "",
       phone: data?.phone || "",
@@ -113,33 +125,9 @@ const FormUser = ({
       country_id: data?.country.id || "",
       region_id: data?.region.id || "",
       city_id: data?.city.id || "",
+      status_id: data?.status.id || "",
     };
   }, [data]);
-
-  const optionsCountries = useMemo(() => {
-    const data = Object.entries(countries);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [countries]);
-
-  const optionsRoles = useMemo(() => {
-    const data = Object.entries(roles);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [roles]);
-
-  const actualOptions = (dataObj: any) => {
-    if (dataObj) {
-      return Object.entries(dataObj)?.map(([value, label]) => ({
-        label,
-        value,
-      }));
-    }
-  };
 
   return (
     <Loading type="cover" loading={isLoadingEndpoint && isLoadingSelectInfo}>
@@ -158,8 +146,8 @@ const FormUser = ({
                 <Card>
                   <FormItem
                     label={t("formInput.employee.name")}
-                    invalid={errors.name && (touched.name as any)}
-                    errorMessage={errors.name as any}
+                    invalid={errors.first_name && (touched.first_name as any)}
+                    errorMessage={errors.first_name as any}
                     layout="horizontal"
                     asterisk
                   >
@@ -167,7 +155,7 @@ const FormUser = ({
                       size="xs"
                       type="text"
                       autoComplete="off"
-                      name="name"
+                      name="first_name"
                       placeholder=""
                       component={Input}
                     />
@@ -259,7 +247,7 @@ const FormUser = ({
                       autoComplete="off"
                       name="password"
                       placeholder=""
-                      component={Input}
+                      component={PasswordInput}
                     />
                   </FormItem>
                   <FormItem
@@ -276,13 +264,40 @@ const FormUser = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsRoles}
-                          value={optionsRoles.filter(
+                          options={roles}
+                          value={roles?.filter(
                             (role: any) => role.value === values.role_id,
                           )}
                           onChange={(role) => {
                             if (role) {
                               form.setFieldValue(field.name, role.value);
+                            }
+                          }}
+                        />
+                      )}
+                    </Field>
+                  </FormItem>
+                  <FormItem
+                    label={t("formInput.employee.status")}
+                    invalid={errors.status_id && (touched.status_id as any)}
+                    errorMessage={errors.status_id as any}
+                    layout="horizontal"
+                    asterisk
+                  >
+                    <Field name="status_id">
+                      {({ field, form }: FieldProps) => (
+                        <Select
+                          size="xs"
+                          placeholder=""
+                          field={field}
+                          form={form}
+                          options={statuses}
+                          value={statuses?.filter(
+                            (status: any) => status.value === values.status_id,
+                          )}
+                          onChange={(status) => {
+                            if (status) {
+                              form.setFieldValue(field.name, status.value);
                             }
                           }}
                         />
@@ -303,8 +318,8 @@ const FormUser = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsCountries}
-                          value={optionsCountries?.filter(
+                          options={countries}
+                          value={countries.filter(
                             (country: any) =>
                               country.value === values.country_id,
                           )}
@@ -319,6 +334,7 @@ const FormUser = ({
                       )}
                     </Field>
                   </FormItem>
+
                   <FormItem
                     label={t("formInput.employee.region")}
                     invalid={errors.region_id && (touched.region_id as any)}
@@ -327,35 +343,41 @@ const FormUser = ({
                     asterisk
                   >
                     <Field name="region_id">
-                      {({ field, form }: FieldProps) => (
-                        <Select
-                          size="xs"
-                          menuPlacement="auto"
-                          placeholder=""
-                          field={field}
-                          form={form}
-                          isDisabled={!values.country_id}
-                          options={actualOptions(regions[values.country_id])}
-                          value={
-                            regions[values.country_id]
-                              ? actualOptions(
-                                  regions[values.country_id],
-                                )?.filter(
-                                  (region: any) =>
-                                    region.value === values.region_id,
-                                )
-                              : null
-                          }
-                          onChange={(region) => {
-                            if (region) {
-                              form.setFieldValue(field.name, region.value);
-                              form.setFieldValue("city_id", null);
-                            }
-                          }}
-                        />
-                      )}
+                      {({ field, form }: FieldProps) => {
+                        const selectedCountry = values.country_id
+                          ? countries.find(
+                              (country: any) =>
+                                country.value === values.country_id,
+                            )
+                          : null;
+
+                        const filteredRegions = selectedCountry?.regions || [];
+
+                        return (
+                          <Select
+                            size="xs"
+                            menuPlacement="auto"
+                            placeholder=""
+                            field={field}
+                            form={form}
+                            isDisabled={!values.country_id}
+                            options={filteredRegions}
+                            value={filteredRegions.filter(
+                              (region: any) =>
+                                region.value === values.region_id,
+                            )}
+                            onChange={(region) => {
+                              if (region) {
+                                form.setFieldValue(field.name, region.value);
+                                form.setFieldValue("city_id", null);
+                              }
+                            }}
+                          />
+                        );
+                      }}
                     </Field>
                   </FormItem>
+
                   <FormItem
                     label={t("formInput.employee.city")}
                     invalid={errors.city_id && (touched.city_id as any)}
@@ -364,31 +386,44 @@ const FormUser = ({
                     asterisk
                   >
                     <Field name="city_id">
-                      {({ field, form }: FieldProps) => (
-                        <Select
-                          size="xs"
-                          menuPlacement="top"
-                          placeholder=""
-                          field={field}
-                          form={form}
-                          isDisabled={!values.country_id || !values.region_id}
-                          options={actualOptions(cities[values.region_id])}
-                          value={
-                            cities[values.region_id]
-                              ? actualOptions(cities[values.region_id])?.filter(
-                                  (city: any) => {
-                                    return city.value === values.city_id;
-                                  },
-                                )
-                              : null
-                          }
-                          onChange={(city) => {
-                            if (city) {
-                              form.setFieldValue(field.name, city.value);
-                            }
-                          }}
-                        />
-                      )}
+                      {({ field, form }: FieldProps) => {
+                        const selectedCountry = values.country_id
+                          ? countries.find(
+                              (country: any) =>
+                                country.value === values.country_id,
+                            )
+                          : null;
+
+                        const selectedRegion =
+                          selectedCountry && values.region_id
+                            ? selectedCountry.regions.find(
+                                (region: any) =>
+                                  region.value === values.region_id,
+                              )
+                            : null;
+
+                        const filteredCities = selectedRegion?.cities || [];
+
+                        return (
+                          <Select
+                            size="xs"
+                            menuPlacement="top"
+                            placeholder=""
+                            field={field}
+                            form={form}
+                            isDisabled={!values.country_id || !values.region_id}
+                            options={filteredCities}
+                            value={filteredCities.filter(
+                              (city: any) => city.value === values.city_id,
+                            )}
+                            onChange={(city) => {
+                              if (city) {
+                                form.setFieldValue(field.name, city.value);
+                              }
+                            }}
+                          />
+                        );
+                      }}
                     </Field>
                   </FormItem>
                 </Card>
@@ -405,12 +440,12 @@ const FormUser = ({
                 >
                   <Button
                     type="button"
-                    onClick={() => navigate(`${routePrefix.employee}`)}
+                    onClick={() => dispatch(setDrawerState(false))}
                   >
                     {t("global.close")}
                   </Button>
                   <Button
-                    loading={isLoadingEndpoint}
+                    loading={isLoadingSelectInfo}
                     variant="solid"
                     type="submit"
                   >

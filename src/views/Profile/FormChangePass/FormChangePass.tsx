@@ -57,6 +57,7 @@ const FormChangePass = ({ onNextChange, isLoading }: any) => {
                     asterisk
                   >
                     <Field
+                      size="xs"
                       type="text"
                       autoComplete="off"
                       name="newPassword"
@@ -75,6 +76,7 @@ const FormChangePass = ({ onNextChange, isLoading }: any) => {
                     asterisk
                   >
                     <Field
+                      size="xs"
                       type="text"
                       autoComplete="off"
                       name="repeatNewPassword"

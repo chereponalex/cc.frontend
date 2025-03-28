@@ -19,24 +19,24 @@ import { Employee, TableTextConst } from "@/@types";
 import FormUser from "../FormUser";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import formatDate from "@/utils/formatDate";
+import { setDrawerState } from "@/store/slices/actionState";
 
-const CardUser = () => {
+const CardUser = ({ item }: any) => {
+  const dispatch = useAppDispatch();
   const permissions: any = useAppSelector(
     (state) => state.auth.user.role?.permissions,
   );
   const updateKey = `api.v1.crm.${TableTextConst.EMPLOYEE}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.EMPLOYEE}.delete_soft`;
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const searchParams = new URLSearchParams(location.search);
   const isEditPage = searchParams.get("editPage");
   const isDuplicatePage = searchParams.get("duplicate");
 
-  const { data, isLoading } = useGetEmployeesByIdQuery(id as string);
+  // const { data, isLoading } = useGetEmployeesByIdQuery(id as string);
   const [UpdateData] = useUpdateEmployeeIdMutation();
   const [SoftDeleteEmployee] = useSoftDeleteEmployeeByIdMutation();
 
@@ -51,11 +51,12 @@ const CardUser = () => {
   const handleUpdate = async (form: Partial<Employee>) => {
     try {
       await UpdateData({
-        id,
+        id: item?.id,
         ...form,
       }).unwrap();
       openNotification(ToastType.SUCCESS, t(`toast.message.employee.update`));
       setIsEdit(false);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
@@ -68,7 +69,7 @@ const CardUser = () => {
     const deletedItem: any = await SoftDeleteEmployee(id);
     if (!deletedItem?.data.error) {
       openNotification(ToastType.SUCCESS, t(`toast.message.employee.delete`));
-      navigate(`${routePrefix.employee}`);
+      dispatch(setDrawerState(false));
     }
   };
 
@@ -79,12 +80,11 @@ const CardUser = () => {
   }, []);
 
   return (
-    <Loading loading={!data && isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
+    <Loading /* loading={!data && isLoading} type="cover" */>
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
-            {t(`${TableTextConst.EMPLOYEE}Page.card.title`)} {data?.data.name}
+            {t(`${TableTextConst.EMPLOYEE}Page.card.title`)} {item?.name}
           </h3>
           <div className="flex justify-end flex-row">
             {isEdit ? (
@@ -96,33 +96,33 @@ const CardUser = () => {
                 onClick={() => setIsEdit((prev) => !prev)}
               />
             ) : (
-              permissions[updateKey] && (
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="md"
-                  icon={<HiPencil size={15} />}
-                  onClick={() => setIsEdit((prev) => !prev)}
-                />
-              )
-            )}
-            {permissions[deleteSoftKey] && (
+              // permissions[updateKey] && (
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
-                icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(id as string)}
+                icon={<HiPencil size={15} />}
+                onClick={() => setIsEdit((prev) => !prev)}
               />
+              // )
             )}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Button
+              shape="circle"
+              variant="plain"
+              size="md"
+              icon={<HiTrash size={15} />}
+              onClick={() => handleDelete(item?.id as string)}
+            />
+            {/* )} */}
           </div>
         </div>
         {isEdit ? (
           <FormUser
             duplicate={isDuplicatePage}
-            data={data?.data}
+            data={item}
             onNextChange={handleUpdate}
-            isLoadingEndpoint={isLoading}
+            // isLoadingEndpoint={isLoading}
             isEdit
           />
         ) : (
@@ -131,54 +131,54 @@ const CardUser = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                 <CustomerInfoField
                   title={t("formInput.employee.id")}
-                  value={data?.data.int_id || t("global.noDataAvailable")}
+                  value={item?.int_id || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.employee.name")}
-                  value={data?.data.name || t("global.noDataAvailable")}
+                  value={item?.first_name || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.employee.last_name")}
-                  value={data?.data.last_name || t("global.noDataAvailable")}
+                  value={item?.last_name || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.employee.date_of_birth")}
                   value={
-                    formatDate(data?.data?.date_of_birth || "", true) ||
+                    formatDate(item?.date_of_birth || "", true) ||
                     t("global.noDataAvailable")
                   }
                 />
                 <CustomerInfoField
                   title={t("formInput.employee.email")}
-                  value={data?.data.email || t("global.noDataAvailable")}
+                  value={item?.email || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.employee.phone")}
-                  value={data?.data.phone || t("global.noDataAvailable")}
+                  value={item?.phone || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.employee.password")}
-                  value={data?.data.password || t("global.noDataAvailable")}
+                  value={item?.password || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.employee.role")}
-                  value={data?.data.role?.name || t("global.noDataAvailable")}
+                  value={item?.role?.name || t("global.noDataAvailable")}
+                />
+                <CustomerInfoField
+                  title={t("formInput.employee.status")}
+                  value={item?.status?.name || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.employee.country")}
-                  value={
-                    data?.data?.country?.name || t("global.noDataAvailable")
-                  }
+                  value={item?.country?.name || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.employee.region")}
-                  value={
-                    data?.data?.region?.name || t("global.noDataAvailable")
-                  }
+                  value={item?.region?.name || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.employee.city")}
-                  value={data?.data?.city?.name || t("global.noDataAvailable")}
+                  value={item?.city?.name || t("global.noDataAvailable")}
                 />
               </div>
             </div>

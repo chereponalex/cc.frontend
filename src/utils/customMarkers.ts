@@ -2,7 +2,6 @@ import hours_glass from "../assets/svg/hours-glass.svg";
 import pieChartGenerate from "./pieChartGenerate";
 
 const customMarkers = (point: MapPoint, yMap: any, clickArea?: any) => {
-  console.log(point, "point");
   const urlParams = new URLSearchParams(window.location.search);
   const pointId = urlParams.get("pointId");
   const { latitude, longitude, objects, is_region, name, deadline, id } = point;

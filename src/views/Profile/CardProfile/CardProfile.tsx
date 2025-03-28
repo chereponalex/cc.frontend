@@ -28,7 +28,7 @@ const CardProfile = ({ onNextChange, isEdit, setIsEdit, isLoading }: any) => {
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                 <CustomerInfoField
                   title={t("formInput.profile.name")}
-                  value={user?.name || t("global.noDataAvailable")}
+                  value={user?.first_name || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.profile.last_name")}

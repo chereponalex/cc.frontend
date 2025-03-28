@@ -144,7 +144,7 @@ const Offers = () => {
         },
       },
       {
-        header: t("table.columnsHeader.expertOffers"),
+        header: t("table.columnsHeader.expertOffer"),
         accessorKey: "expert_mode",
         cell: (props) => {
           const is_expert = props.row.original.expert_mode;

@@ -16,15 +16,12 @@ import { Employee } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import methodInsert from "@/utils/methodInsertBread";
 import axios, { AxiosError, isAxiosError } from "axios";
+import { useAppDispatch } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
 
-const CreatNewUser = () => {
+const CreatNewUser = ({ item }: any) => {
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
-
-  const { data, isLoading } = useGetEmployeesByIdQuery(id as string, {
-    skip: !id,
-  });
+  const dispatch = useAppDispatch();
   const [
     creatNew,
     {
@@ -46,10 +43,9 @@ const CreatNewUser = () => {
     try {
       await creatNew(form).unwrap();
       openNotification(ToastType.SUCCESS, t(`toast.message.employee.create`));
-      navigate(`${routePrefix.employee}`);
+      dispatch(setDrawerState(false));
     } catch (error: unknown) {
       const axiosError = error as AxiosError;
-      console.log("isCreateUserError ", axiosError);
       openNotification(
         ToastType.WARNING,
         (error as { message: string }).message,
@@ -58,14 +54,13 @@ const CreatNewUser = () => {
   };
 
   return (
-    <Loading loading={isLoading} type="cover">
-      {methodInsert(document.getElementById("breadcrumbs"), data?.data.name)}
-      <FormUser
-        data={data?.data}
-        onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoadingCreate}
-      />
-    </Loading>
+    // <Loading loading={isLoading} type="cover">
+    <FormUser
+      data={item}
+      onNextChange={handleCreatNew}
+      isLoadingEndpoint={isLoadingCreate}
+    />
+    // </Loading>
   );
 };
 

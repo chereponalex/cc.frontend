@@ -40,8 +40,8 @@ const PageContainer = (props: PageContainerProps) => {
       <main className="h-full flex justify-center">
         <div
           style={{
-            marginLeft: "20px",
-            marginRight: "20px",
+            marginLeft: "10px",
+            marginRight: "10px",
             paddingLeft: 0,
             paddingRight: 0,
           }}

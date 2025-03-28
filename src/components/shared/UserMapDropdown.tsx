@@ -111,7 +111,7 @@ const _UserMapDropdown = ({ className }: CommonProps) => {
             <div>
               <div className="text-xs capitalize">{user.status?.value}</div>
               <div ref={ref} className="font-bold">
-                {user.name} {user.last_name}
+                {user.first_name} {user.last_name}
               </div>
             </div>
             <div

@@ -1101,6 +1101,7 @@ const CardResidentialComplex = ({ item }: any) => {
         t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`),
       );
       setIsEdit(false);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,

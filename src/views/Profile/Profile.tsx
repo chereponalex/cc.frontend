@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { TypeTab } from "@/@types/tabs";
+import { TypeTabProfile } from "@/@types/tabs";
 import Tabs from "@/components/ui/Tabs";
 import { useTranslation } from "react-i18next";
 
@@ -17,7 +17,7 @@ const { TabNav, TabList, TabContent } = Tabs;
 
 const Profile = () => {
   const { t } = useTranslation();
-  const [currentTab, setCurrentTab] = useState<string>(TypeTab.ACTIVE);
+  const [currentTab, setCurrentTab] = useState<string>(TypeTabProfile.PROFILE);
   const { user } = useAppSelector((state) => state.auth);
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
@@ -42,13 +42,14 @@ const Profile = () => {
         ...formUpdate,
       }).unwrap();
       if (result.data && typeSubmit === "profile") {
-        const { name, last_name, role, email } = result.data;
-        dispatch(updateUser({ name, last_name, role, email }));
+        const { first_name, last_name, role, email } = result.data;
+        dispatch(updateUser({ first_name, last_name, role, email }));
         openNotification(ToastType.SUCCESS, t(`toast.message.employee.update`));
         setIsEdit(false);
       }
       if (result.data && typeSubmit === "password") {
         openNotification(ToastType.SUCCESS, t(`toast.message.password.update`));
+        setCurrentTab(TypeTabProfile.PROFILE);
       }
     } catch (error) {
       openNotification(
@@ -61,11 +62,13 @@ const Profile = () => {
   return (
     <Tabs value={currentTab} onChange={(val) => setCurrentTab(val)}>
       <TabList>
-        <TabNav value={TypeTab.ACTIVE}>{t("tabsText.profile")}</TabNav>
-        <TabNav value={TypeTab.BASKET}>{t("tabsText.password")}</TabNav>
+        <TabNav value={TypeTabProfile.PROFILE}>{t("tabsText.profile")}</TabNav>
+        <TabNav value={TypeTabProfile.PASSWORD}>
+          {t("tabsText.password")}
+        </TabNav>
       </TabList>
       <div className="py-4">
-        <TabContent value={TypeTab.ACTIVE}>
+        <TabContent value={TypeTabProfile.PROFILE}>
           <h3 className="mb-4">Общая информация</h3>
           <CardProfile
             isLoading={isLoading}
@@ -74,7 +77,7 @@ const Profile = () => {
             setIsEdit={setIsEdit}
           />
         </TabContent>
-        <TabContent value={TypeTab.BASKET}>
+        <TabContent value={TypeTabProfile.PASSWORD}>
           <h3 className="mb-4">Смена пароля</h3>
           <FormChangePass onNextChange={handleUpdate} isLoading={isLoading} />
         </TabContent>

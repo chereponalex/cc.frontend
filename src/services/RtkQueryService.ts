@@ -30,6 +30,7 @@ import {
   SelectInfoCountry,
   SelectInfo,
   SelectInfoOfferCombined,
+  SelectInfoEmployeeCombined,
 } from "@/@types";
 import {
   FormEssence,
@@ -112,7 +113,7 @@ const RtkQueryService = createApi({
     // Employees
     getEmployees: build.query<Response<Employee[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/employee",
+        url: "/api/employee",
         method: params.method,
         params: params.method == "GET" ? params.body : undefined,
         data: params.method == "PUT" ? params.body : undefined,
@@ -122,9 +123,20 @@ const RtkQueryService = createApi({
     }),
     getEmployeesActionInfo: build.query<Response<any>, Request>({
       query: (params) => ({
-        url: "crm/employee/get/action-info",
+        url: "api/employee/get/action-info",
         method: "GET",
         params: params,
+      }),
+      providesTags: ["Employees"],
+      keepUnusedDataFor: 0,
+    }),
+    selectInfoEmployee: build.query<
+      Response<SelectInfoEmployeeCombined>,
+      Request
+    >({
+      query: () => ({
+        url: "/api/select-info/combined-select-employee",
+        method: "GET",
       }),
       providesTags: ["Employees"],
       keepUnusedDataFor: 0,
@@ -139,7 +151,7 @@ const RtkQueryService = createApi({
     }),
     creatNewEmployees: build.mutation<string, FormEssence<Employee>>({
       query: (body) => ({
-        url: `/crm/employee`,
+        url: `/api/employee/create`,
         method: "POST",
         data: body,
       }),
@@ -148,7 +160,7 @@ const RtkQueryService = createApi({
     }),
     updateEmployeeId: build.mutation<any, Partial<Employee>>({
       query: ({ id, ...body }) => ({
-        url: `/crm/employee/${id}`,
+        url: `/api/employee/edit/${id}`,
         method: "PATCH",
         data: { ...body },
       }),
@@ -156,7 +168,7 @@ const RtkQueryService = createApi({
     }),
     recoveryEmployeeById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/employee/${id}`,
+        url: `/api/employee/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["Employees"],
@@ -171,7 +183,7 @@ const RtkQueryService = createApi({
     }),
     softDeleteEmployeeById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/employee/soft/${id}`,
+        url: `/api/employee/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Employees"],
@@ -2017,8 +2029,8 @@ const RtkQueryService = createApi({
         return {
           url:
             is_active != ""
-              ? `/map/filters/${id}?is_active=${is_active}&city=${id}`
-              : `/map/filters/${id}?city=${id}`,
+              ? `api/filters/filters-map/${id}?is_active=${is_active}&city=${id}`
+              : `api/filters/filters-map/${id}?city=${id}`,
           method: "GET",
           // params: params,
         };
@@ -2109,6 +2121,7 @@ export const {
   // Employees
   useGetEmployeesQuery,
   useGetEmployeesActionInfoQuery,
+  useSelectInfoEmployeeQuery,
   useLazyGetEmployeesQuery,
   useCreatNewEmployeesMutation,
   useGetEmployeesByIdQuery,
