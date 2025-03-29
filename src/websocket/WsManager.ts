@@ -49,6 +49,10 @@ enum ChannelsType {
   MAP = "map",
 }
 
+enum SocketType {
+  MAP = "map",
+}
+
 export default function WSManager(): null {
   const dispatch = useAppDispatch();
   const [queryParams, setQueryParams] = useSearchParams();
@@ -82,7 +86,7 @@ export default function WSManager(): null {
         dispatch(setWS(false));
         break;
       case SocketMessageType.MESSAGE:
-        if (message?.data?.data === WS_SERVER_PONG_RESPONSE) {
+        if (message?.data?.type === WS_SERVER_PONG_RESPONSE) {
           dispatch(setWS(true));
         }
         if (parseChannelName(message?.data?.channel) === ChannelsType.CALL) {
@@ -123,7 +127,7 @@ export default function WSManager(): null {
         ) {
           dispatch(updateRatingWeeklyCount(message?.data?.data));
         }
-        if (message?.data?.channel === ChannelsType.MAP) {
+        if (message?.data?.type === SocketType.MAP) {
           dispatch(updateEntityMarkers(message?.data));
         }
         break;
@@ -168,7 +172,7 @@ export default function WSManager(): null {
     // } else socketInstance?.closeSocketFx(1000, "client disconnected");
     return () => {
       socketInstance?.closeSocketFx(1000, "client disconnected");
-    }
+    };
   }, [token]);
 
   return null;

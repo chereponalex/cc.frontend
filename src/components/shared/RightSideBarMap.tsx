@@ -68,9 +68,9 @@ export const RightSideBarMap = ({
     (state) => state.entities.markers.disabledOffer,
   );
   const id = queryParams.get("pointId");
-  const point = useAppSelector((state) => state.map.points)?.find(
-    (el: any) => el.id === id,
-  );
+  // const point = useAppSelector((state) => state.map.points)?.find(
+  //   (el: any) => el.id === id,
+  // );
 
   useEffect(() => {
     let timeOut = null;
@@ -198,7 +198,7 @@ export const RightSideBarMap = ({
         display: isVisible ? "block" : "none",
       }}
     >
-      {!point ? (
+      {!id ? (
         <>
           <h6>Для отображения информации кликните по маркеру на карте</h6>
           <h6>Если маркеров нет, настройте фильтры</h6>

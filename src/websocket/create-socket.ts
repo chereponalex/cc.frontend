@@ -21,7 +21,7 @@ export class SocketClass {
   }
 
   openSocketFx(
-    { type, wsURL }: { wsURL: string ;type?: string },
+    { type, wsURL }: { wsURL: string; type?: string },
     cb: (args: { type: string; data?: any }) => any,
   ) {
     this.callback = cb;
@@ -36,9 +36,7 @@ export class SocketClass {
       this.callback &&
         this.callback({ type: SocketMessageType.ONOPEN, data: e });
       this.pingInterval = setInterval(() => {
-        this.socket?.send(
-          JSON.stringify({ type: WS_SERVER_PING_REQUEST }),
-        );
+        this.socket?.send(JSON.stringify({ type: WS_SERVER_PING_REQUEST }));
         this.pingTimeout = setTimeout(() => {
           this.callback &&
             this.callback({ type: SocketMessageType.NO_PONG, data: e });
@@ -65,7 +63,7 @@ export class SocketClass {
     };
     this.socket.onmessage = (event: MessageEvent) => {
       let message = event.data ? JSON.parse(event.data) : {};
-      if (message.data === WS_SERVER_PONG_RESPONSE) {
+      if (message.type === WS_SERVER_PONG_RESPONSE) {
         clearTimeout(this.pingTimeout as any);
       }
       this.callback &&

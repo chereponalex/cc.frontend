@@ -72,7 +72,7 @@ const FormOffer = ({
   const dispatch = useAppDispatch();
   const { mode } = useAppSelector((state) => state.theme);
   const { t } = useTranslation();
-
+  console.log(data, "data");
   const { data: selectInfo, isLoading: isLoadingSelectInfo } =
     //@ts-ignore
     useSelectInfoOffersQuery();
@@ -108,7 +108,7 @@ const FormOffer = ({
   const initialValues: any = useMemo(() => {
     return {
       external_id: data?.external_id || "",
-      is_active: data?.is_active || false,
+      isActive: data?.isActive || false,
       priority: data?.priority?.toString() || "",
       name: data?.name || "",
       expert_mode: data?.expert_mode || false,
@@ -167,16 +167,16 @@ const FormOffer = ({
                   <FormItem
                     noPadding
                     label={t("formInput.offer.is_active")}
-                    invalid={errors.is_active && (touched.is_active as boolean)}
-                    errorMessage={errors.is_active as string}
+                    invalid={errors.isActive && (touched.isActive as boolean)}
+                    errorMessage={errors.isActive as string}
                     layout="horizontal"
                   >
-                    <Field name="is_active">
+                    <Field name="isActive">
                       {({ field, form }: FieldProps) => (
                         <SwitcherComponent
                           field={field}
                           form={form}
-                          value={values.is_active}
+                          value={values.isActive}
                         />
                       )}
                     </Field>

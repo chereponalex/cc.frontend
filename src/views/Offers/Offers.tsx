@@ -91,7 +91,7 @@ const Offers = () => {
     try {
       await UpdateData({
         id,
-        is_active: value,
+        isActive: value,
       }).unwrap();
       openNotification(
         ToastType.SUCCESS,
