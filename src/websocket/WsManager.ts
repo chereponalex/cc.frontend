@@ -160,19 +160,12 @@ export default function WSManager(): null {
   }, []);
 
   useEffect(() => {
-    socketInstance?.openSocketFx(
-      { wsURL: `${appConfig.wsLink}?token=${token}` },
-      wsListener,
-    );
-    // if (employee_id) {
-    //   socketInstance?.openSocketFx(
-    //     { channel: `connect:${employee_id}` },
-    //     wsListener,
-    //   );
-    // } else socketInstance?.closeSocketFx(1000, "client disconnected");
-    return () => {
-      socketInstance?.closeSocketFx(1000, "client disconnected");
-    };
+    if (token) {
+      socketInstance?.openSocketFx(
+        { wsURL: `${appConfig.wsLink}?token=${token}` },
+        wsListener,
+      );
+    } else socketInstance?.closeSocketFx(1000, "client disconnected");
   }, [token]);
 
   return null;

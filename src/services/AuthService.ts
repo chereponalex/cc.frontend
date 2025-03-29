@@ -30,7 +30,7 @@ export async function apiSignOut() {
   return ApiService.fetchData({
     url: "/api/auth/logout",
     // url: "/logout",
-    method: "get",
+    method: "post",
   });
 }
 
