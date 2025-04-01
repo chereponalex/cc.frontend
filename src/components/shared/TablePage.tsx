@@ -134,7 +134,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
   const heightRef = useRef<HTMLDivElement>(null);
   const focusRef = useRef<HTMLDivElement>(null);
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions,
+    (state) => state.auth.user.role?.permissions
   );
   const reportLinkLoading = useAppSelector((state) => state.report.isLoading);
   const createKey = `api.v1.crm.${textConst}.create`;
@@ -144,7 +144,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const isOpenDrawer = useAppSelector(
-    (state) => state.actionsState.actions.drawer,
+    (state) => state.actionsState.actions.drawer
   );
 
   const [selectedRowsData, setSelectedRowsData] = useState<any[]>([]);
@@ -194,7 +194,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
 
       return <Comp {...props} />;
     },
-    [drawerType],
+    [drawerType]
   );
 
   const formatDate = (date: Date): string => {
@@ -246,7 +246,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>,
+      </Notification>
     );
   };
 
@@ -267,7 +267,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
         ...{
           selectedRows: [
             ...prevData.selectedRows.filter(
-              (id) => id !== (row as { id: string }).id,
+              (id) => id !== (row as { id: string }).id
             ),
           ],
         },
@@ -281,13 +281,13 @@ function _TablePage<T>(props: TablePageProps<T>) {
         await SoftDelete(userId).unwrap();
         openNotification(
           ToastType.SUCCESS,
-          t(`toast.message.${textConst}.addInBasket`),
+          t(`toast.message.${textConst}.addInBasket`)
         );
       } else {
         await HardDelete(userId).unwrap();
         openNotification(
           ToastType.SUCCESS,
-          t(`toast.message.${textConst}.delete`),
+          t(`toast.message.${textConst}.delete`)
         );
       }
     } catch (error) {
@@ -307,7 +307,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
           // setSelectedRowsData([]);
           openNotification(
             ToastType.SUCCESS,
-            t(`toast.message.${textConst}.addInBasket`),
+            t(`toast.message.${textConst}.addInBasket`)
           );
         }
       }
@@ -323,7 +323,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
         await Recovery(userId).unwrap();
         openNotification(
           ToastType.SUCCESS,
-          t(`toast.message.${textConst}.recovery`),
+          t(`toast.message.${textConst}.recovery`)
         );
       } else {
         //@ts-ignore
@@ -342,7 +342,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
         await RecoveryMass({ ids: rowIds } as any).unwrap();
         openNotification(
           ToastType.SUCCESS,
-          t(`toast.message.${textConst}.recovery`),
+          t(`toast.message.${textConst}.recovery`)
         );
       }
     } catch (error: any) {
@@ -381,7 +381,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
                         icon={<HiTrash />}
                         onClick={() =>
                           handleDelete(
-                            (props.row.original as { id: string }).id,
+                            (props.row.original as { id: string }).id
                           )
                         }
                       />
@@ -399,7 +399,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
                               onClick={() => {
                                 handleOpenDrawer(
                                   "card",
-                                  (props.row.original as { id: string }).id,
+                                  (props.row.original as { id: string }).id
                                 );
                                 // setIsOpenDrawer(true);
                                 // navigate(
@@ -438,7 +438,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
                                 icon={<RestoreFromTrashSvg />}
                                 onClick={() =>
                                   handleRecovery(
-                                    (props.row.original as { id: string }).id,
+                                    (props.row.original as { id: string }).id
                                   )
                                 }
                               />
@@ -483,7 +483,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
                           icon={<HiTrash />}
                           onClick={() =>
                             handleDelete(
-                              (props.row.original as { id: string }).id,
+                              (props.row.original as { id: string }).id
                             )
                           }
                         />
@@ -523,9 +523,9 @@ function _TablePage<T>(props: TablePageProps<T>) {
     const queryParams: any = {};
     queryParams.page = `${tableData.pageIndex}`;
     queryParams.per_page = `${tableData.pageSize}`;
-    queryParams.date = {
-      start: dayjs().startOf("day").format("YYYY-MM-DD HH:mm"),
-    };
+    // queryParams.date = {
+    //   start: dayjs().startOf("day").format("YYYY-MM-DD HH:mm"),
+    // };
     await getData({
       body: queryParams,
       method: "PUT",
@@ -558,7 +558,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
               return { ...el, value: { ...currentValue, end: value } };
             }
           }
-          if (el.type === "dropdown-checkbox") {
+          if (el.type === "select-multi") {
             return el.name === key ? { ...el, value: value.split(",") } : el;
           } else {
             return el.name === key ? { ...el, value } : el;
@@ -622,9 +622,13 @@ function _TablePage<T>(props: TablePageProps<T>) {
     return res;
   }, [tableFiltersData]);
 
+  //   useEffect(() => {
+  // queryParams
+  //   }, [currentTab])
+
   const fetchData = async (
     type: RequestFilterType = "GET",
-    isApplyFilters?: boolean,
+    isApplyFilters?: boolean
   ) => {
     const queryParams: any = {};
     const sanitizeEmptyProperties = (obj: Record<string, object | string>) => {
@@ -794,21 +798,21 @@ function _TablePage<T>(props: TablePageProps<T>) {
                     elm?.options?.length > 0
                       ? elm.options.filter(
                           (option: Option) =>
-                            option.value !== null && option.value !== "",
+                            option.value !== null && option.value !== ""
                         )
                       : [];
                   options.unshift({ value: "all", label: "Все" });
 
                   const dropdownCheckboxVal = options.filter((el: any) =>
-                    elm.type === "dropdown-checkbox"
+                    elm.type === "select-multi"
                       ? elm.value?.includes(el.value)
-                      : elm.value == el.value,
+                      : elm.value == el.value
                   );
 
                   const singleDropDownCheckBoxVal =
                     elm?.options?.length > 0
                       ? elm?.options?.find(
-                          (el: Option) => elm.value === el.value,
+                          (el: Option) => elm.value === el.value
                         )
                       : null;
 
@@ -927,7 +931,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
                           />
                         </div>
                       )}
-                      {elm.type === TypeFilter.SELECT && (
+                      {elm.type === TypeFilter.SELECT_SINGLE && (
                         <div key={`${elm.name}-${i}`}>
                           <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
                           <Select
@@ -945,7 +949,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
                           />
                         </div>
                       )}
-                      {elm.type === TypeFilter.CHECKBOX && (
+                      {elm.type === TypeFilter.SELECT_MULTI && (
                         <div key={`${elm.name}-${i}`}>
                           <h6 style={{ fontSize: "12px" }}>{elm.label}</h6>
                           <Select
@@ -973,8 +977,8 @@ function _TablePage<T>(props: TablePageProps<T>) {
                                 handleFiltersChange(
                                   elm.name,
                                   transformOptionsToString(
-                                    options.filter((el) => el.value !== "all"),
-                                  ),
+                                    options.filter((el) => el.value !== "all")
+                                  )
                                 );
                               } else {
                                 let sendedVal = "";
@@ -990,7 +994,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
                                 }
                                 handleFiltersChange(
                                   elm.name,
-                                  items.map((el) => el.value).join(","),
+                                  items.map((el) => el.value).join(",")
                                 );
                               }
                             }}
@@ -1214,12 +1218,13 @@ function _TablePage<T>(props: TablePageProps<T>) {
           isOpen={isOpenDrawer}
           placement={direction === "rtl" ? "left" : "right"}
           width={
-            textConst === TableTextConst.REALESTATEBUILDING ||
             textConst === TableTextConst.OFFER ||
             textConst === TableTextConst.SCRIPT ||
             textConst === TableTextConst.EMPLOYEE
               ? 775
-              : 575
+              : textConst === TableTextConst.REALESTATEBUILDING
+                ? 1000
+                : 575
           }
           onClose={() => dispatch(setDrawerState(false))}
           onRequestClose={() => dispatch(setDrawerState(false))}
@@ -1237,7 +1242,7 @@ function _TablePage<T>(props: TablePageProps<T>) {
 }
 
 const TablePage = _TablePage as <T>(
-  props: TablePageProps<T>,
+  props: TablePageProps<T>
 ) => ReturnType<typeof _TablePage>;
 
 export default TablePage;

@@ -71,11 +71,11 @@ export enum TypeFilter {
   NUMBER = "number",
   DATE_PICKER = "date",
   DATE = "date-time-interval",
-  CHECKBOX = "dropdown-checkbox",
+  SELECT_MULTI = "select-multi",
   CHECKBOX_SINGLE = "checkbox",
   RANGE = "number-interval",
   INPUT = "input",
-  SELECT = "select",
+  SELECT_SINGLE = "select-single",
   GROUP_CHECKBOX = "group-checkbox",
 }
 
@@ -89,7 +89,7 @@ export enum TableTextConst {
   REALESTATEBUILDING = "real_estate_building",
   RESIDENTIAL_COMPLEXES = "residentialComplexes",
   VENUE = "marketplace",
-  PAYMENT_METHOD = "payment_method",
+  PAYMENT_METHOD = "paymentMethod",
   STOCK = "stock",
   CITY = "city",
   COUNTRY = "country",

@@ -17,6 +17,7 @@ import { FormBindToBuilding } from "./FormBindToBuilding/FormBindToBuilding";
 import { TypeTabTableResidentialComplex } from "@/@types/tabs";
 import { useAppSelector } from "@/store";
 import { idea } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import Dialog from "@/components/ui/Dialog";
 
 type TableColumnSort = {
   order: "" | "asc" | "desc";
@@ -42,6 +43,7 @@ type Props<T> = {
   getData: (request: { [key: string]: any }) => UseQueryStateResult<any, any>;
   SoftDelete: (request: string) => UseQueryStateResult<any, any>;
   isMetroStationTableBind?: boolean;
+  itemId?: string;
 };
 
 function _TabTableResidentialComplex<T>(props: Props<T>) {
@@ -62,8 +64,8 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
     bindMode,
     setParamCache,
     isMetroStationTableBind,
+    itemId,
   } = props;
-  // console.log(data, 'data')
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -97,8 +99,10 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
     sort: [],
   });
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions,
+    (state) => state.auth.user.role?.permissions
   );
+  const [isOpen, setIsOpen] = useState<Record<string, any>>({});
+
   const createKey = `api.v1.crm.${textConst}.create`;
   const updateKey = `api.v1.crm.${textConst}.update`;
   const deleteSoftKey = `api.v1.crm.${textConst}.delete_soft`;
@@ -107,7 +111,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>,
+      </Notification>
     );
   };
 
@@ -137,7 +141,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
         ...{
           selectedRows: [
             ...prevData.selectedRows.filter(
-              (id) => id !== (row as { id: string }).id,
+              (id) => id !== (row as { id: string }).id
             ),
           ],
         },
@@ -146,7 +150,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
         ...newTableData.current,
         selectedRows: [
           ...newTableData.current.selectedRows.filter(
-            (id) => id !== (row as { id: string }).id,
+            (id) => id !== (row as { id: string }).id
           ),
         ],
       };
@@ -169,7 +173,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
           SoftDelete(id).unwrap();
           openNotification(
             ToastType.SUCCESS,
-            t(`toast.message.${textConst}.addInBasket`),
+            t(`toast.message.${textConst}.addInBasket`)
           );
         }
       } else {
@@ -180,7 +184,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
         });
         openNotification(
           ToastType.SUCCESS,
-          t(`toast.message.${textConst}.addInBasket`),
+          t(`toast.message.${textConst}.addInBasket`)
         );
       }
     } catch (error) {
@@ -198,7 +202,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
         id: "action",
         cell: (props) => (
           <div className="flex justify-end">
-            <Tooltip title={t(`tooltip.${textConst}.view`)}>
+            {/* <Tooltip title={t(`tooltip.${textConst}.view`)}>
               <Button
                 shape="circle"
                 variant="plain"
@@ -209,13 +213,13 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
                     //@ts-ignore
                     `${routePrefix[textConst]}/${
                       (props.row.original as { id: string }).id
-                    }`,
+                    }`
                   );
                 }}
               />
-            </Tooltip>
-            {permissions[updateKey] && (
-              <Tooltip title={t(`tooltip.${textConst}.edit`)}>
+            </Tooltip> */}
+            {/* {permissions[updateKey] && ( */}
+            {/* <Tooltip title={t(`tooltip.${textConst}.edit`)}>
                 <Button
                   shape="circle"
                   variant="plain"
@@ -230,10 +234,10 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
                     );
                   }}
                 />
-              </Tooltip>
-            )}
-            {permissions[createKey] && (
-              <Tooltip
+              </Tooltip> */}
+            {/* )} */}
+            {/* {permissions[createKey] && ( */}
+            {/* <Tooltip
                 title={t(`tooltip.${textConst}.duplicateAndCreatElement`)}
               >
                 <Button
@@ -250,33 +254,34 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
                     )
                   }
                 />
-              </Tooltip>
-            )}
-            {permissions[deleteSoftKey] && (
-              <Tooltip
-                title={t(
-                  //TODO
-                  `tooltip.${textConst}.${
-                    (type === TypeTabTableResidentialComplex.PAYMENT_METHODS ||
-                      type === TypeTabTableResidentialComplex.METRO_STATIONS ||
-                      type === TypeTabTableResidentialComplex.TAGS) &&
-                    !bindMode
-                      ? "unPin"
-                      : "sendToCart"
-                  }`,
-                )}
-              >
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="xs"
-                  icon={<HiTrash />}
-                  onClick={() =>
-                    handleDelete((props.row.original as { id: string }).id)
-                  }
-                />
-              </Tooltip>
-            )}
+              </Tooltip> */}
+            {/* )} */}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Tooltip
+              title={t(
+                //TODO
+                `tooltip.${textConst}.${
+                  (type === TypeTabTableResidentialComplex.PAYMENT_METHODS ||
+                    type === TypeTabTableResidentialComplex.METRO_STATIONS ||
+                    type === TypeTabTableResidentialComplex.TAGS) &&
+                  !bindMode
+                    ? "unPin"
+                    : "sendToCart"
+                }`
+              )}
+            >
+              <Button
+                shape="circle"
+                variant="plain"
+                size="xs"
+                style={{marginRight: "30px"}}
+                icon={<HiTrash />}
+                onClick={() =>
+                  handleDelete((props.row.original as { id: string }).id)
+                }
+              />
+            </Tooltip>
+            {/* )} */}
           </div>
         ),
       },
@@ -362,14 +367,23 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
     }
 
     if (!isEdit) {
-      require["real_estate_building_id"] = [id];
+      // require["id"] = [itemId];
+      require["type"] = textConst;
     }
 
     try {
-      // console.log(require, "require");
-      setParamCache && setParamCache(require);
-      const result = await getData(require);
-
+      // setParamCache && setParamCache(require);
+      const result = await getData(
+        !bindMode
+          ? require
+          : {
+              body: {
+                page: newTableData.current.pageIndex,
+                per_page: newTableData.current.pageSize,
+              },
+              method: "PUT"
+            }
+      );
       if (result) {
         setTableData((prevData) => ({
           ...prevData,
@@ -395,10 +409,10 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
     setSelectedRowsData([]);
   }, [bindMode]);
 
-  // useEffect(() => {
-  //   // fetchData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [tableData.pageIndex, tableData.sort, tableData.pageSize]);
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableData.pageIndex, tableData.sort, tableData.pageSize, bindMode]);
 
   return (
     <>
@@ -436,12 +450,35 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
           type={type}
         />
       </div>
+      <Dialog
+        width={580}
+        isOpen={false}
+        // onClose={() => onDialogClose(props.row.original.id, "script")}
+        // onRequestClose={() => onDialogClose(props.row.original.id, "script")}
+      >
+        <div className="flex flex-col h-full justify-between">
+          {/*   {" "}
+          <ul>
+            {Object.entries(props.row.original.scripts || {}).map(
+              ([key, script]: any) => (
+                <li key={script?.id} className="mb-2">
+                  <h6>Название: {script?.name}</h6>
+                  <p>
+                    Относится к:{" "}
+                    {script?.script_location?.value || "Не указано"}
+                  </p>
+                </li>
+              )
+            )}
+          </ul> */}
+        </div>
+      </Dialog>
     </>
   );
 }
 
 const TabTableResidentialComplex = _TabTableResidentialComplex as <T>(
-  props: Props<T>,
+  props: Props<T>
 ) => ReturnType<typeof _TabTableResidentialComplex>;
 
 export default TabTableResidentialComplex;
