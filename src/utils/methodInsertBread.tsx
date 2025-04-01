@@ -6,6 +6,7 @@ const methodInsert = (param: Element | null, name?: string) => {
     return createPortal(
       <Breadcrumbs
         idName={name}
+        className="flex items-center pl-4"
         // className="pl-0 pr-0 flex items-center whitespace-nowrap"
       />,
       param,

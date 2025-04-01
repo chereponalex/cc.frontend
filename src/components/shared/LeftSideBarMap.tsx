@@ -1,6 +1,6 @@
 import { Filter, TypeFilter } from "@/@types";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button, ScrollBar, Select } from "../ui";
+import { Button, Card, ScrollBar, Select } from "../ui";
 import Checkbox from "@/components/ui/Checkbox";
 import { components, ValueContainerProps } from "react-select";
 import { useSearchParams } from "react-router-dom";
@@ -46,7 +46,7 @@ const Range = ({
   }, [value]);
 
   const formatter: NonNullable<SliderSingleProps["tooltip"]>["formatter"] = (
-    value,
+    value
   ) => {
     if (!value) {
       return "0 ₽";
@@ -216,7 +216,7 @@ const ElementTypeComponent = ({
 }) => {
   const { t } = useTranslation();
   switch (element.type) {
-    case TypeFilter.SELECT:
+    case TypeFilter.SELECT_SINGLE:
       const [queryParams, setQueryParams] = useSearchParams();
       const cityId = queryParams.get("city");
       const selected = useMemo(() => {
@@ -247,10 +247,10 @@ const ElementTypeComponent = ({
 
       function replaceLabelInOptions(
         opt: { value: string; label: string }[],
-        modified: { value: string; label: string },
+        modified: { value: string; label: string }
       ) {
         const foundIndex = opt.findIndex(
-          (option) => option?.value === modified?.value,
+          (option) => option?.value === modified?.value
         );
         if (foundIndex !== -1) {
           const newOpt = [...opt];
@@ -321,13 +321,13 @@ const ElementTypeComponent = ({
           />
         </>
       );
-    case TypeFilter.CHECKBOX:
+    case TypeFilter.SELECT_MULTI:
       const options = element.options.filter(
-        (option: { value: string; label: string }) => option.value,
+        (option: { value: string; label: string }) => option.value
       );
       options.unshift({ value: "all", label: "Все" });
       const dropdownCheckboxVal = options.filter(
-        (el: { value: string; label: string }) => value?.includes(el.value),
+        (el: { value: string; label: string }) => value?.includes(el.value)
       );
       return (
         <div className="">
@@ -545,7 +545,7 @@ const LeftSideBarMap = ({
     }
   }, [cityId]);
   const [priceFilter, setPriceFilter] = useState(
-    dataFilters?.filters?.find((filter) => filter.name === "price") ?? null,
+    dataFilters?.filters?.find((filter) => filter.name === "price") ?? null
   );
   useEffect(() => {
     const newPriceFilter =
@@ -563,38 +563,7 @@ const LeftSideBarMap = ({
       );
     });
   }, [dataFilters]);
-  console.log(filterData, "fil");
-  // NUMBER = "number",
-  // DATE_PICKER = "date",
-  // DATE = "date-time-interval",
-  // DROP_DOWN = "dropdown-checkbox",
-  // CHECKBOX_SINGLE = "checkbox",
-  // RANGE = "number-interval",
-  // INPUT = "input",
-  // SELECT = "select",
-  // GROUP_CHECKBOX = "group-checkbox",
 
-  // element: {
-  //   name: string;
-  //   type: string;
-  //   options: { value: string; label: string }[] | any;
-  //   label: string;
-  //   placeholder?: string;
-  // };
-  // const test = data: [
-  // {name: "city", type: "select-single", options: cityOptions, label: "Города", placeholder: ""},
-  // {name: "roominess", type: "group-checkbox", options: romminessOptions, label: "Комнатность", placeholder: ""},
-  // {name: "deadline", type: "select-single", options: deadlineOptions, label: "Срок сдачи", placeholder: ""},
-  // {name: "finishing", type: "select-multi", options: finishingOptions, label: "Отделка", placeholder: ""},
-  // {name: "payment_methods", type: "select-multi", options: paymentMethodsOptions, label: "Способы оплаты", placeholder: ""},
-  // {name: "price", type: "number-interval", options: priceOptions, label: "Цена", placeholder: ""},
-  // {name: "client_is_out_of_town", type: "checkbox", options: isClientInCity, label: "Клиент за городом", placeholder: ""},
-  // {name: "not_looking_for_himself", type: "checkbox", options: isLookingFor, label: "Ищет не себе", placeholder: ""},
-  // {name: "is_active", type: "checkbox", options: isActive, label: "Нерабочее время", placeholder: ""},
-  // {name: "tags", type: "select-multi", options: tagOptions, label: "Теги", placeholder: ""},
-  // {name: "developers", type: "select-multi", options: developerOptions, label: "Застройщики", placeholder: ""},
-  // {name: "marketplaces", type: "select-multi", options: marketplaceOptions, label: "Площадки", placeholder: ""},
-  // ]
   const memorizedData: any[] = useMemo(() => {
     let arraySort = Array.from(Array(filterData?.length), () => null);
     // ToDo переписать с сортировочной функцией
@@ -625,7 +594,7 @@ const LeftSideBarMap = ({
         case "not_looking_for_himself":
           arraySort[7] = elm;
           break;
-        case "is_active":
+        case "isActive":
           arraySort[8] = elm;
           break;
         case "tags":
@@ -648,7 +617,7 @@ const LeftSideBarMap = ({
   useEffect(() => {
     const isClearingFilters = (
       prevParams: URLSearchParams,
-      currentParams: URLSearchParams,
+      currentParams: URLSearchParams
     ) => {
       const prev = Object.fromEntries(prevParams);
       const current = Object.fromEntries(currentParams);
@@ -656,7 +625,7 @@ const LeftSideBarMap = ({
     };
     const getRemainingFields = (
       prevParams: URLSearchParams,
-      currentParams: URLSearchParams,
+      currentParams: URLSearchParams
     ) => {
       const prevKeys = Object.keys(Object.fromEntries(prevParams));
       const currentKeys = Object.keys(Object.fromEntries(currentParams));
@@ -685,15 +654,15 @@ const LeftSideBarMap = ({
     if (cityId) {
       if (
         isClearingFilters(prevQueryParams, queryParams) &&
-        containsOnlyItemsInList(["city", "is_active"], prevKeys)
+        containsOnlyItemsInList(["city", "isActive"], prevKeys)
       ) {
         getMapFilters({ id: cityId });
       } else if (
         !isClearingFilters(prevQueryParams, queryParams) &&
-        containsOnlyItemsInList(["city", "is_active"], currentKeys)
+        containsOnlyItemsInList(["city", "isActive"], currentKeys)
       ) {
-        if (currentKeys.includes("is_active")) {
-          getMapFilters({ id: cityId, is_active: "off" });
+        if (currentKeys.includes("isActive")) {
+          getMapFilters({ id: cityId, isActive: "off" });
         } else {
           getMapFilters({ id: cityId });
         }
@@ -751,10 +720,11 @@ const LeftSideBarMap = ({
                   ) : null;
                 })}
               </div>
-              <div
+              {/* <div
                 style={{ background: "rgba(202, 197, 197, 0.1)" }}
                 className="rounded-lg px-4 py-2"
-              >
+              > */}
+              <Card>
                 {memorizedData?.slice(6).map((elm, i) => {
                   return elm !== null ? (
                     <div key={`${elm.name}-${i}`} className="mb-0.5">
@@ -771,9 +741,10 @@ const LeftSideBarMap = ({
                     </div>
                   ) : null;
                 })}
-              </div>
-              {/* <div className="py-4"><ModeSwitcher /></div> */}
+              </Card>
             </div>
+            {/* <div className="py-4"><ModeSwitcher /></div> */}
+            {/* </div> */}
           </Loading>
         }
       </ScrollBar>

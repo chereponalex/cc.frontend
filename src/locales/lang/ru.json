@@ -236,7 +236,7 @@
       "recovery": "Восстановить вопрос",
       "delete": "Удалить вопрос"
     },
-    "payment_method": {
+    "paymentMethod": {
       "view": "Просмотр способа оплаты",
       "edit": "Редактировать способ оплаты",
       "duplicateAndCreatElement": "Создать способ оплаты с передзаполненными данными",
@@ -422,7 +422,7 @@
     },
     "buttons": {
       "createNew": "Создать новый \"Жилой Комплекс\"",
-      "payment_methodAttachNew": "Прикрепить новый \"Способ оплаты\"",
+      "paymentMethodAttachNew": "Прикрепить новый \"Способ оплаты\"",
       "metro_stationAttachNew": "Прикрепить новую \"Станцию\"",
       "tagAttachNew": "Прикрепить новый \"Тег\"",
       "real_estate_objectAttachNew": "Создать новый \"Объект\"",
@@ -445,7 +445,7 @@
       "createNew": "Создать новую \"Площадку\""
     }
   },
-  "payment_methodPage": {
+  "paymentMethodPage": {
     "card": {
       "title": "Способ оплаты: "
     },
@@ -783,7 +783,7 @@
         "create": "Площадка успешно создана",
         "update": "Площадка успешно изменена"
       },
-      "payment_method": {
+      "paymentMethod": {
         "addInBasket": "Способ оплаты успешно перенесен в корзину",
         "delete": "Способ оплаты успешно удален",
         "recovery": "Способ оплаты успешно востановлен",

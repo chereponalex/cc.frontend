@@ -1359,7 +1359,7 @@ const RtkQueryService = createApi({
         }),
         providesTags: ["Offers"],
         keepUnusedDataFor: 0,
-      },
+      }
     ),
 
     //Questions
@@ -1616,6 +1616,17 @@ const RtkQueryService = createApi({
       }),
       invalidatesTags: ["RealEstateBuildings"],
     }),
+    getBindedEntityReb: build.query<Response<RealEstateBuilding>, string>({
+      query: ({ id, params }: any) => {
+        return {
+          url: `/api/real_estate_building/binded-entity/${id}`,
+          method: "GET",
+          params: params,
+        };
+      },
+      providesTags: ["RealEstateBuildings"],
+      keepUnusedDataFor: 0,
+    }),
     updateRealEstateBuildingById: build.mutation<
       string,
       Partial<RealEstateBuilding>
@@ -1665,21 +1676,26 @@ const RtkQueryService = createApi({
       string,
       Partial<RealEstateBuilding>
     >({
-      query: (body) => ({
-        url: `/crm/real_estate_payment_method`,
-        method: "POST",
-        data: body,
-      }),
+      query: (body) => {
+        return {
+          url: `/api/real_estate_building/bind-item`,
+          method: "POST",
+          data: body,
+        };
+      },
       invalidatesTags: ["RealEstateBuildings"],
     }),
     R_E_BuildingUnBindPaymentMethods: build.mutation<
       string,
       Partial<RealEstateBuilding>
     >({
-      query: (id) => ({
-        url: `/crm/real_estate_payment_method/hard/${id}`,
-        method: "DELETE",
-      }),
+      query: (body) => {
+        return {
+          url: `/api/real_estate_building/unbind-item`,
+          method: "POST",
+          data: body,
+        };
+      },
       invalidatesTags: ["RealEstateBuildings"],
     }),
     R_E_BuildingBindTags: build.mutation<string, Partial<RealEstateBuilding>>({
@@ -1697,7 +1713,7 @@ const RtkQueryService = createApi({
           method: "DELETE",
         }),
         invalidatesTags: ["RealEstateBuildings"],
-      },
+      }
     ),
     recoveryRealEstateBuildingById: build.mutation<string, string>({
       query: (id) => ({
@@ -2347,6 +2363,7 @@ export const {
   // RealEstateBuildings
   // useBindToRealEstateBuildingMutation,
   useGetRealEstateBuildingsActionInfoQuery,
+  useLazyGetBindedEntityRebQuery,
   useR_E_BuildingBindPaymentMethodsMutation,
   useR_E_BuildingUnBindPaymentMethodsMutation,
   useR_E_BuildingBindMetroStationsMutation,

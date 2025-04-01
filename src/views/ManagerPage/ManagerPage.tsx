@@ -29,6 +29,7 @@ import {
 } from "@/store/slices/entities/markersSlice";
 import groupDataByMaxPrice from "@/utils/groupDataByMaxPrice";
 import BtnsPriority from "@/components/shared/BtnsPriority";
+import { truncate } from "fs";
 
 const ManagerPage = () => {
   const { t } = useTranslation();
@@ -158,11 +159,11 @@ const ManagerPage = () => {
               key === "not_looking_for_himself"
             ) {
               if (params[key] === "true") {
-                transformedParams[key] = 1;
+                transformedParams[key] = true;
               }
-            } else if (key === "is_active") {
+            } else if (key === "isActive") {
               if (params[key] === "true") {
-                transformedParams[key] = "off";
+                transformedParams[key] = true;
               }
             } else if (key === "price") {
               const [min, max] = params[key].split("-");

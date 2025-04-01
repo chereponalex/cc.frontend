@@ -39,6 +39,13 @@ const Cities = () => {
         // }
       },
       {
+        header: t("table.columnsHeader.city"),
+        accessorKey: "city",
+        cell: function (props) {
+          return useCustomLink(routePrefix.city, props.row.original);
+        },
+      },
+      {
         header: t("table.columnsHeader.country"),
         accessorKey: "country",
         cell: function (props) {
@@ -50,13 +57,6 @@ const Cities = () => {
         accessorKey: "region",
         cell: function (props) {
           return useCustomLink(routePrefix.region, props.row.original.region);
-        },
-      },
-      {
-        header: t("table.columnsHeader.city"),
-        accessorKey: "city",
-        cell: function (props) {
-          return useCustomLink(routePrefix.city, props.row.original);
         },
       },
       {

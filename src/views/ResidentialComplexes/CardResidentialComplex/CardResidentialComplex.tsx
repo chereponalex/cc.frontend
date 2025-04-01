@@ -1,6 +1,9 @@
 import Card from "@/components/ui/Card";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  useLazyGetBindedEntityRebQuery,
+  useLazyGetPaymentMethodsQuery,
+  // useGetBindedEntityRebQuery,
   useLazyGetRealEstateBuildingByIdQuery,
   useR_E_BuildingBindMetroStationsMutation,
   useR_E_BuildingBindMetroStationsUpdateMutation,
@@ -72,7 +75,7 @@ const { METRO_STATIONS, PAYMENT_METHODS, TAGS, OBJECTS, OFFERS } =
 
 const SwitcherComponent = ({ value, onClick }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions,
+    (state) => state.auth.user.role?.permissions
   );
   const updateKeyOffer = `api.v1.crm.${TableTextConst.OFFER}.update`;
 
@@ -94,7 +97,7 @@ const SwitcherComponent = ({ value, onClick }: any) => {
 
 const CardResidentialComplex = ({ item }: any) => {
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions,
+    (state) => state.auth.user.role?.permissions
   );
 
   // const updateKey = `api.v1.crm.${TableTextConst.REALESTATEBUILDING}.update`;
@@ -123,12 +126,12 @@ const CardResidentialComplex = ({ item }: any) => {
     [key: string]: { square: string | null; price: string | null };
   }>({});
   const [isEditDriving, setIsEditDriving] = useState<Record<string, boolean>>(
-    {},
+    {}
   );
   const [isEditSquare, setIsEditSquare] = useState<Record<string, boolean>>({});
   const [isEditPrice, setIsEditPrice] = useState<Record<string, boolean>>({});
   const [paramCache, setParamCache] = useState<any>(null);
-  const [currentTab, setCurrentTab] = useState<string>("");
+  const [currentTab, setCurrentTab] = useState<string>(PAYMENT_METHODS);
   const [searchMetroStation, setSearchMetroStation] = useState<string>("");
 
   const fetchLoading = useRef(false);
@@ -182,6 +185,14 @@ const CardResidentialComplex = ({ item }: any) => {
     // }
     // getData({ id: id, params: paramCache } as any);
   }, []);
+  const [
+    getBindedEntity,
+    { data: bindedEntity = null, isFetching: isFetchingBinded },
+  ] = useLazyGetBindedEntityRebQuery();
+  const [
+    getPaymentMethods,
+    { data: paymentMethods = null, isLoading, isFetching },
+  ] = useLazyGetPaymentMethodsQuery();
 
   // ================update======================
   const [UpdateData, { data: updateData, isLoading: loadingUpdate }] =
@@ -218,23 +229,24 @@ const CardResidentialComplex = ({ item }: any) => {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>,
+      </Notification>
     );
   };
   const bindItemToBuilding = async (newIds: {
     [key in TypeTabTableResidentialComplex]?: any;
   }) => {
     try {
-      // if (newIds.hasOwnProperty(PAYMENT_METHODS)) {
-      //   const alreadyBindedIds: any = data?.data.payment_methods.map(
-      //     (el) => el.payment_method_id
-      //   );
-      //   const allIds = [...alreadyBindedIds, ...newIds.payment_methods];
-      //   const transform = allIds?.map((id) => ({
-      //     payment_method_id: id,
-      //   }));
-      //   await bindData(PAYMENT_METHODS, transform);
-      // }
+      // console.log({...newIds}, 'newIds')
+      if (newIds.hasOwnProperty(PAYMENT_METHODS)) {
+        // const alreadyBindedIds: any = data?.data.payment_methods.map(
+        //   (el) => el.payment_method_id
+        // );
+        // const allIds = [...alreadyBindedIds, ...newIds.payment_methods];
+        // const transform = allIds?.map((id) => ({
+        //   payment_method_id: id,
+        // }));
+        await bindData(PAYMENT_METHODS, newIds);
+      }
       // if (newIds.hasOwnProperty(METRO_STATIONS)) {
       //   const alreadyBindedIds: any = data?.data.metro_stations.map(
       //     (el) => el.metro_station_id
@@ -255,47 +267,47 @@ const CardResidentialComplex = ({ item }: any) => {
       //   }));
       //   await bindData(TAGS, transform);
       // }
-      // getData({
-      //   id: id,
-      //   params: paramCache,
-      // } as any).then(() => {
-      //   openNotification(
-      //     ToastType.SUCCESS,
-      //     t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`)
-      //   );
-      //   setBindMode(false);
-      //   inputChangeStation.current = {};
-      //   // setInputChangeStation({});
-      // });
+      getBindedEntity({
+        id: item?.id,
+        params: paramCache,
+      } as any).then(() => {
+        openNotification(
+          ToastType.SUCCESS,
+          t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`)
+        );
+        setBindMode(false);
+        inputChangeStation.current = {};
+        // setInputChangeStation({});
+      });
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
 
-  const bindData = async (tabType: any, transform: any) => {
+  const bindData = async (tabType: any, ids: string[]) => {
     try {
       switch (tabType) {
         case PAYMENT_METHODS:
           await BindPaymentMethod({
-            real_estate_building_id: id,
-            payment_methods: transform as any,
+            id: item?.id,
+            ...ids,
           });
           break;
-        case METRO_STATIONS:
-          await BindMetroStation({
-            real_estate_building_id: id as string,
-            metro_stations: transform,
-          });
-          break;
-        case TAGS:
-          await bindTag({
-            real_estate_building_id: id,
-            tags: transform as any,
-          });
-          break;
+        // case METRO_STATIONS:
+        //   await BindMetroStation({
+        //     real_estate_building_id: id as string,
+        //     metro_stations: transform,
+        //   });
+        //   break;
+        // case TAGS:
+        //   await bindTag({
+        //     real_estate_building_id: id,
+        //     tags: transform as any,
+        //   });
+        // break;
         default:
           break;
       }
@@ -309,23 +321,27 @@ const CardResidentialComplex = ({ item }: any) => {
     [key in TypeTabTableResidentialComplex]?: string[];
   }) => {
     try {
-      if (objectId.hasOwnProperty(METRO_STATIONS)) {
-        const transform = objectId.metro_stations;
-        await unBindData(METRO_STATIONS, transform);
-      }
+      // if (objectId.hasOwnProperty(METRO_STATIONS)) {
+      //   const transform = objectId.metro_stations;
+      //   await unBindData(METRO_STATIONS, transform);
+      // }
       if (objectId.hasOwnProperty(PAYMENT_METHODS)) {
-        const transform = objectId.payment_methods;
-        await unBindData(PAYMENT_METHODS, transform);
+        // console.log(objectId, 'objectId')
+        // const transform = objectId.payment_methods;
+        await unBindData(PAYMENT_METHODS, objectId);
       }
-      if (objectId.hasOwnProperty(TAGS)) {
-        const transform = objectId.tags;
-        await unBindData(TAGS, transform);
-      }
-      async function unBindData(tabType: any, transform: any) {
+      // if (objectId.hasOwnProperty(TAGS)) {
+      //   const transform = objectId.tags;
+      //   await unBindData(TAGS, transform);
+      // }
+      async function unBindData(tabType: any, itemID: any) {
         switch (tabType) {
           case PAYMENT_METHODS:
             fetchLoading.current = true;
-            await unBindPaymentMethod(transform).then(async (res) => {
+            await unBindPaymentMethod({
+              id: item?.id,
+              ...itemID,
+            }).then(async (res) => {
               //@ts-ignore
               if (res?.data.success) {
                 // await getData({ id: id, params: paramCache } as any).then(
@@ -336,49 +352,47 @@ const CardResidentialComplex = ({ item }: any) => {
               }
             });
             break;
-          case METRO_STATIONS:
-            fetchLoading.current = true;
-            await unBindMetroStation(transform).then(async (res) => {
-              //@ts-ignore
-              if (res?.data.success) {
-                // await getData({ id: id, params: paramCache } as any).then(
-                //   () => {
-                //     fetchLoading.current = false;
-                //   }
-                // );
-              }
-            });
-            break;
-          case TAGS:
-            fetchLoading.current = true;
-            await unbindTag(transform).then(async (res) => {
-              //@ts-ignore
-              if (res?.data.success) {
-                // await getData({ id: id, params: paramCache } as any).then(
-                //   () => {
-                //     fetchLoading.current = false;
-                //   }
-                // );
-              }
-            });
-            break;
+          // case METRO_STATIONS:
+          //   fetchLoading.current = true;
+          //   await unBindMetroStation(transform).then(async (res) => {
+          //     //@ts-ignore
+          //     if (res?.data.success) {
+          //       // await getData({ id: id, params: paramCache } as any).then(
+          //       //   () => {
+          //       //     fetchLoading.current = false;
+          //       //   }
+          //       // );
+          //     }
+          //   });
+          //   break;
+          // case TAGS:
+          //   fetchLoading.current = true;
+          //   await unbindTag(transform).then(async (res) => {
+          //     //@ts-ignore
+          //     if (res?.data.success) {
+          //       // await getData({ id: id, params: paramCache } as any).then(
+          //       //   () => {
+          //       //     fetchLoading.current = false;
+          //       //   }
+          //       // );
+          //     }
+          //   });
+          //   break;
           default:
             break;
         }
         openNotification(
           ToastType.SUCCESS,
-          t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`),
+          t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`)
         );
       }
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
-
-  // console.log(fetchLoading.current, 'cur')
 
   const editModeDriving = (rowId: string) => {
     setIsEditDriving((prev) => {
@@ -435,13 +449,13 @@ const CardResidentialComplex = ({ item }: any) => {
       }
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.METRO_STATION}.update`),
+        t(`toast.message.${TableTextConst.METRO_STATION}.update`)
       );
     } catch (error) {
       console.log(error, "error");
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -450,7 +464,7 @@ const CardResidentialComplex = ({ item }: any) => {
       fetchLoading.current = true;
       const fieldToUpdate = type === "price" ? "price" : "square";
       const updatedValue = Number(
-        inputChangeObject.current[rowId]?.[fieldToUpdate]?.replace(/\s/g, ""),
+        inputChangeObject.current[rowId]?.[fieldToUpdate]?.replace(/\s/g, "")
       );
       const res: any = await UpdateDataObject({
         id: rowId,
@@ -471,7 +485,7 @@ const CardResidentialComplex = ({ item }: any) => {
       console.log(error, "error");
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -491,7 +505,7 @@ const CardResidentialComplex = ({ item }: any) => {
   const handleInputChangeObject = (
     rowId: string,
     field: string,
-    value: string,
+    value: string
   ) => {
     if (rowId) {
       inputChangeObject.current = {
@@ -539,7 +553,7 @@ const CardResidentialComplex = ({ item }: any) => {
                     handleInputChange(
                       props.row.original.id,
                       "time_on_car",
-                      e.target.value,
+                      e.target.value
                     )
                   }
                 />
@@ -553,7 +567,7 @@ const CardResidentialComplex = ({ item }: any) => {
                       handleInputChange(
                         props.row.original.id,
                         "time_on_car",
-                        e.target.value,
+                        e.target.value
                       )
                     }
                   />
@@ -604,7 +618,7 @@ const CardResidentialComplex = ({ item }: any) => {
                     handleInputChange(
                       props.row.original.id,
                       "time_on_foot",
-                      e.target.value,
+                      e.target.value
                     )
                   }
                 />
@@ -618,7 +632,7 @@ const CardResidentialComplex = ({ item }: any) => {
                       handleInputChange(
                         props.row.original.id,
                         "time_on_foot",
-                        e.target.value,
+                        e.target.value
                       )
                     }
                   />
@@ -726,7 +740,7 @@ const CardResidentialComplex = ({ item }: any) => {
           return useCustomLink(
             routePrefix.marketplace,
             props.row.original.marketplace,
-            maxLength,
+            maxLength
           );
         },
       },
@@ -737,7 +751,7 @@ const CardResidentialComplex = ({ item }: any) => {
           return useCustomLink(
             routePrefix.developer,
             props.row.original.developer,
-            maxLength,
+            maxLength
           );
         },
       },
@@ -783,7 +797,7 @@ const CardResidentialComplex = ({ item }: any) => {
                             {script.script_location?.value || "Не указано"}
                           </p>
                         </li>
-                      ),
+                      )
                     )}
                   </ul>
                 </div>
@@ -912,7 +926,7 @@ const CardResidentialComplex = ({ item }: any) => {
         },
       },
     ];
-  }, []);
+  }, [bindMode]);
 
   const columnsTags: ColumnDef<Tag>[] = useMemo(() => {
     return [
@@ -986,14 +1000,14 @@ const CardResidentialComplex = ({ item }: any) => {
                       Number(
                         props.row.original?.square
                           ?.toString()
-                          ?.replace(/\D/g, ""),
-                      ),
+                          ?.replace(/\D/g, "")
+                      )
                     )}
                     onChange={(e) =>
                       handleInputChangeObject(
                         props.row.original.id,
                         "square",
-                        e.target.value,
+                        e.target.value
                       )
                     }
                   />
@@ -1046,14 +1060,14 @@ const CardResidentialComplex = ({ item }: any) => {
                     size="xs"
                     defaultValue={thousandSeparatorValue(
                       Number(
-                        props.row.original.price.toString().replace(/\D/g, ""),
-                      ),
+                        props.row.original.price.toString().replace(/\D/g, "")
+                      )
                     )}
                     onChange={(e) =>
                       handleInputChangeObject(
                         props.row.original.id,
                         "price",
-                        e.target.value,
+                        e.target.value
                       )
                     }
                   />
@@ -1098,14 +1112,14 @@ const CardResidentialComplex = ({ item }: any) => {
       await UpdateData({ id: item?.id, ...form }).unwrap();
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`),
+        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.update`)
       );
       setIsEdit(false);
       dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -1122,12 +1136,12 @@ const CardResidentialComplex = ({ item }: any) => {
       });
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.OFFER}.update`),
+        t(`toast.message.${TableTextConst.OFFER}.update`)
       );
     } catch (error) {
       openNotification(
         ToastType.WARNING,
-        (error as { message: string }).message,
+        (error as { message: string }).message
       );
     }
   };
@@ -1137,7 +1151,7 @@ const CardResidentialComplex = ({ item }: any) => {
     if (!deletedItem?.data.error) {
       openNotification(
         ToastType.SUCCESS,
-        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.delete`),
+        t(`toast.message.${TableTextConst.REALESTATEBUILDING}.delete`)
       );
       dispatch(setDrawerState(false));
       // navigate(`${routePrefix.real_estate_building}`);
@@ -1219,7 +1233,7 @@ const CardResidentialComplex = ({ item }: any) => {
             )} */}
             <Card>
               <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto">
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-y-4 gap-x-4">
                   <CustomerInfoField
                     title={t("formInput.residentialComplexes.id")}
                     value={item?.int_id || t("global.noDataAvailable")}
@@ -1342,21 +1356,27 @@ const CardResidentialComplex = ({ item }: any) => {
                   update={UpdateData}
                   setBindMode={setBindMode}
                   bindMode={bindMode}
-                  // info={data?.info.payment_methods}
+                  itemId={item?.id}
                   info={[]}
-                  // cityId={data?.data.city?.id}
                   columns={columnsPaymentMethods}
                   type={PAYMENT_METHODS}
                   textConst={TableTextConst.PAYMENT_METHOD}
-                  // data={
-                  //   bindMode
-                  //     ? data?.info.payment_methods
-                  //     : data?.data.payment_methods
-                  // }
-                  // loading={isFetching}
-                  // getData={(req) => {
-                  //   getData({ id, params: req } as any);
-                  // }}
+                  data={
+                    !bindMode
+                      ? bindedEntity?.data
+                      : paymentMethods?.data?.filter(
+                          (paymentMethod: any) =>
+                            !bindedEntity?.data?.some(
+                              (binded: any) => binded.id === paymentMethod.id
+                            )
+                        )
+                  }
+                  loading={isFetching || isFetchingBinded}
+                  getData={(req) => {
+                    !bindMode
+                      ? getBindedEntity({ id: item?.id, params: req } as any)
+                      : getPaymentMethods({ ...req } as any);
+                  }}
                   SoftDelete={(req) => SoftDeletePaymentMethod(req)}
                 />
               </TabContent>

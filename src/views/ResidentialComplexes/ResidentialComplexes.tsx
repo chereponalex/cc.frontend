@@ -94,7 +94,6 @@ const ResidentialComplexes = () => {
         header: t("table.columnsHeader.website"),
         accessorKey: "site",
         cell: (props) => {
-          console.log(props.row.original.site, "site");
           return (
             props.row.original.site && (
               <ActionLink target="_blank" to={props.row.original.site}>
@@ -108,7 +107,6 @@ const ResidentialComplexes = () => {
         header: t("table.columnsHeader.photo"),
         accessorKey: "images",
         cell: (props) => {
-          console.log(props.getValue(), "photo");
           return (
             <div>
               {props.getValue() && (props.getValue() as string[]).length ? (

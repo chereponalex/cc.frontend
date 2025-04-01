@@ -12,7 +12,7 @@ export enum TypeTabTableResidentialComplex {
   OFFERS = "offers",
   OBJECTS = "objects",
   METRO_STATIONS = "metro_stations",
-  PAYMENT_METHODS = "payment_methods",
+  PAYMENT_METHODS = "paymentMethods",
   TAGS = "tags",
 }
 
