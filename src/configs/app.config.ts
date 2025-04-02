@@ -12,9 +12,9 @@ export type AppConfig = {
   wsLink: string;
 };
 
+
 const appConfig: AppConfig = {
-  // apiPrefix: "https://dev.api.lidofon.com/api/v1",
-  apiPrefix: "http://localhost:8000",
+  apiPrefix: __BACKEND_URL__,
   uisApi: "https://callapi.uiscom.ru/v4.0",
   authenticatedEntryPath: `${routePrefix.rating}?tab=daily`,
   unAuthenticatedEntryPath: "/sign-in",
@@ -22,9 +22,7 @@ const appConfig: AppConfig = {
   locale: "ru",
   fallbackLng: "ru",
   enableMock: false,
-  // wsLink: "wss://dev.api.lidofon.com//ws",
-  // wsLink: "wss://websocket.manager.place",
-  wsLink: "http://localhost:8000/websockets",
+  wsLink: `${__BACKEND_URL__}/websockets`,
 };
 
 export default appConfig;
