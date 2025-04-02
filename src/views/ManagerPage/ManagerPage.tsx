@@ -152,9 +152,9 @@ const ManagerPage = () => {
               transformedParams["phone"] = phone;
               transformedParams["city"] = cityId;
               continue;
-            } else if (key === "tags" || key === "payment_methods") {
+            } /* else if (key === "tags" || key === "payment_methods") {
               continue;
-            } else if (
+            } */ else if (
               key === "client_is_out_of_town" ||
               key === "not_looking_for_himself"
             ) {
@@ -246,44 +246,44 @@ const ManagerPage = () => {
     );
   };
 
-  useEffect(() => {
-    const allParams = Object.fromEntries(queryParams);
-    const tagsArray =
-      allParams.tags && allParams.tags !== "all"
-        ? allParams.tags.split(",")
-        : [];
-    const paymentMethodsArray =
-      allParams.payment_methods && allParams.payment_methods !== "all"
-        ? allParams.payment_methods.split(",")
-        : [];
-    if (tagsArray.length > 0 || paymentMethodsArray.length > 0) {
-      const filteredData = dataRedux?.data?.filter((item: any) => {
-        if (tagsArray.length > 0 && paymentMethodsArray.length > 0) {
-          return (
-            tagsArray.some((tag) => item.tags.includes(tag)) &&
-            paymentMethodsArray.some((payment) =>
-              item.payment_methods.includes(payment),
-            )
-          );
-        } else if (tagsArray.length > 0) {
-          return tagsArray.some((tag) => item.tags.includes(tag));
-        } else if (paymentMethodsArray.length > 0) {
-          return paymentMethodsArray.some((payment) =>
-            Object.values(item.payment_methods).includes(payment),
-          );
-        }
+  // useEffect(() => {
+  //   const allParams = Object.fromEntries(queryParams);
+  //   const tagsArray =
+  //     allParams.tags && allParams.tags !== "all"
+  //       ? allParams.tags.split(",")
+  //       : [];
+  //   const paymentMethodsArray =
+  //     allParams.payment_methods && allParams.payment_methods !== "all"
+  //       ? allParams.payment_methods.split(",")
+  //       : [];
+  //   if (tagsArray.length > 0 || paymentMethodsArray.length > 0) {
+  //     const filteredData = dataRedux?.data?.filter((item: any) => {
+  //       if (tagsArray.length > 0 && paymentMethodsArray.length > 0) {
+  //         return (
+  //           tagsArray.some((tag) => item.tags.includes(tag)) &&
+  //           paymentMethodsArray.some((payment) =>
+  //             item.payment_methods.includes(payment),
+  //           )
+  //         );
+  //       } else if (tagsArray.length > 0) {
+  //         return tagsArray.some((tag) => item.tags.includes(tag));
+  //       } else if (paymentMethodsArray.length > 0) {
+  //         return paymentMethodsArray.some((payment) =>
+  //           Object.values(item.payment_methods).includes(payment),
+  //         );
+  //       }
 
-        return false;
-      });
+  //       return false;
+  //     });
 
-      setFiltered({
-        data: filteredData,
-        city: dataRedux?.city,
-      });
-    } else {
-      setFiltered(dataRedux);
-    }
-  }, [queryParams, dataRedux]);
+  //     setFiltered({
+  //       data: filteredData,
+  //       city: dataRedux?.city,
+  //     });
+  //   } else {
+  //     setFiltered(dataRedux);
+  //   }
+  // }, [queryParams, dataRedux]);
 
   const resetBeforeCityChange = () => {
     for (let [key, val] of queryParams) {

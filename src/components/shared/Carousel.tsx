@@ -16,21 +16,21 @@ interface CarouselProps {
 }
 
 const CarouselComponent = ({ images }: CarouselProps) => {
-  const [isLoading, setIsLoading] = useState<Record<string, boolean>>(() => {
-    return images?.reduce(
-      (acc, el, index) => {
-        acc[index] = true;
-        return acc;
-      },
-      {} as Record<string, boolean>,
-    );
-  });
+  // const [isLoading, setIsLoading] = useState<Record<string, boolean>>(() => {
+  //   return images?.reduce(
+  //     (acc, el, index) => {
+  //       acc[index] = true;
+  //       return acc;
+  //     },
+  //     {} as Record<string, boolean>,
+  //   );
+  // });
 
   const handleImageLoad = (index: number) => {
-    setIsLoading((prevState) => ({
-      ...prevState,
-      [index]: false,
-    }));
+    // setIsLoading((prevState) => ({
+    //   ...prevState,
+    //   [index]: false,
+    // }));
   };
 
   return (
@@ -45,7 +45,9 @@ const CarouselComponent = ({ images }: CarouselProps) => {
         }}
       >
         <div>
-          {images?.length > 0 ? (
+        <img src={`${no_photo}`} className="img-carousel" />
+          {/* {
+          images?.length > 0 ? (
             <Carousel
               arrows
               infinite={false}
@@ -67,8 +69,9 @@ const CarouselComponent = ({ images }: CarouselProps) => {
               })}
             </Carousel>
           ) : (
+            
             <img src={`${no_photo}`} className="img-carousel" />
-          )}
+          )} */}
         </div>
       </ConfigProvider>
     </>

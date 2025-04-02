@@ -159,12 +159,13 @@ export const RightSideBarMap = ({
       console.log(error, "error");
     }
   };
+  console.log(data?.data, 'dev')
 
   const maxOffer: Offers =
     Array.isArray(data?.data.offers) &&
     data?.data.offers.reduce((maxElement: any, currentElement: any) => {
       if (
-        currentElement.is_active &&
+        currentElement.isActive &&
         (maxElement === null || currentElement.priority < maxElement.priority)
       ) {
         return currentElement;
@@ -172,6 +173,7 @@ export const RightSideBarMap = ({
       return maxElement;
     }, null);
 
+    console.log(maxOffer, 'maxOffer')
   const openNotification = (
     type: ToastType,
     text: string,
@@ -229,7 +231,7 @@ export const RightSideBarMap = ({
                   <div className="flex items-center">
                     <FaRegBuilding size={15} />
                     <p className="ml-1 mr-1" style={{ fontSize: "14px" }}>
-                      {maxOffer?.developer?.name}
+                      {data?.data?.developer?.name}
                     </p>
                   </div>
                 </Tooltip>
@@ -429,6 +431,7 @@ export const RightSideBarMap = ({
                   }`}
                 >
                   <TabRightSide
+                    developer={data?.data?.developer}
                     setIsAnimation={setIsAnimation}
                     isAnimation={isAnimation}
                     disabled={disabled}

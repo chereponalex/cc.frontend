@@ -119,6 +119,7 @@ const TabRightSide = ({
   disabled,
   setIsAnimation,
   isAnimation,
+  developer
 }: any) => {
   const fetchLoading = useRef(false);
   const dispatch = useAppDispatch();
@@ -193,7 +194,7 @@ const TabRightSide = ({
             : [],
           {
             ...object,
-            developer: offers?.developer?.name,
+            developer: developer?.name,
             name: inputValue?.name,
             payment_method: inputValue?.payment,
             real_estate_building,
@@ -208,7 +209,7 @@ const TabRightSide = ({
           offers?.scripts ? offers?.scripts["QUESTION"].questions || [] : [],
           {
             ...object,
-            developer: offers?.developer?.name,
+            developer: developer?.name,
             name: inputValue?.name,
             payment_method: inputValue?.payment,
             real_estate_building,
@@ -223,7 +224,7 @@ const TabRightSide = ({
           offers?.scripts ? offers?.scripts["TRANSFER"]?.questions || [] : [],
           {
             ...object,
-            developer: offers.developer?.name,
+            developer: developer?.name,
             name: inputValue?.name,
             payment_method: inputValue?.payment,
             real_estate_building,
@@ -558,7 +559,7 @@ const TabRightSide = ({
                                 parse(
                                   accordanceParams(question?.text, {
                                     ...object,
-                                    developer: offers?.developer.name,
+                                    developer: developer.name,
                                     uniqueness_period:
                                       offers?.uniqueness_period,
                                     name: inputValue?.name,
@@ -808,7 +809,7 @@ const TabRightSide = ({
                               parse(
                                 accordanceParams(question?.text, {
                                   ...object,
-                                  developer: offers?.developer.name,
+                                  developer: developer.name,
                                   uniqueness_period: offers?.uniqueness_period,
                                   name: inputValue?.name,
                                   payment_method: inputValue?.payment || "__",
@@ -994,7 +995,7 @@ const TabRightSide = ({
                           parse(
                             accordanceParams(question?.text, {
                               ...object,
-                              developer: offers?.developer.name,
+                              developer: developer.name,
                               uniqueness_period: offers?.uniqueness_period,
                               name: inputValue?.name,
                               payment_method: inputValue?.payment || "__",
