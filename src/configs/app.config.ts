@@ -12,7 +12,7 @@ export type AppConfig = {
   wsLink: string;
 };
 
-
+// коммитим apiPrefix для прокси на бэк,  __BACKEND_URL__ должен быть IP сервера удаленного
 const appConfig: AppConfig = {
   apiPrefix: __BACKEND_URL__,
   uisApi: "https://callapi.uiscom.ru/v4.0",
