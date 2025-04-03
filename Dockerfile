@@ -3,7 +3,7 @@ ARG BACKEND_URL
 #ENV NODE_ENV=production
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json yarn.lock ./
 RUN yarn install
 
 COPY . .
