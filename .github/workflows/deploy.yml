@@ -37,8 +37,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: "195.2.70.213"
-          username: ${{ secrets.USERNAME_DEV }}
-          password: ${{ secrets.PASSWORD_DEV }}
+          username: "root"
+          password: "9CF1927rJ37p8ifJ"
           script: |
             IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/${{ env.IMAGE_NAME }}
             (echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin)
