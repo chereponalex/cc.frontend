@@ -1439,7 +1439,7 @@ const RtkQueryService = createApi({
     //Rating
     getRating: build.query<Response<any[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/rating",
+        url: "/api/crm/rating",
         method: params.method,
         params: params.method === "GET" ? params.body : undefined,
         data: params.method === "PUT" ? params.body : undefined,
@@ -1450,7 +1450,7 @@ const RtkQueryService = createApi({
     getRatingWeekly: build.query<Response<any[]>, RtkRequest>({
       query: (params) => {
         return {
-          url: "/crm/rating/weekly",
+          url: "/api/crm/rating/weekly",
           method: params.method,
           params: params.method === "GET" ? params.body : undefined,
           data: params.method === "PUT" ? params.body : undefined,
@@ -1462,7 +1462,7 @@ const RtkQueryService = createApi({
     getCountWeekly: build.query<Response<{ count: number }>, any>({
       query: (employee_id) => {
         return {
-          url: `/crm/rating/weekly/${employee_id}`,
+          url: `/api/crm/rating/weekly/${employee_id}`,
           method: "GET",
         };
       },
@@ -1473,7 +1473,7 @@ const RtkQueryService = createApi({
     //RealEstateObjects
     getRealEstateObjects: build.query<Response<BuildingObject[]>, RtkRequest>({
       query: (params) => ({
-        url: "/crm/real_estate_object",
+        url: "/api/crm/real_estate_object",
         method: params.method,
         params: params.method == "GET" ? params.body : undefined,
         data: params.method == "PUT" ? params.body : undefined,
