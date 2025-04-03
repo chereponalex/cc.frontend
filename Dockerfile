@@ -1,15 +1,15 @@
-FROM node:18.17.0-alpine AS builder
+FROM node:18.17.0-bullseye-slim AS builder
 ARG BACKEND_URL
 #ENV NODE_ENV=production
 WORKDIR /app
 
 COPY package.json ./
-RUN npm install
+RUN yarn install
 
 COPY . .
-RUN npm run build
+RUN yarn build
 
-FROM node:18.17.0-alpine AS release
+FROM node:18.17.0-bullseye-slim AS release
 ENV BACKEND_URL=$BACKEND_URL
 ENV NODE_ENV=production
 #USER node
