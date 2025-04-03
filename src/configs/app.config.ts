@@ -12,7 +12,7 @@ export type AppConfig = {
   wsLink: string;
 };
 
-// docker build --no-cache --build-arg BACKEND_URL=http://195.2.70.213 -t front-img .
+// docker build --build-arg BACKEND_URL=http://195.2.70.213 -t front-img .
 
 // коммитим apiPrefix для прокси на бэк,  __BACKEND_URL__ должен быть IP сервера удаленного
 const appConfig: AppConfig = {
