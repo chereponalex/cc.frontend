@@ -10,7 +10,7 @@ COPY . .
 RUN npm run build
 
 FROM node:18.17.0-bullseye-slim AS release
-ENV BACKEND_URL=$BACKEND_URL
+ENV BACKEND_URL
 ENV NODE_ENV=production
 USER node
 WORKDIR /app
