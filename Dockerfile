@@ -1,6 +1,6 @@
-FROM node:18.17.0-bullseye-slim AS builder
+FROM node:18.17.0-alpine AS builder
 ARG BACKEND_URL
-ENV NODE_ENV=production
+#ENV NODE_ENV=production
 WORKDIR /app
 
 COPY package.json ./
@@ -9,10 +9,10 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM node:18.17.0-bullseye-slim AS release
-ARG BACKEND_URL
+FROM node:18.17.0-alpine AS release
+ENV BACKEND_URL=$BACKEND_URL
 ENV NODE_ENV=production
-USER node
+#USER node
 WORKDIR /app
 
 COPY --from=builder /app/build /app/build
