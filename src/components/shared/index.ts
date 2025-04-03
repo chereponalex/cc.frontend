@@ -3,7 +3,6 @@ export { default as AdaptableCard } from "./AdaptableCard";
 export { default as Affix } from "./Affix";
 export { default as AuthorityCheck } from "./AuthorityCheck";
 export { default as CalendarView } from "./CalendarView";
-export { default as Chart } from "./Chart";
 export { default as ConfirmDialog } from "./ConfirmDialog";
 export { default as Container } from "./Container";
 export { default as DataTable } from "./DataTable";
