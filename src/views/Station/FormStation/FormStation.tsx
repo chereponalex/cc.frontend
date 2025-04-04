@@ -83,7 +83,6 @@ const FormStation = ({
         onSubmit={(values) => onNext(values, duplicate)}
       >
         {({ values, touched, errors }) => {
-          console.log(values, "values");
           return (
             <Form>
               <FormContainer>
