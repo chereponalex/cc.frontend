@@ -45,7 +45,7 @@ const CarouselComponent = ({ images }: CarouselProps) => {
         }}
       >
         <div>
-        <img src={`${no_photo}`} className="img-carousel" />
+          <img src={`${no_photo}`} className="img-carousel" />
           {/* {
           images?.length > 0 ? (
             <Carousel

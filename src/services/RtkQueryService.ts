@@ -1359,7 +1359,7 @@ const RtkQueryService = createApi({
         }),
         providesTags: ["Offers"],
         keepUnusedDataFor: 0,
-      }
+      },
     ),
 
     //Questions
@@ -1473,7 +1473,7 @@ const RtkQueryService = createApi({
     //RealEstateObjects
     getRealEstateObjects: build.query<Response<BuildingObject[]>, RtkRequest>({
       query: (params) => ({
-        url: "/api/crm/real_estate_object",
+        url: "/api/real_estate_object",
         method: params.method,
         params: params.method == "GET" ? params.body : undefined,
         data: params.method == "PUT" ? params.body : undefined,
@@ -1505,7 +1505,7 @@ const RtkQueryService = createApi({
 
     creatNewRealEstateObject: build.mutation<string, FormEssence<any>>({
       query: (body) => ({
-        url: `/crm/real_estate_object`,
+        url: `/api/real_estate_object/create`,
         method: "POST",
         data: body,
       }),
@@ -1517,7 +1517,7 @@ const RtkQueryService = createApi({
       Partial<any>
     >({
       query: ({ id, ...body }) => ({
-        url: `/crm/real_estate_object/${id}`,
+        url: `/api/real_estate_object/edit/${id}`,
         method: "PATCH",
         data: body,
       }),
@@ -1526,10 +1526,19 @@ const RtkQueryService = createApi({
 
     recoveryRealEstateObjectById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/real_estate_object/${id}`,
+        url: `/api/real_estate_object/recovery/${id}`,
         method: "PUT",
       }),
       invalidatesTags: ["RealEstateObjects"],
+    }),
+
+    selectInfoRealEstateObject: build.query<Response<any>, Request>({
+      query: () => ({
+        url: "/api/select-info/combined-select-reo",
+        method: "GET",
+      }),
+      providesTags: ["RealEstateObjects"],
+      keepUnusedDataFor: 0,
     }),
 
     softDeleteRealEstateObjectMass: build.mutation<string, string>({
@@ -1551,7 +1560,7 @@ const RtkQueryService = createApi({
 
     softDeleteRealEstateObjectById: build.mutation<string, string>({
       query: (id) => ({
-        url: `/crm/real_estate_object/soft/${id}`,
+        url: `/api/real_estate_object/delete/soft/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["RealEstateObjects"],
@@ -1713,7 +1722,7 @@ const RtkQueryService = createApi({
           method: "DELETE",
         }),
         invalidatesTags: ["RealEstateBuildings"],
-      }
+      },
     ),
     recoveryRealEstateBuildingById: build.mutation<string, string>({
       query: (id) => ({
@@ -2351,6 +2360,7 @@ export const {
   // RealEstateObjects
   useLazyGetRealEstateObjectsQuery,
   useGetRealEstateObjectByIdQuery,
+  useSelectInfoRealEstateObjectQuery,
   useGetRealEstateObjectsActionInfoQuery,
   useCreatNewRealEstateObjectMutation,
   useUpdateRealEstateObjectByIdMutation,

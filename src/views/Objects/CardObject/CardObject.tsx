@@ -19,23 +19,26 @@ import { RealEstateObject, TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import FormObject from "../FormObject";
 import methodInsert from "@/utils/methodInsertBread";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { setDrawerState } from "@/store/slices/actionState";
+import thousandSeparatorValue from "@/utils/thousandSeparator";
 
-const CardObject = () => {
+const CardObject = ({ item }: any) => {
+  const dispatch = useAppDispatch();
   const permissions: any = useAppSelector(
     (state) => state.auth.user.role?.permissions,
   );
   const updateKey = `api.v1.crm.${TableTextConst.REAL_ESTATE_OBJECT}.update`;
   const deleteSoftKey = `api.v1.crm.${TableTextConst.REAL_ESTATE_OBJECT}.delete_soft`;
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
+  // const { id } = useParams();
+  // const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const searchParams = new URLSearchParams(location.search);
   const isEditPage = searchParams.get("editPage");
   const isDuplicatePage = searchParams.get("duplicate");
 
-  const { data, isLoading } = useGetRealEstateObjectByIdQuery(id as string);
+  // const { data, isLoading } = useGetRealEstateObjectByIdQuery(id as string);
   const [UpdateData] = useUpdateRealEstateObjectByIdMutation();
   const [SoftDeleteRealEstateObject] =
     useSoftDeleteRealEstateObjectByIdMutation();
@@ -50,7 +53,7 @@ const CardObject = () => {
   const handleUpdate = async (form: Partial<RealEstateObject>) => {
     try {
       await UpdateData({
-        id,
+        id: item?.id,
         ...form,
       }).unwrap();
       openNotification(
@@ -58,6 +61,7 @@ const CardObject = () => {
         t(`toast.message.${TableTextConst.REAL_ESTATE_OBJECT}.update`),
       );
       setIsEdit(false);
+      dispatch(setDrawerState(false));
     } catch (error) {
       openNotification(
         ToastType.WARNING,
@@ -73,7 +77,8 @@ const CardObject = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.REAL_ESTATE_OBJECT}.delete`),
       );
-      navigate(`${routePrefix.real_estate_object}`);
+      dispatch(setDrawerState(false));
+      // navigate(`${routePrefix.real_estate_object}`);
     }
   };
 
@@ -84,16 +89,12 @@ const CardObject = () => {
   }, []);
 
   return (
-    <Loading loading={!data && isLoading} type="cover">
-      {methodInsert(
-        document.getElementById("breadcrumbs"),
-        data?.data?.real_estate_building.name,
-      )}
+    <Loading /* loading={!data && isLoading} type="cover" */>
       <>
         <div className="mb-1 flex justify-between items-center w-full">
           <h3 className="mb-2 text-base">
             {t(`${TableTextConst.REAL_ESTATE_OBJECT}Page.card.title`)}{" "}
-            {data?.data?.real_estate_building.name}
+            {item?.building.name}
           </h3>
           <div className="mb-1 flex justify-end flex-row">
             {isEdit ? (
@@ -105,33 +106,33 @@ const CardObject = () => {
                 onClick={() => setIsEdit((prev) => !prev)}
               />
             ) : (
-              permissions[updateKey] && (
-                <Button
-                  shape="circle"
-                  variant="plain"
-                  size="md"
-                  icon={<HiPencil size={15} />}
-                  onClick={() => setIsEdit((prev) => !prev)}
-                />
-              )
-            )}
-            {permissions[deleteSoftKey] && (
+              // permissions[updateKey] && (
               <Button
                 shape="circle"
                 variant="plain"
                 size="md"
-                icon={<HiTrash size={15} />}
-                onClick={() => handleDelete(id as string)}
+                icon={<HiPencil size={15} />}
+                onClick={() => setIsEdit((prev) => !prev)}
               />
+              // )
             )}
+            {/* {permissions[deleteSoftKey] && ( */}
+            <Button
+              shape="circle"
+              variant="plain"
+              size="md"
+              icon={<HiTrash size={15} />}
+              onClick={() => handleDelete(item?.id)}
+            />
+            {/* )} */}
           </div>
         </div>
         {isEdit ? (
           <FormObject
             duplicate={isDuplicatePage}
-            data={data?.data as any}
+            data={item}
             onNextChange={handleUpdate}
-            isLoadingEndpoint={isLoading}
+            // isLoadingEndpoint={isLoading}
             isEdit
           />
         ) : (
@@ -140,38 +141,37 @@ const CardObject = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-4 gap-x-4">
                 <CustomerInfoField
                   title={t("formInput.realEstateObject.id")}
-                  value={data?.data.id || t("global.noDataAvailable")}
+                  value={item?.int_id || t("global.noDataAvailable")}
                 />
                 <CustomerInfoField
                   title={t("formInput.realEstateObject.name")}
+                  value={item?.building.name || t("global.noDataAvailable")}
+                />
+                <CustomerInfoField
+                  title={t("formInput.realEstateObject.roominess")}
+                  value={item?.roominess?.label || t("global.noDataAvailable")}
+                />
+                <CustomerInfoField
+                  title={t("formInput.realEstateObject.type")}
+                  value={item?.type?.label || t("global.noDataAvailable")}
+                />
+                <CustomerInfoField
+                  title={t("formInput.realEstateObject.finishing")}
+                  value={item?.finishing?.label || t("global.noDataAvailable")}
+                />
+                <CustomerInfoField
+                  title={t("formInput.realEstateObject.square")}
                   value={
-                    data?.data.real_estate_building.name ||
+                    thousandSeparatorValue(item?.square) ||
                     t("global.noDataAvailable")
                   }
                 />
                 <CustomerInfoField
-                  title={t("formInput.realEstateObject.roominess")}
-                  value={
-                    data?.data.roominess.value || t("global.noDataAvailable")
-                  }
-                />
-                <CustomerInfoField
-                  title={t("formInput.realEstateObject.type")}
-                  value={data?.data.type.value || t("global.noDataAvailable")}
-                />
-                <CustomerInfoField
-                  title={t("formInput.realEstateObject.finishing")}
-                  value={
-                    data?.data.finishing.value || t("global.noDataAvailable")
-                  }
-                />
-                <CustomerInfoField
-                  title={t("formInput.realEstateObject.square")}
-                  value={data?.data.square || t("global.noDataAvailable")}
-                />
-                <CustomerInfoField
                   title={t("formInput.realEstateObject.price")}
-                  value={data?.data.price || t("global.noDataAvailable")}
+                  value={
+                    thousandSeparatorValue(item?.price) ||
+                    t("global.noDataAvailable")
+                  }
                 />
                 {/* <CustomerInfoField
                   title={t("formInput.realEstateObject.priceForMeters")}
@@ -182,7 +182,7 @@ const CardObject = () => {
                 <CustomerInfoField
                   title={t("formInput.realEstateObject.deadline")}
                   value={
-                    data?.data.deadline.value
+                    item?.deadline.label
                     // `${extractYearAndQuarter(data?.data.deadline)
                     //   ?.quarter} квартал${"  "}${extractYearAndQuarter(
                     //   data?.data.deadline,

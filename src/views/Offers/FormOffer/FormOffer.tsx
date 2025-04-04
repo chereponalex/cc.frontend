@@ -72,7 +72,6 @@ const FormOffer = ({
   const dispatch = useAppDispatch();
   const { mode } = useAppSelector((state) => state.theme);
   const { t } = useTranslation();
-  console.log(data, "data");
   const { data: selectInfo, isLoading: isLoadingSelectInfo } =
     //@ts-ignore
     useSelectInfoOffersQuery();

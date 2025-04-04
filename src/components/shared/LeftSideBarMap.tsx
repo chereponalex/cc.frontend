@@ -46,7 +46,7 @@ const Range = ({
   }, [value]);
 
   const formatter: NonNullable<SliderSingleProps["tooltip"]>["formatter"] = (
-    value
+    value,
   ) => {
     if (!value) {
       return "0 ₽";
@@ -247,10 +247,10 @@ const ElementTypeComponent = ({
 
       function replaceLabelInOptions(
         opt: { value: string; label: string }[],
-        modified: { value: string; label: string }
+        modified: { value: string; label: string },
       ) {
         const foundIndex = opt.findIndex(
-          (option) => option?.value === modified?.value
+          (option) => option?.value === modified?.value,
         );
         if (foundIndex !== -1) {
           const newOpt = [...opt];
@@ -323,11 +323,11 @@ const ElementTypeComponent = ({
       );
     case TypeFilter.SELECT_MULTI:
       const options = element.options.filter(
-        (option: { value: string; label: string }) => option.value
+        (option: { value: string; label: string }) => option.value,
       );
       options.unshift({ value: "all", label: "Все" });
       const dropdownCheckboxVal = options.filter(
-        (el: { value: string; label: string }) => value?.includes(el.value)
+        (el: { value: string; label: string }) => value?.includes(el.value),
       );
       return (
         <div className="">
@@ -545,7 +545,7 @@ const LeftSideBarMap = ({
     }
   }, [cityId]);
   const [priceFilter, setPriceFilter] = useState(
-    dataFilters?.filters?.find((filter) => filter.name === "price") ?? null
+    dataFilters?.filters?.find((filter) => filter.name === "price") ?? null,
   );
   useEffect(() => {
     const newPriceFilter =
@@ -617,7 +617,7 @@ const LeftSideBarMap = ({
   useEffect(() => {
     const isClearingFilters = (
       prevParams: URLSearchParams,
-      currentParams: URLSearchParams
+      currentParams: URLSearchParams,
     ) => {
       const prev = Object.fromEntries(prevParams);
       const current = Object.fromEntries(currentParams);
@@ -625,7 +625,7 @@ const LeftSideBarMap = ({
     };
     const getRemainingFields = (
       prevParams: URLSearchParams,
-      currentParams: URLSearchParams
+      currentParams: URLSearchParams,
     ) => {
       const prevKeys = Object.keys(Object.fromEntries(prevParams));
       const currentKeys = Object.keys(Object.fromEntries(currentParams));

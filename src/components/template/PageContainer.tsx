@@ -44,7 +44,7 @@ const PageContainer = (props: PageContainerProps) => {
             marginRight: "10px",
             paddingLeft: 0,
             paddingRight: 0,
-            paddingTop: 0
+            paddingTop: 0,
           }}
           className={classNames(
             "page-container relative h-full flex flex-auto flex-col",

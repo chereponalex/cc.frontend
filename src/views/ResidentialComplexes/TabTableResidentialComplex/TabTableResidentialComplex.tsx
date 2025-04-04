@@ -99,7 +99,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
     sort: [],
   });
   const permissions: any = useAppSelector(
-    (state) => state.auth.user.role?.permissions
+    (state) => state.auth.user.role?.permissions,
   );
   const [isOpen, setIsOpen] = useState<Record<string, any>>({});
 
@@ -111,7 +111,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
     toast.push(
       <Notification title={t(`toast.title.${type}`)} type={type}>
         {text}
-      </Notification>
+      </Notification>,
     );
   };
 
@@ -141,7 +141,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
         ...{
           selectedRows: [
             ...prevData.selectedRows.filter(
-              (id) => id !== (row as { id: string }).id
+              (id) => id !== (row as { id: string }).id,
             ),
           ],
         },
@@ -150,7 +150,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
         ...newTableData.current,
         selectedRows: [
           ...newTableData.current.selectedRows.filter(
-            (id) => id !== (row as { id: string }).id
+            (id) => id !== (row as { id: string }).id,
           ),
         ],
       };
@@ -173,7 +173,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
           SoftDelete(id).unwrap();
           openNotification(
             ToastType.SUCCESS,
-            t(`toast.message.${textConst}.addInBasket`)
+            t(`toast.message.${textConst}.addInBasket`),
           );
         }
       } else {
@@ -184,7 +184,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
         });
         openNotification(
           ToastType.SUCCESS,
-          t(`toast.message.${textConst}.addInBasket`)
+          t(`toast.message.${textConst}.addInBasket`),
         );
       }
     } catch (error) {
@@ -267,14 +267,14 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
                   !bindMode
                     ? "unPin"
                     : "sendToCart"
-                }`
+                }`,
               )}
             >
               <Button
                 shape="circle"
                 variant="plain"
                 size="xs"
-                style={{marginRight: "30px"}}
+                style={{ marginRight: "30px" }}
                 icon={<HiTrash />}
                 onClick={() =>
                   handleDelete((props.row.original as { id: string }).id)
@@ -381,8 +381,8 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
                 page: newTableData.current.pageIndex,
                 per_page: newTableData.current.pageSize,
               },
-              method: "PUT"
-            }
+              method: "PUT",
+            },
       );
       if (result) {
         setTableData((prevData) => ({
@@ -478,7 +478,7 @@ function _TabTableResidentialComplex<T>(props: Props<T>) {
 }
 
 const TabTableResidentialComplex = _TabTableResidentialComplex as <T>(
-  props: Props<T>
+  props: Props<T>,
 ) => ReturnType<typeof _TabTableResidentialComplex>;
 
 export default TabTableResidentialComplex;

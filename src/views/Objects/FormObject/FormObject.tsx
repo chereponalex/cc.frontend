@@ -15,9 +15,13 @@ import { TableTextConst } from "@/@types";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import { separateNumbers } from "@/utils/separateNumbers";
 import { validationSchemaObject } from "@/utils/validationForm";
-import { useGetRealEstateObjectsActionInfoQuery } from "@/services/RtkQueryService";
-import { useAppSelector } from "@/store";
+import {
+  useGetRealEstateObjectsActionInfoQuery,
+  useSelectInfoRealEstateObjectQuery,
+} from "@/services/RtkQueryService";
+import { useAppDispatch, useAppSelector } from "@/store";
 import useDarkMode from "@/utils/hooks/useDarkmode";
+import { setDrawerState } from "@/store/slices/actionState";
 
 const FormObject = ({
   data,
@@ -27,20 +31,17 @@ const FormObject = ({
   duplicate,
   object_id,
 }: CreatNewFormObjectProps) => {
+  const dispatch = useAppDispatch();
   const [isDark] = useDarkMode();
-  const { mode } = useAppSelector((state) => state.theme);
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { data: selectInfo, isLoading: isLoadingSelectInfo } =
+  const { data: selectInfo, isLoading: isLoadingSelectInfoReo } =
     //@ts-ignore
-    useGetRealEstateObjectsActionInfoQuery();
-
-  const real_estate_buildings =
-    (selectInfo?.data.real_estate_buildings as any) || {};
-  const roominess = selectInfo?.data.roominess || {};
-  const finishing = selectInfo?.data.finishing || {};
-  const types = selectInfo?.data.types || {};
-  const deadlines = selectInfo?.data.deadlines || {};
+    useSelectInfoRealEstateObjectQuery();
+  const real_estate_buildings = selectInfo?.data.real_estate_buildings || [];
+  const roominess = selectInfo?.data?.roominess || [];
+  const types = selectInfo?.data?.types || [];
+  const finishing = selectInfo?.data?.finishing || [];
+  const deadlines = selectInfo?.data?.deadlines || [];
 
   const onNext = (values: any) => {
     onNextChange?.(values);
@@ -48,60 +49,21 @@ const FormObject = ({
 
   const initialValues: any = useMemo(() => {
     return {
-      real_estate_building_id: object_id
-        ? object_id
-        : data?.real_estate_building.id || "",
-      roominess: data?.roominess.key || "",
-      type: data?.type.key || "",
-      finishing: data?.finishing.key || "",
+      real_estate_building_id: object_id ? object_id : data?.building.id || "",
+      roominess: data?.roominess.value || "",
+      type: data?.type.value || "",
+      finishing: data?.finishing.value || "",
       square: data?.square || "",
       price: data?.price || "",
-      deadline: data?.deadline.key || "",
+      deadline: data?.deadline.value || "",
     };
   }, [data]);
 
-  const optionsRealEstateObjects = useMemo(() => {
-    const data = Object.entries(real_estate_buildings);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [real_estate_buildings]);
-
-  const optionsRoominess = useMemo(() => {
-    const data = Object.entries(roominess);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [roominess]);
-
-  const optionsFinishing = useMemo(() => {
-    const data = Object.entries(finishing);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [finishing]);
-
-  const optionsTypes = useMemo(() => {
-    const data = Object.entries(types);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [types]);
-
-  const optionsDeadlines = useMemo(() => {
-    const data = Object.entries(deadlines);
-    return data.map(([id, value]) => ({
-      label: value,
-      value: id,
-    }));
-  }, [deadlines]);
+  console.log(initialValues, "init");
+  console.log(deadlines, "deadlines");
 
   return (
-    <Loading type="cover" loading={isLoadingSelectInfo}>
+    <Loading type="cover" loading={isLoadingSelectInfoReo}>
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
@@ -109,7 +71,7 @@ const FormObject = ({
         onSubmit={(values) => onNext(values)}
       >
         {({ values, touched, errors }) => {
-          console.log(values, "values");
+          // console.log(values, "values");
           return (
             <Form>
               <FormContainer>
@@ -131,14 +93,12 @@ const FormObject = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsRealEstateObjects}
-                          value={optionsRealEstateObjects.filter(
-                            (name: any) => {
-                              return (
-                                name.value === values.real_estate_building_id
-                              );
-                            },
-                          )}
+                          options={real_estate_buildings}
+                          value={real_estate_buildings?.filter((name: any) => {
+                            return (
+                              name.value === values.real_estate_building_id
+                            );
+                          })}
                           onChange={(name) => {
                             if (name) {
                               form.setFieldValue(field.name, name.value);
@@ -162,10 +122,8 @@ const FormObject = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsRoominess}
-                          value={optionsRoominess.filter((roominess: any) => {
-                            // console.log(roominess, "roominess");
-                            // console.log(values, "values");
+                          options={roominess}
+                          value={roominess?.filter((roominess: any) => {
                             return roominess.value === values.roominess;
                           })}
                           onChange={(roominess) => {
@@ -191,8 +149,8 @@ const FormObject = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsTypes}
-                          value={optionsTypes.filter(
+                          options={types}
+                          value={types?.filter(
                             (type: any) => type.value === values.type,
                           )}
                           onChange={(type) => {
@@ -218,8 +176,8 @@ const FormObject = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsFinishing}
-                          value={optionsFinishing.filter(
+                          options={finishing}
+                          value={finishing?.filter(
                             (finishing: any) =>
                               finishing.value === values.finishing,
                           )}
@@ -264,14 +222,11 @@ const FormObject = ({
                       component={Input}
                     />
                   </FormItem>
-                  {/* </Card> */}
-                  {/* <Card className="mt-5"> */}
                   <FormItem
                     label={t("formInput.realEstateObject.deadline")}
                     invalid={errors.deadline && (touched.deadline as boolean)}
                     errorMessage={errors.deadline as string}
                     layout="horizontal"
-                    style={{ fontSize: "16px", fontWeight: 900 }}
                     asterisk
                   >
                     <Field name="deadline">
@@ -281,8 +236,8 @@ const FormObject = ({
                           placeholder=""
                           field={field}
                           form={form}
-                          options={optionsDeadlines}
-                          value={optionsDeadlines.filter((deadline: any) => {
+                          options={deadlines}
+                          value={deadlines?.filter((deadline: any) => {
                             return deadline.value === values.deadline;
                           })}
                           onChange={(deadline) => {
@@ -308,12 +263,14 @@ const FormObject = ({
                 >
                   <Button
                     type="button"
-                    onClick={() =>
-                      navigate(
-                        object_id
-                          ? `${routePrefix.real_estate_building}/${object_id}`
-                          : `${routePrefix.real_estate_object}`,
-                      )
+                    onClick={
+                      () => dispatch(setDrawerState(false))
+
+                      // navigate(
+                      //   object_id
+                      //     ? `${routePrefix.real_estate_building}/${object_id}`
+                      //     : `${routePrefix.real_estate_object}`,
+                      // )
                     }
                   >
                     {t("global.close")}
@@ -339,73 +296,3 @@ const FormObject = ({
   );
 };
 export default FormObject;
-
-// const [state, setState] = useState<any>({ optionSelected: null });
-
-// const Option = (props: any) => {
-//   return (
-//     <div>
-//       <components.Option {...props}>
-//         <input
-//           type="checkbox"
-//           checked={props.isSelected}
-//           onChange={() => null}
-//           style={{ marginTop: "-10px" }}
-//         />
-//         {""}
-//         <label style={{ marginLeft: "10px" }}>{props.label}</label>
-//       </components.Option>
-//     </div>
-//   );
-// };
-// const mockData = [
-//   { value: "0", label: "Все" },
-//   { value: "1", label: "Готово" },
-//   { value: "2", label: "В этом году" },
-//   { value: "3", label: "До 1 кв 2025" },
-//   { value: "4", label: "До 2 кв 2025" },
-//   { value: "5", label: "До 3 кв 2025" },
-//   { value: "6", label: "До 4 кв 2025" },
-// ];
-// const handleChange = (selected: any) => {
-//   setState({
-//     optionSelected: selected,
-//   });
-// };
-
-// <FormItem
-//   label={t("formInput.realEstateObject.deadline")}
-//   // invalid={errors.roominess_id && touched.roominess_id}
-//   // errorMessage={errors.roominess_id}
-//   layout="horizontal"
-//   asterisk
-// >
-//   <Field name="deadline_id">
-//     {({ field, form }: FieldProps) => (
-//       <Select
-//         placeholder=""
-//         field={field}
-//         form={form}
-//         isMulti
-//         options={mockData}
-//         closeMenuOnSelect={false}
-//         hideSelectedOptions={false}
-//         components={{
-//           Option,
-//         }}
-//         onChange={handleChange}
-//         value={state.optionSelected}
-//         // options={optionsTypes}
-//         // value={optionsTypes.filter(
-//         //   (type: any) =>
-//         //     type.value === values.type_id
-//         // )}
-//         // onChange={(roominess) => {
-//         //   if (type) {
-//         //     form.setFieldValue(field.name, type.value);
-//         //   }
-//         // }}
-//       />
-//     )}
-//   </Field>
-// </FormItem>;
