@@ -159,7 +159,7 @@ export const RightSideBarMap = ({
       console.log(error, "error");
     }
   };
-  console.log(data?.data, 'dev')
+  console.log(data?.data, "dev");
 
   const maxOffer: Offers =
     Array.isArray(data?.data.offers) &&
@@ -173,7 +173,7 @@ export const RightSideBarMap = ({
       return maxElement;
     }, null);
 
-    console.log(maxOffer, 'maxOffer')
+  console.log(maxOffer, "maxOffer");
   const openNotification = (
     type: ToastType,
     text: string,

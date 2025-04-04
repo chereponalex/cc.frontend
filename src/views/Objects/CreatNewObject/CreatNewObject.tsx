@@ -12,17 +12,21 @@ import FormObject from "../FormObject";
 import routePrefix from "@/configs/routes.config/routePrefix";
 import { TableTextConst } from "@/@types";
 import methodInsert from "@/utils/methodInsertBread";
+import MenuItem from "antd/es/menu/MenuItem";
+import { setDrawerState } from "@/store/slices/actionState";
+import { useAppDispatch } from "@/store";
 
-const CreatNewObject = () => {
+const CreatNewObject = ({ item }: any) => {
   const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  // const { id } = useParams();
+  // const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const objectID = searchParams.get("objectID");
 
-  const { data, isLoading } = useGetRealEstateObjectByIdQuery(id as string, {
-    skip: !id,
-  });
+  // const { data, isLoading } = useGetRealEstateObjectByIdQuery(id as string, {
+  //   skip: !id,
+  // });
   const [creatNew, { isLoading: isLoadingCreate }] =
     useCreatNewRealEstateObjectMutation();
 
@@ -41,11 +45,13 @@ const CreatNewObject = () => {
         ToastType.SUCCESS,
         t(`toast.message.${TableTextConst.REAL_ESTATE_OBJECT}.create`),
       );
-      navigate(
-        objectID
-          ? `${routePrefix.real_estate_building}/${objectID}`
-          : `${routePrefix.real_estate_object}`,
-      );
+      dispatch(setDrawerState(false));
+
+      // navigate(
+      //   objectID
+      //     ? `${routePrefix.real_estate_building}/${objectID}`
+      //     : `${routePrefix.real_estate_object}`
+      // );
     } catch (error) {
       openNotification(
         ToastType.WARNING,
@@ -55,16 +61,12 @@ const CreatNewObject = () => {
   };
 
   return (
-    <Loading loading={isLoading} type="cover">
-      {methodInsert(
-        document.getElementById("breadcrumbs"),
-        data?.data?.real_estate_building.name,
-      )}
+    <Loading /* loading={isLoading} type="cover" */>
       <FormObject
         object_id={objectID}
-        data={data?.data as any}
+        data={item}
         onNextChange={handleCreatNew}
-        isLoadingEndpoint={isLoadingCreate}
+        // isLoadingEndpoint={isLoadingCreate}
       />
     </Loading>
   );

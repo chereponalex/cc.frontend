@@ -119,7 +119,7 @@ const TabRightSide = ({
   disabled,
   setIsAnimation,
   isAnimation,
-  developer
+  developer,
 }: any) => {
   const fetchLoading = useRef(false);
   const dispatch = useAppDispatch();

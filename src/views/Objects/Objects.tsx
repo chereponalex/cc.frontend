@@ -21,6 +21,9 @@ import { HiPencil } from "react-icons/hi";
 import { ToastType } from "@/@types/toast";
 import Notification from "@/components/ui/Notification";
 import thousandSeparatorValue from "@/utils/thousandSeparator";
+import CardObject from "./CardObject";
+import CreatNewObject from "./CreatNewObject";
+import formatDate from "@/utils/formatDate";
 
 const Objects = () => {
   const { t } = useTranslation();
@@ -93,7 +96,7 @@ const Objects = () => {
         id: rowId,
         [fieldToUpdate]: updatedValue,
       });
-      if (res?.data?.success) {
+      if (res?.data?.status === "success") {
         setIsEditSquare({});
         setIsEditPrice({});
         fetchLoading.current = false;
@@ -114,11 +117,11 @@ const Objects = () => {
     return [
       {
         header: t("table.columnsHeader.nameObject"),
-        accessorKey: "real_estate_building.name",
+        accessorKey: "name",
         cell: function (props) {
           return useCustomLink(
-            routePrefix.real_estate_building,
-            props.row.original.real_estate_building as any,
+            routePrefix.building,
+            props.row.original.building as any,
           );
         },
       },
@@ -126,24 +129,24 @@ const Objects = () => {
         header: t("table.columnsHeader.roominess"),
         accessorKey: "roominess",
         cell: (props) => {
-          const { key, value }: any = props.getValue();
-          return <span>{value}</span>;
+          const { label }: any = props.getValue();
+          return <span>{label}</span>;
         },
       },
       {
         header: t("table.columnsHeader.type"),
         accessorKey: "type",
         cell: (props) => {
-          const { key, value }: any = props.getValue();
-          return <span>{value}</span>;
+          const { label }: any = props.getValue();
+          return <span>{label}</span>;
         },
       },
       {
         header: t("table.columnsHeader.finishing"),
         accessorKey: "finishing",
         cell: (props) => {
-          const { key, value }: any = props.getValue();
-          return <span>{value}</span>;
+          const { label }: any = props.getValue();
+          return <span>{label}</span>;
         },
       },
       {
@@ -199,7 +202,7 @@ const Objects = () => {
                     onClick={() => editSquare(props.row.original.id)}
                   />
                   <p>
-                    {props.row.original.square}
+                    {thousandSeparatorValue(props.row.original.square)}
                     {""}
                   </p>
                 </>
@@ -261,7 +264,7 @@ const Objects = () => {
                     onClick={() => editPrice(props.row.original.id)}
                   />
                   <p>
-                    {props.row.original.price}
+                    {thousandSeparatorValue(props.row.original.price)}
                     {""}
                   </p>
                 </>
@@ -273,13 +276,21 @@ const Objects = () => {
       {
         header: t("table.columnsHeader.priceForSquare"),
         accessorKey: "price_per_meter",
+        cell: (props) => {
+          const value: any = props.getValue();
+          return (
+            <span style={{ whiteSpace: "nowrap" }}>
+              {thousandSeparatorValue(value)}
+            </span>
+          );
+        },
       },
       {
         header: t("table.columnsHeader.deadline"),
         accessorKey: "deadline",
         cell: (props) => {
-          const value: any = props.getValue();
-          return <span style={{ whiteSpace: "nowrap" }}>{value.value}</span>;
+          const { label, value }: any = props.getValue();
+          return <span style={{ whiteSpace: "nowrap" }}>{label}</span>;
         },
       },
     ];
@@ -289,6 +300,10 @@ const Objects = () => {
     <>
       {methodInsert(document.getElementById("breadcrumbs"))}
       <TablePage<BuildingObject>
+        childrenDrawer={{
+          card: CardObject,
+          create: CreatNewObject,
+        }}
         columns={columns}
         textConst={TableTextConst.REAL_ESTATE_OBJECT}
         data={realEstateObjects}
