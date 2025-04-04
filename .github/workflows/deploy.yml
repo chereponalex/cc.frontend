@@ -40,6 +40,7 @@ jobs:
           script: |
             IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/${{ env.IMAGE_NAME }}
             (echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin)
+            (docker rm -f frontend || true)
             (docker rm -f ${{ env.IMAGE_NAME }} || true)
             docker pull $IMAGE_ID:latest
             docker run --name frontend --network=ccbackend_app-network -v frontend:/app $IMAGE_ID:latest
