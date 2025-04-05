@@ -40,11 +40,11 @@ const FormScripts = (
   const dispatch = useAppDispatch();
   const [isDark] = useDarkMode();
   const { t } = useTranslation();
-  const {
-    data: selectInfo,
-    isLoading: isLoadingSelectInfo,
-    //@ts-ignore
-  } = useGetScriptActionInfoQuery();
+  // const {
+  //   data: selectInfo,
+  //   isLoading: isLoadingSelectInfo,
+  //   //@ts-ignore
+  // } = useGetScriptActionInfoQuery();
 
   const { data: selectInfoScript, isLoading: isLoadingSelectInfoScript } =
     //@ts-ignore
@@ -54,7 +54,7 @@ const FormScripts = (
   // const scriptLocations = selectInfo?.data.script_locations || {};
   // const typesTransfers = selectInfo?.data.types || {};
 
-  const script_locations = selectInfoScript?.data?.script_location;
+  const script_locations = selectInfoScript?.data?.script_location || [];
   // const optionsTypesTransfers = useMemo(() => {
   //   return Object.entries(typesTransfers).map(([value, label]) => ({
   //     label,
@@ -112,7 +112,7 @@ const FormScripts = (
   }, [data]);
 
   return (
-    <Loading type="cover" loading={isLoadingEndpoint && isLoadingSelectInfo}>
+    <Loading type="cover" loading={isLoadingEndpoint && isLoadingSelectInfoScript}>
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
@@ -236,7 +236,7 @@ const FormScripts = (
                     </Field>
                   </FormItem>
                   <TableScript
-                    loading={isLoadingSelectInfo}
+                    loading={isLoadingSelectInfoScript}
                     selectInfo={selectInfoScript?.data}
                     dataCollection={dataCollection}
                     setDataColletion={setDataColletion}
