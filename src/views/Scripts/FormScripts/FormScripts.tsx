@@ -51,23 +51,23 @@ const FormScripts = (
     useSelectInfoScriptQuery();
   // console.log(selectInfoScript, 'selectInfoScript')
 
-  const scriptLocations = selectInfo?.data.script_locations || {};
-  const typesTransfers = selectInfo?.data.types || {};
+  // const scriptLocations = selectInfo?.data.script_locations || {};
+  // const typesTransfers = selectInfo?.data.types || {};
 
   const script_locations = selectInfoScript?.data?.script_location;
-  const optionsTypesTransfers = useMemo(() => {
-    return Object.entries(typesTransfers).map(([value, label]) => ({
-      label,
-      value,
-    }));
-  }, [scriptLocations]);
+  // const optionsTypesTransfers = useMemo(() => {
+  //   return Object.entries(typesTransfers).map(([value, label]) => ({
+  //     label,
+  //     value,
+  //   }));
+  // }, [script_locations]);
 
-  const optionsScriptLocations = useMemo(() => {
-    return Object.entries(scriptLocations).map(([value, label]) => ({
-      label,
-      value,
-    }));
-  }, [scriptLocations]);
+  // const optionsScriptLocations = useMemo(() => {
+  //   return Object.entries(script_locations).map(([value, label]) => ({
+  //     label,
+  //     value,
+  //   }));
+  // }, [script_locations]);
   const [dataCollection, setDataColletion] = useState<ScriptDataProps[]>([]);
   useEffect(() => {
     setDataColletion(
