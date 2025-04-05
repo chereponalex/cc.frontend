@@ -2076,7 +2076,6 @@ const RtkQueryService = createApi({
     }),
     // createTransfer: build.mutation<string, FormEssence<MapPoint>>({
     //   query: (body) => {
-    //     console.log(body, "body");
     //     return {
     //       url: `/map/transfer`,
     //       method: "POST",
